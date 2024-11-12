@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"> 
+
+        <meta name="viewport" content="width=device-width , user-scalable=no"> 
+        
+        <title>Enneper Full Experience </title>
+        <link rel="stylesheet" href="styles.css"> <!-- Enlaza tu archivo CSS externo aquí -->
+    </head>
+<body>
+    <div id="textoEnneperFX">
+        <a href="mailto:blanquiaraujo@gmail.com?subject=EnneperFX" id="textoEnneperFX"> EnneperFX   © arauxodev</a>
+    </div>
+       
+<div id="textoAyuda">
+     Axuda
+</div>
+<div class="divAbsolute">
+
+<select id="opciones" onchange="redireccionar()">
+    <option value="mobile">Enneper Mobile</option>
+    <option value="miscelanea">Miscelanea</option>
+    <option value="revolucion">Revolución</option>
+    <option value="sphehar" selected>Harmónicos Esféricos</option>
+    <option value="tubos">Tubos</option>
+    <option value="implicitas">Implícitas</option>
+    <option value="curvasplanas">Curvas Planas</option>
+    <option value="suptoroid">Supertoroides</option>
+    <option value="supelip">Superelipsoides</option>
+</select>
+    
+<script>
+    function redireccionar() {
+    var opcion = document.getElementById("opciones").value;
+    var url;
+    
+    switch (opcion) {
+        case "mobile":
+        url = "./index.html";
+        break;
+        case "miscelanea":
+        url = "./miscelanea.html";
+        break;
+        case "revolucion":
+        url = "./revolucion.html";
+        break;
+        case "sphehar":
+        url = "./sphehar.html";
+        break;
+        case "tubos":
+        url = "./tubos.html";
+        break;
+        case "implicitas":
+        url = "./implicitas.html";
+        break;
+        case "curvasplanas":
+        url = "./curvasplanas.html";
+        break;
+        case "suptoroid":
+        url = "./suptoroid.html";
+        break;
+        case "supelip":
+        url = "./supelip.html";
+        break;
+        default:
+        url = "./index.html"; // Puedes establecer una URL predeterminada aquí
+    }
+    
+    window.location.href = url;
+    }
+</script>
+    
+<br>
+
+
+<select id="surface-select">   <!-- onchange="changeSurface()"> -->
+   
+    <option value="0|2|3|5|0|5|3|0">(0,2,3,5,0,5,3,0)</option>
+    <option value="0|3|6|3|1|4|1|0">(0,3,6,3,1,4,1,0)</option>
+    <option value="1|2|3|4|1|2|3|4">(1,2,3,4,1,2,3,4)</option>
+    <option value="1|3|5|2|4|6|5|3">(1,3,5,2,4,6,5,3)</option>
+    <option value="1|4|0|0|2|6|2|1">(1,4,0,0,2,6,2,1)</option>
+
+    <option value="2|1|0|4|2|3|0|2">(2,1,0,4,2,3,0,2)</option>
+    <option value="2|2|4|4|2|2|4|4">(2,2,4,4,2,2,4,4)</option>
+    <option value="2|3|1|2|6|4|4|0">(2,3,1,2,6,4,4,0)</option>
+    <option value="2|3|1|2|6|4|4|2">(2,3,1,2,6,4,4,2)</option>
+    <option value="2|3|2|3|2|3|2|3">(2,3,2,3,2,3,2,3)</option>
+
+    <option value="2|3|4|2|3|4|5|6">(2,3,4,2,3,4,5,6)</option>
+    <option value="3|0|0|5|6|5|4|2">(3,0,0,5,6,5,4,2)</option>
+    <option value="3|0|0|5|6|5|4|3">(3,0,0,5,6,5,4,3)</option>
+    <option value="3|4|0|2|5|6|2|3">(3,4,0,2,5,6,2,3)</option>
+    <option value="3|4|3|4|3|4|3|4">(3,4,3,4,3,4,3,4)</option>
+
+    <option value="4|3|2|1|1|2|3|4">(4,3,2,1,1,2,3,4)</option>
+    <option value="4|3|2|4|6|2|6|3">(4,3,2,4,6,2,6,3)</option>
+    <option value="4|3|2|4|6|2|6|4">(4,3,2,4,6,2,6,4)</option>
+    <option value="4|4|6|6|4|4|6|6">(4,4,6,6,4,4,6,6)</option>
+    <option value="4|5|4|5|4|5|4|5">(4,5,4,5,4,5,4,5)</option>
+
+    <option value="5|0|5|1|3|3|3|4">(5,0,5,1,3,3,3,4)</option>
+    <option value="5|0|5|1|3|3|3|5">(5,0,5,1,3,3,3,5)</option>
+    <option value="5|1|3|4|0|2|0|2">(5,1,3,4,0,2,0,2)</option>
+    <option value="5|1|4|5|5|2|5|0">(5,1,4,5,5,2,5,0)</option>
+    <option value="5|1|4|5|5|2|5|5">(5,1,4,5,5,2,5,5)</option>
+
+    <option value="5|2|5|5|2|1|0|1">(5,2,5,5,2,1,0,1)</option>
+    <option value="5|4|2|3|3|2|4|5">(5,4,2,3,3,2,4,5)</option>
+    <option value="5|4|5|4|5|4|5|4">(5,4,5,4,5,4,5,4)</option>
+    <option value="6|3|1|2|1|2|1|0">(6,3,1,2,1,2,1,0)</option>
+    <option value="6|3|1|2|1|2|1|2">(6,3,1,2,1,2,1,2)</option>
+
+    <option value="6|3|1|2|1|2|1|6">(6,3,1,2,1,2,1,6)</option>
+    <option value="6|5|4|3|3|4|5|6">(6,5,4,3,3,4,5,6)</option>
+    <option value="6|5|4|3|4|3|6|5">(6,5,4,3,4,3,6,5)</option>
+    <option value="6|6|4|0|2|4|0|1">(6,6,4,0,2,4,0,1)</option>
+    <option value="6|6|4|4|6|6|4|4">(6,6,4,4,6,6,4,4)</option>
+
+</select>
+
+<!-- Combo box for selecting materials -->
+<select id="material-select">  <!-- onchange="changeMaterial()"> -->
+    <option value="wireframe" selected>Wireframe</option>
+    <option value="wireframe2">Wireframe Clásico</option>
+    <option value="basico">Material Básico</option>
+    <option value="textura">Material Textura</option>
+    <option value="basicoazul">Básico Azul</option>
+</select>
+
+<!-- Combo box for selecting textures -->
+
+<select id="texture-select" disabled> <!-- onchange="changeTexture()"> -->
+    <option value="elena.jpg">Elena Abal</option>
+    <option value="agua.jpg">Agua</option>
+    <option value="aguaazul.jpg">Auga Azul</option>
+    <option value="aguaazul2.jpg">Auga Azul 2</option>
+    <option value="aguametal.jpg">Auga Metal</option>
+    <option value="aguaroja.jpg">Auga Vermella</option>
+    <option value="azul.jpg">Azul</option>
+    <option value="circulos.jpg">Circulos</option>
+    <option value="colmenagris.jpg">Colmea Gris</option>
+    <option value="colmenairis.jpg">Colmea Iris</option>
+    <option value="colmenaverde.jpg">Colmea Verde</option>
+    <option value="cyberpunk.jpg">Cyberpunk</option>
+    <option value="eleganteazul.jpg">Elegante Azul</option>
+    <option value="elegantegris.jpg">Elegante Gris</option>
+    <option value="escher.jpg">Escher</option>
+    <option value="gotas.jpg">Gotas</option>
+    <option value="metal.jpg">Metal</option>
+    <option value="metal2.jpg">Metal 2</option>
+    <option value="metal3.jpg">Metal 3</option>
+    <option value="metal4.jpg">Metal 4</option>
+    <option value="metalquake.jpg">Metal Quake</option>
+   <option value="oro.jpg">Ouro</option>
+   <option value="oromalla.jpg">Ouro malla</option>
+   <option value="piscinaverde.jpg">Piscina</option>
+   <option value="quake.jpg">Quake</option>
+   <option value="rainbow.jpg">Rainbow</option>
+   <option value="rejametalica.jpg">Reixa</option>
+   <option value="suelometal.jpg">Chan 1</option>
+   <option value="suelometal2.jpg">Chan 2</option>
+   <option value="suelometal3.jpg">Chan 3</option>
+   <option value="suelometal4.jpg">Chan 4</option>
+   <option value="suelometal5.jpg">Chan 5</option>
+   <option value="techno.jpg">Techno</option>
+</select>
+
+
+</div>
+<script>
+    // Obtener el elemento de texto de ayuda por su ID
+    var textoAyuda = document.getElementById("textoAyuda");
+    
+    // Función para mostrar el alert al hacer clic en el texto
+    textoAyuda.addEventListener('click', function() {
+        alert("Axuda \n\n Movementos : \n  1 Dedo e Move : Xira  \n  2 dedos e Move : Traslada \n  Separa 2 dedos : Zoom \n\n Elixe nos menus desplegables as distintas Superficies e os Tipos de Vista e vai cambiando os valores" ) 
+        });
+
+    // Función para cambiar el color del texto al pasar el ratón sobre él
+    textoAyuda.addEventListener('mouseover', function() {
+        textoAyuda.style.color = 'green';
+    });
+
+    // Función para restaurar el color del texto cuando el ratón sale de él
+    textoAyuda.addEventListener('mouseout', function() {
+        textoAyuda.style.color = 'white';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/jsm/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js"></script>
+<div id="canvas-container">
+
+    <script src="Three.js"></script>
+    
+    <script type="module" src="funcionessphehar.js"></script>
+    <script type="module">
+        import { OrbitControls }  from './orbitcontrols.js';
+        import {  } from 'https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js';
+        import { changeSurface , init , animate , exportSTL , changeMaterial , 
+                 changeTexture ,onWindowResize , mostrarComboTextura }  from './funcionessphehar.js';
+        
+        let scene, camera, renderer;
+        let surfaceMesh;
+        let isAnimationPaused = false;
+        let animationId;
+ 
+        var primerSelect = document.getElementById("primerSelect");
+        var segundoSelect = document.getElementById("segundoSelect");
+        
+        // Initialize Three.js scene
+        // Start the animation
+        init();
+        animate();
+
+        
+/*
+// Export the mesh to STL
+function exportSTL() {
+    alert('hola');
+    const exporter = new THREE.STLExporter();
+    const stlString = exporter.parse(surfaceMesh);
+    const blob = new Blob([stlString], { type: 'text/plain' });
+    
+    const link = document.createElement('a');
+    alert('hola');
+    link.style.display = 'none';
+    alert('hola2');
+    document.body.appendChild(link);
+    link.href = URL.createObjectURL(blob);
+    link.download = 'parametric_surface.stl';
+    link.click();
+    document.body.removeChild(link);
+}
+*/
+// Button to export the STL file
+const button = document.createElement('button');
+button.textContent = 'Exporta a STL';
+button.style.position = 'absolute';
+button.style.top = '10px';
+button.style.left = '10px';
+// button.addEventListener('click', exportSTL);
+button.addEventListener('click', exportSTL);
+
+document.body.appendChild(button);
+
+
+        //     scene.fog = null;
+        // Call changeMaterial function when the selection changes
+        document.getElementById("surface-select").addEventListener("change", changeSurface);
+
+        // Call changeMaterial function when the selection changes
+        document.getElementById("material-select").addEventListener("change", changeMaterial);
+
+        // Call changeMaterial function when the selection changes
+        document.getElementById("texture-select").addEventListener("change", changeTexture);
+</script>
+
+
+
+
+
+</div>
+</body>
+</html>

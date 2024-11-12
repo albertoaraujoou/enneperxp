@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parametric Surface Export</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/jsm/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js"></script>
+</head>
+<body>
+  <script>
+    // Set up scene, camera, and renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    
+    
+    // Create the Enneper surface geometry
+    const geometry = new THREE.ParametricGeometry((u, v, target) => {
+        const scale = 0.4;
+
+        // Limit u and v to the range (-2, 2)
+        u = (u - 0.5) * 4;
+        v = (v - 0.5) * 4;
+
+        const x = scale * (u - (u * u * u) / 3 + u * v * v);
+        const y = scale * (v - (v * v * v) / 3 + v * u * u);
+        const z = scale * (u * u - v * v);
+        target.set(x, y, z);
+    }, 100, 100);
+/*
+    
+    // Add parametric surface to the scene
+    const geometry = new THREE.ParametricGeometry((u, v, target) => {
+      const x = u * 10;
+      const y = v * 10;
+      const z = Math.sin(u * Math.PI * 2) * Math.cos(v * Math.PI * 2);
+      target.set(x, y, z);
+    }, 100, 100);
+    */
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    // Set up camera controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    camera.position.z = 20;
+    controls.update();
+
+    // Render loop
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+      controls.update();
+    }
+    animate();
+
+    // Export the mesh to STL
+    function exportSTL() {
+      const exporter = new THREE.STLExporter();
+      const stlString = exporter.parse(mesh);
+      const blob = new Blob([stlString], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.href = URL.createObjectURL(blob);
+      link.download = 'parametric_surface.stl';
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Button to export the STL file
+    const button = document.createElement('button');
+    button.textContent = 'Export to STL';
+    button.style.position = 'absolute';
+    button.style.top = '10px';
+    button.style.left = '10px';
+    button.addEventListener('click', exportSTL);
+    document.body.appendChild(button);
+  </script>
+</body>
+</html>

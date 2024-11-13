@@ -1,4 +1,5 @@
 import { OrbitControls }  from './orbitcontrols.js';
+import {  } from 'https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js';
  
 let scene, camera, renderer;
 let surfaceMesh;

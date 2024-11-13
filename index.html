@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html> 
+<html>  
     <head>
         <meta charset="UTF-8">
 
@@ -183,13 +183,18 @@
         textoAyuda.style.color = 'white';
     });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/jsm/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js"></script>
 
 <div id="canvas-container">
     <script src="Three.js"></script>
     <script type="module" src="funciones.js"></script>
     <script type="module">
         import { OrbitControls }  from './orbitcontrols.js';
-        import { changeSurface , init , animate , changeMaterial , 
+        import {  } from 'https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js';
+
+        import { changeSurface , init , animate , exportSTL , changeMaterial , 
                  changeTexture ,onWindowResize , mostrarComboTextura }  from './funciones.js';
         
         let scene, camera, renderer;
@@ -204,6 +209,19 @@
         // Start the animation
         init();
         animate();
+
+        // Button to export the STL file
+        const button = document.createElement('button');
+        button.textContent = 'Imprime 3D Exporta a STL';
+        button.style.position = 'absolute';
+        button.style.top = '80px';
+        button.style.left = '1px';
+        // button.addEventListener('click', exportSTL);
+        button.addEventListener('click', exportSTL);
+
+        document.body.appendChild(button);
+
+
    //     scene.fog = null;
         // Call changeMaterial function when the selection changes
         document.getElementById("surface-select").addEventListener("change", changeSurface);

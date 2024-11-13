@@ -1,6 +1,6 @@
 import { OrbitControls }  from './orbitcontrols.js';
 import {  } from 'https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js';
- 
+  
 let scene, camera, renderer;
 let surfaceMesh;
 let isAnimationPaused = false;
@@ -8,6 +8,7 @@ let animationId;
  
 var primerSelect = document.getElementById("primerSelect");
 var segundoSelect = document.getElementById("segundoSelect");
+var nombreArchivoSTL = document.getElementById("surface-select").value;
 
 
 
@@ -120,25 +121,24 @@ export function animate() {
 }
 
 
+
 // Export the mesh to STL
 export function exportSTL() {
-   // alert('hola');
-    const exporter = new THREE.STLExporter();
-    const stlString = exporter.parse(surfaceMesh);
-    const blob = new Blob([stlString], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.style.display = 'none';
-  //  alert('hola2');
-    document.body.appendChild(link);
-    link.href = URL.createObjectURL(blob);
-    link.download = 'parametric_surface.stl';
-    link.click();
-    document.body.removeChild(link);
-}
-
-
-
-
+    // alert('hola');
+     const exporter = new THREE.STLExporter();
+     const stlString = exporter.parse(surfaceMesh);
+     const blob = new Blob([stlString], { type: 'text/plain' });
+     const link = document.createElement('a');
+     link.style.display = 'none';
+   //  alert('hola2');
+     document.body.appendChild(link);
+     link.href = URL.createObjectURL(blob);
+     link.download = nombreArchivoSTL + '.stl';
+     link.click();
+     document.body.removeChild(link);
+ }
+ 
+ 
 
 
 // Handle window resize
@@ -156,7 +156,8 @@ export function onWindowResize() {
 export function changeSurface() {
     const surfaceSelect = document.getElementById('surface-select');
     const selectedSurface = surfaceSelect.value;
-
+    // nombreArchivoSTL da el nombre de archivo a imprimir 3D
+    nombreArchivoSTL = selectedSurface;
     // Remove existing surface
     scene.remove(surfaceMesh);
 
@@ -898,6 +899,7 @@ export function changeSurface() {
 
     // Add the mesh to the scene
     scene.add(surfaceMesh);
+
 
     // Update material and texture based on selections
     changeMaterial();

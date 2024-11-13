@@ -178,7 +178,7 @@
 
 
 </div>
-<script>
+<script> 
     // Obtener el elemento de texto de ayuda por su ID
     var textoAyuda = document.getElementById("textoAyuda");
     
@@ -244,16 +244,17 @@ function exportSTL() {
     document.body.removeChild(link);
 }
 */
-// Button to export the STL file
-const button = document.createElement('button');
-button.textContent = 'Imprime 3D Exporta a STL';
-button.style.position = 'absolute';
-button.style.top = '80px';
-button.style.left = '1px';
-// button.addEventListener('click', exportSTL);
-button.addEventListener('click', exportSTL);
 
-document.body.appendChild(button);
+        // Button to export the STL file
+        const button = document.createElement('button');
+        button.textContent = 'Imprime 3D Exporta a STL';
+        button.style.position = 'absolute';
+        button.style.top = '80px';
+        button.style.left = '1px';
+        // button.addEventListener('click', exportSTL);
+        button.addEventListener('click', exportSTL);
+
+        document.body.appendChild(button);
 
 
         //     scene.fog = null;
@@ -266,11 +267,6 @@ document.body.appendChild(button);
         // Call changeMaterial function when the selection changes
         document.getElementById("texture-select").addEventListener("change", changeTexture);
 </script>
-
-
-
-
-
 </div>
 </body>
 </html>

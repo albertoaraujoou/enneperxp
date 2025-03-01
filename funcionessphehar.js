@@ -114,14 +114,6 @@ export function init() {
     light3.position.set(-5, 5, 5);
     scene.add(light3);
 
-
-
-
-
-
-
-
-
     // Modificar el estilo CSS para ocultar las barras de desplazamiento
     document.body.style.margin = '0';
     document.body.style.overflow = 'hidden';
@@ -239,7 +231,7 @@ export function changeSurface() {
 
     const surfaceGeometry = new THREE.ParametricGeometry((q, j, vec) => {
 
-        var scale = 1.0;
+        var scale = 1.00;
 
         q = q * 2 * Math.PI;
         j = j * 2 * Math.PI;

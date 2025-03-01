@@ -81,7 +81,7 @@
 <select id="surface-select">   <!-- onchange="changeSurface()"> -->
     <option value="cicloideorrevox">Cicloide Ordinaria Rev. OX</option>
     <option value="cicloideorrevoz">Cicloide Ordinaria Rev. OZ</option>
-    <option value="agnesi">Agnesi Rev.</option>
+    <option value="agnesi" selected>Agnesi Rev.</option>
     <option value="astroide">Astroide Rev.</option>
 
 </select>
@@ -92,7 +92,7 @@
     <option value="wireframe2">Wireframe Clásico</option>
     <option value="basico">Material Básico</option>
     <option value="textura">Material Textura</option>
-    <option value="basicoazul">L.A.Cordero</option>
+    <option value="basicoazul" selected>L.A.Cordero</option>
 </select>
 
 <!-- Combo box for selecting textures -->
@@ -155,6 +155,8 @@
 
         // Call changeMaterial function when the selection changes
         document.getElementById("texture-select").addEventListener("change", changeTexture);
+
+        document.addEventListener("DOMContentLoaded", changeSurface);
 </script>
 </div>
 </body>

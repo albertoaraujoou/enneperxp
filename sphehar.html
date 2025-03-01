@@ -93,7 +93,7 @@
 
     <option value="2|1|0|4|2|3|0|2">(2,1,0,4,2,3,0,2)</option>
     <option value="2|2|4|4|2|2|4|4">(2,2,4,4,2,2,4,4)</option>
-    <option value="2|3|1|2|6|4|4|0">(2,3,1,2,6,4,4,0)</option>
+    <option value="2|3|1|2|6|4|4|0" selected>(2,3,1,2,6,4,4,0)</option>
     <option value="2|3|1|2|6|4|4|2">(2,3,1,2,6,4,4,2)</option>
     <option value="2|3|2|3|2|3|2|3">(2,3,2,3,2,3,2,3)</option>
 
@@ -135,7 +135,7 @@
     <option value="wireframe2">Wireframe Clásico</option>
     <option value="basico">Material Básico</option>
     <option value="textura">Material Textura</option>
-    <option value="basicoazul">L.A.Cordero</option>
+    <option value="basicoazul" selected>L.A.Cordero</option>
 </select>
 
 <!-- Combo box for selecting textures -->
@@ -272,6 +272,8 @@ function exportSTL() {
 
         // Call changeMaterial function when the selection changes
         document.getElementById("texture-select").addEventListener("change", changeTexture);
+
+        document.addEventListener("DOMContentLoaded", changeSurface);
 </script>
 </div>
 </body>

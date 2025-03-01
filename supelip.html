@@ -129,7 +129,7 @@
     <option value="wireframe2">Wireframe Clásico</option>
     <option value="basico">Material Básico</option>
     <option value="textura">Material Textura</option>
-    <option value="basicoazul">L.A.Cordero</option>
+    <option value="basicoazul" selected>L.A.Cordero</option>
 </select>
 
 <!-- Combo box for selecting textures -->
@@ -221,6 +221,8 @@
 
         // Call changeMaterial function when the selection changes
         document.getElementById("texture-select").addEventListener("change", changeTexture);
+
+        document.addEventListener("DOMContentLoaded", changeSurface);
 </script>
 </div>
 </body>

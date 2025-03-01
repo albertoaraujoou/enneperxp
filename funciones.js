@@ -254,7 +254,7 @@ export function changeSurface() {
     } else if  (selectedSurface === 'kleinclasicaWRI') {
         // Create the Botella de Klein Clasica surface geometry
     //    geometry = new THREE.BoxGeometry(2.5,2.5,2.5);
-        
+  /*      
            // Create the Klein surface geometry
         geometry = new THREE.ParametricGeometry((q, j, target) => {
             const scale = 0.168/1.2;
@@ -278,7 +278,7 @@ export function changeSurface() {
                 const z = scale * (4 * (1 - Math.cos(q) / 2) * Math.sin(j));
             
             }
-*/
+
             const x = scale * (6 * Math.cos(q) * (1 + Math.sin(q)) + 4 * (1 - Math.cos(q) / 2) * Math.cos(q) * Math.cos(j));
             const y = scale * (16 * Math.sin(q) + 4 * (1 - Math.cos(q) / 2) * Math.sin(q) * Math.cos(j));
             const z = scale * (4 * (1 - Math.cos(q) / 2) * Math.sin(j));
@@ -287,6 +287,40 @@ export function changeSurface() {
             target.set(x, y, z);
 
         }, 200, 200);
+
+
+*/
+       // Klein bottle parametric function
+        // Adapted from parametric equations for a Klein bottle
+        function kleinBottle(u, v, target) {
+            u *= Math.PI * 2;
+            v *= Math.PI * 2;
+            
+            // Scale factor
+            const scale = 0.3;
+            
+            // Klein bottle parametric equations
+            let x, y, z;
+            
+            if (u < Math.PI) {
+                x = 3 * Math.cos(u) * (1 + Math.sin(u)) + (2 * (1 - Math.cos(u) / 2)) * Math.cos(u) * Math.cos(v);
+                y = 8 * Math.sin(u) + (2 * (1 - Math.cos(u) / 2)) * Math.sin(u) * Math.cos(v);
+            } else {
+                x = 3 * Math.cos(u) * (1 + Math.sin(u)) + (2 * (1 - Math.cos(u) / 2)) * Math.cos(v + Math.PI);
+                y = 8 * Math.sin(u);
+            }
+            
+            z = (2 * (1 - Math.cos(u) / 2)) * Math.sin(v);
+            
+            target.set(x * scale, y * scale, z * scale);
+        }
+            
+        // Geometría paramétrica de la botella de Klein
+        geometry = new THREE.ParametricGeometry(kleinBottle, 200, 200);
+        geometry.computeVertexNormals();
+
+        
+
 
     } else if (selectedSurface === 'kleinbanchoff') {
 
@@ -948,11 +982,12 @@ export function changeMaterial() {
             scene.fog = new THREE.Fog(0x000090, 2.2, 5); // Restaurar la niebla
     
             break;
-        case 'textura':
-            // changeTexture();
-            // alert('entra!');
-            material = new THREE.MeshBasicMaterial({ map: texture , color: 0xffffff });
-            //surfaceMesh.material.color = 0xffffff;
+        case 'textura': 
+            material = new THREE.MeshPhongMaterial({
+                map: texture, // Asegúrate de que aquí cargas la textura correctamente
+                side: THREE.DoubleSide, // Renderiza ambas caras del objeto
+            });
+            
             scene.fog = null;
             break;
         case 'wireframe':

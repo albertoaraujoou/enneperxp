@@ -38,7 +38,7 @@
 
     // Función para verificar si un punto está en la superficie
     function isOnSurface(x, y, z) {
-      return Math.pow((2*x*x + y*y + z*z - 1), 3) - (0.1 * x*x * z*z*z) - (y*y * z*z*z) < 0.01;
+      return Math.pow((2*x*x + y*y + z*z - 1), 3) - (0.1 * x*x * z*z*z) - (y*y * z*z*z) < 0.002;
     }
 
     // Función para generar puntos en la superficie
@@ -55,7 +55,7 @@
       return points;
     }
 
-    var points = generateSurfacePoints(164000);
+    var points = generateSurfacePoints(150000);
 
     // Crear la malla de puntos y agregarla a la escena
     var geometry = new THREE.BufferGeometry().setFromPoints(points);

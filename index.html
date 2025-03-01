@@ -41,11 +41,12 @@
         Bifolia Revolucion OZ ">
 
         <title>Enneper Experience </title>
-        
+     
         <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
         <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
 
         <link rel="stylesheet" href="styles.css"> <!-- Enlaza tu archivo CSS externo aquí -->
+
     </head>
 <body>
 <div id="textoEnneperFX">
@@ -123,7 +124,7 @@
     <option value="supenneper">Sup. Enneper</option>
     <option value="supscherk">Sup. Scherk</option>
     <option value="estanque">Onda Estanque</option>
-    <option value="klein">Botella de Klein</option>
+    <option value="klein" selected>Botella de Klein</option>
     <option value="kleinclasicaWRI">Klein Clasica W.R.I.</option>
     <option value="kleinbanchoff">Bot. Klein Banchoff</option>
     
@@ -154,7 +155,7 @@
     <option value="wireframe2">Wireframe Clásico</option>
     <option value="basico">Material Básico</option>
     <option value="textura">Material Textura</option>
-    <option value="basicoazul">L.A.Cordero</option>
+    <option value="basicoazul" selected>L.A.Cordero</option>
 </select>
 
 <!-- Combo box for selecting textures -->
@@ -274,7 +275,9 @@
 
         // Call changeMaterial function when the selection changes
         document.getElementById("texture-select").addEventListener("change", changeTexture);
+
+        document.addEventListener("DOMContentLoaded", changeSurface);
 </script>
-</div>
+</div>    
 </body>
 </html>

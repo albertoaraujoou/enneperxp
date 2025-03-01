@@ -806,10 +806,11 @@ export function changeMaterial() {
     
             break;
         case 'textura':
-            // changeTexture();
-            // alert('entra!');
-            material = new THREE.MeshBasicMaterial({ map: texture , color: 0xffffff });
-            //surfaceMesh.material.color = 0xffffff;
+            material = new THREE.MeshPhongMaterial({
+                map: texture, // Asegúrate de que aquí cargas la textura correctamente
+                side: THREE.DoubleSide, // Renderiza ambas caras del objeto
+            });
+            
             scene.fog = null;
             break;
         case 'wireframe':

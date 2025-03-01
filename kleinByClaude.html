@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Klein Bottle Visualization</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #000;
+            font-family: Arial, sans-serif;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        Klein Bottle Implicit Surface Visualization
+    </div>
+
+    <script async src="https://unpkg.com/three@0.137.5/build/three.min.js"></script>
+    <script async src="https://unpkg.com/three@0.137.5/examples/js/controls/OrbitControls.js"></script>
+    <script async src="https://unpkg.com/three@0.137.5/examples/js/objects/MarchingCubes.js"></script>
+
+    <script>
+        class KleinBottleRenderer {
+            constructor() {
+                this.initScene();
+                this.setupLights();
+                this.createKleinBottle();
+                this.setupCamera();
+                this.animate();
+            }
+
+            initScene() {
+                // Scene setup
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x101020);
+
+                // Renderer
+                this.renderer = new THREE.WebGLRenderer({ 
+                    antialias: true, 
+                    alpha: true 
+                });
+                this.renderer.setPixelRatio(window.devicePixelRatio);
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(this.renderer.domElement);
+
+                // Responsive handling
+                window.addEventListener('resize', this.onWindowResize.bind(this), false);
+            }
+
+            setupLights() {
+                // Ambient light
+                const ambientLight = new THREE.AmbientLight(0x404040);
+                this.scene.add(ambientLight);
+
+                // Directional lights
+                const lights = [
+                    [0xffffff, 1, [0, 200, 0]],
+                    [0x11E8BB, 1, [100, 200, 100]],
+                    [0x8200C9, 1, [-100, -200, -100]]
+                ];
+
+                lights.forEach(light => {
+                    const [color, intensity, position] = light;
+                    const dirLight = new THREE.DirectionalLight(color, intensity);
+                    dirLight.position.set(...position);
+                    this.scene.add(dirLight);
+                });
+            }
+
+            setupCamera() {
+                // Camera setup
+                this.camera = new THREE.PerspectiveCamera(
+                    75, 
+                    window.innerWidth / window.innerHeight, 
+                    0.1, 
+                    1000
+                );
+                this.camera.position.z = 5;
+
+                // Orbit controls
+                this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+                this.controls.enableDamping = true;
+                this.controls.dampingFactor = 0.05;
+            }
+
+            kleinBottleFunction(x, y, z) {
+                const a = 2;
+                const r = 1;
+
+                const u = x * Math.PI * 2;
+                const v = y * Math.PI * 2;
+
+                const xu = (a + r * Math.cos(v)) * Math.cos(u);
+                const yu = (a + r * Math.cos(v)) * Math.sin(u);
+                const zu = r * Math.sin(v) * Math.cos(u/2);
+
+                return Math.sqrt(
+                    Math.pow(xu - x * 4, 2) +
+                    Math.pow(yu - y * 4, 2) +
+                    Math.pow(zu - z * 4, 2)
+                ) - 0.2;
+            }
+
+            createKleinBottle() {
+                const resolution = 50;
+                const material = new THREE.MeshPhongMaterial({
+                    color: 0x3366ff,
+                    specular: 0x111111,
+                    shininess: 50,
+                    transparent: true,
+                    opacity: 0.8
+                });
+
+                this.effect = new THREE.MarchingCubes(resolution, material);
+                this.effect.field.set(resolution, resolution, resolution);
+                
+                // Custom field generation
+                for (let k = 0; k < resolution; k++) {
+                    for (let j = 0; j < resolution; j++) {
+                        for (let i = 0; i < resolution; i++) {
+                            const x = i / resolution;
+                            const y = j / resolution;
+                            const z = k / resolution;
+                            this.effect.field.setField(i, j, k, this.kleinBottleFunction(x, y, z));
+                        }
+                    }
+                }
+
+                this.effect.update();
+                this.scene.add(this.effect);
+            }
+
+            onWindowResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            animate() {
+                requestAnimationFrame(this.animate.bind(this));
+                
+                // Optional rotation
+                if (this.effect) {
+                    this.effect.rotation.y += 0.005;
+                }
+
+                this.controls.update();
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            new KleinBottleRenderer();
+        });
+    </script>
+</body>
+</html>

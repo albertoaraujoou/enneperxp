@@ -81,6 +81,26 @@ export function init() {
     // Add the mesh to the scene
     scene.add(surfaceMesh);
 
+
+    // Iluminación
+    const light1 = new THREE.PointLight(0xffffff, 1);
+    light1.position.set(5, 5, 5);
+    scene.add(light1);
+
+
+    const light2 = new THREE.AmbientLight(0x404040, 2); // Luz ambiental
+    scene.add(light2);
+
+    const light3 = new THREE.DirectionalLight(0xffffff, 0.5);
+    light3.position.set(-5, 5, 5);
+    scene.add(light3);
+
+
+
+
+
+
+
     // Modificar el estilo CSS para ocultar las barras de desplazamiento
     document.body.style.margin = '0';
     document.body.style.overflow = 'hidden';
@@ -946,8 +966,21 @@ export function changeMaterial() {
             break;
 
         case 'basicoazul':
-            material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });// Lambert
-            scene.fog = new THREE.Fog(0x000090, 2.2, 5); // Restaurar la niebla
+            
+
+            // Material con iluminación
+            material = new THREE.MeshStandardMaterial({ 
+                color: 0x71797E,
+                //color: 0x0077ff, 
+                metalness: 0.5, 
+                roughness: 0.3, 
+                side: THREE.DoubleSide 
+            });
+  
+  
+        
+//            material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });// Lambert
+            scene.fog = new THREE.Fog(0x71797E, 2.2, 5); // Restaurar la niebla
     
             // material.color = 0x0000ff;
             break;

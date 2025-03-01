@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Armonicos esfericos en Three.js</title>
     <!-- Incluimos Three.js -->
+    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/build/three.module.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three/examples/js/exporters/STLExporter.js"></script>
 </head>
 
@@ -101,8 +104,19 @@
             */ 
             vec.set(x, y, z); // Usamos vec para asignar los valores de x, y, z
         }, 450, 450); // Ampliamos el rango de los parámetros q y f
-    
-        const material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
+       // surfaceGeometry.computeVertexNormals();
+
+//        const material = new THREE.MeshBasicMaterial({ color: 0x0000ff, wireframe: true });
+
+   // Material con iluminación
+   const material = new THREE.MeshStandardMaterial({ 
+      color: 0x0077ff, 
+      metalness: 0.5, 
+      roughness: 0.3, 
+      side: THREE.DoubleSide 
+    });
+
+
         const surface = new THREE.Mesh(surfaceGeometry, material);
         scene.add(surface);
     

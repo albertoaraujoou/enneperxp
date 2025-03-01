@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="textoEnneperFX">
-    <a href="mailto:albertoaraujoou@gmail.com?subject=Lovers" id="textoEnneperFX"> Lovers   © arauxodev</a>
+    <a href="mailto:albertoaraujoou@gmail.com?subject=Lovers" id="textoEnneperFX"> Lovers   © arauxodev 2025</a>
   </div>
 
   <div class="divAbsolute">
@@ -45,7 +45,7 @@
     function generateSurfacePoints(numPoints) {
       var points = [];
       for (var i = 0; i < numPoints; i++) {
-        var x = (Math.random() - 0.5) * 6 + 2;
+        var x = (Math.random() - 0.5) * 6+2;
         var y = (Math.random() - 0.5) * 6;
         var z = (Math.random() - 0.5) * 6;
         if (isOnSurface(x, y, z)) {
@@ -55,7 +55,7 @@
       return points;
     }
 
-    var points = generateSurfacePoints(150000);
+    var points = generateSurfacePoints(160000);
 
     // Crear la malla de puntos y agregarla a la escena
     var geometry = new THREE.BufferGeometry().setFromPoints(points);

@@ -297,7 +297,7 @@ export function changeMaterial() {
     // Choose material based on selection
     switch (selectedMaterial) {
         case 'basico':
-            material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            material = new THREE.MeshBasicMaterial({ color: 0xffffff,  side: THREE.DoubleSide,});
             scene.fog = new THREE.Fog(0x000090, 2.2, 5); // Restaurar la niebla
     
             break;

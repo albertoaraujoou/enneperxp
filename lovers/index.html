@@ -45,9 +45,9 @@
     function generateSurfacePoints(numPoints) {
       var points = [];
       for (var i = 0; i < numPoints; i++) {
-        var x = (Math.random() - 0.5) * 2;
-        var y = (Math.random() - 0.5) * 2;
-        var z = (Math.random() - 0.5) * 2;
+        var x = (Math.random() - 0.5) * 6 + 2;
+        var y = (Math.random() - 0.5) * 6;
+        var z = (Math.random() - 0.5) * 6;
         if (isOnSurface(x, y, z)) {
           points.push(new THREE.Vector3(x, y, z));
         }

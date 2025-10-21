@@ -133,13 +133,13 @@ resultado final en un solo bloque de codigo en un archivo html
 
             // Export the mesh to STL
     function exportSTL() {
-      alert('hola');
+      alert('...i tens ja la matessa enhorabona');
       const exporter = new THREE.STLExporter();
       const stlString = exporter.parse(mesh);
       const blob = new Blob([stlString], { type: 'text/plain' });
       const link = document.createElement('a');
       link.style.display = 'none';
-      alert('hola2');
+      // alert('hola2');
       document.body.appendChild(link);
       link.href = URL.createObjectURL(blob);
       link.download = 'lamatessa.stl';

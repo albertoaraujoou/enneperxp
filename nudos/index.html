@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trefoil, Hopf, Borromeo & más • Three.js</title>
+  <style>
+    html, body { height: 100%; margin: 0; background: #0b0e13; color: #e6e6e6; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif; }
+    #app { position: fixed; inset: 0; }
+    .hud { position: fixed; left: 16px; top: 16px; background: rgba(17,20,26,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 14px; font-size: 14px; }
+    .row { display:flex; gap:12px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+    .hud label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    .hud input[type="range"]{ width: 160px; }
+    .status { margin-top: 6px; opacity: .8; font-size: 12px; }
+    select { background: #131722; color: #e6e6e6; border: 1px solid #2a3244; border-radius: 8px; padding: 4px 8px; }
+  </style>
+  <!-- Three.js (UMD) -->
+  <script src="Three.js"></script>
+  <script src="three.min.js"></script>
+  <!-- OrbitControls (UMD for examples/js) -->
+  <script src="orbitcontrols.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <div class="hud">
+    <div><strong>Visualizador de nudos</strong></div>
+    <div class="row">
+      <label>Figura
+        <select id="shape">
+          <option value="trefoil">Trébol (2,3)</option>
+          <option value="figure8">Nudo de lazo (8)</option>
+          <option value="cinquefoil">Cincohojas (2,5)</option>
+          <option value="hopf">Enlace de Hopf</option>
+          <option value="borromean" selected>Anillos de Borromeo*</option>
+        </select>
+      </label>
+      <label>Tubo <input id="tube" type="range" min="0.04" max="0.6" value="0.2" step="0.01"></label>
+      <label>Segm. <input id="seg" type="range" min="64" max="1024" value="256" step="32"></label>
+      <label>Wireframe <input id="wire" type="checkbox"></label>
+    </div>
+    <div class="status" id="status">Cargando…</div>
+    <div class="status">* Nota: Borromeo no puede hacerse con 3 circunferencias perfectas; usamos aros suavemente deformados.</div>
+  </div>
+
+  <script>
+    window.onload = function() {
+      const statusEl = document.getElementById('status');
+      console.assert(typeof THREE !== 'undefined', 'TEST: THREE debe estar definido');
+      if (typeof THREE === 'undefined') { statusEl.textContent = 'Error: Three.js no se cargó.'; return; }
+
+      const app = document.getElementById('app');
+
+      // --- Escena, cámara y render ---
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0b0e13);
+
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(3.6, 2.2, 3.6);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      const gl = renderer.getContext();
+      console.assert(!!gl, 'TEST: WebGL context debe existir');
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
+      if (THREE.ACESFilmicToneMapping) renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      app.appendChild(renderer.domElement);
+
+      // Controles
+      let controls = null;
+      if (THREE.OrbitControls) {
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.enablePan = true;
+        controls.enableZoom = true;
+        // Mapeo clásico: IZQ = rotar, CENTRO = zoom, DER = desplazar
+        controls.mouseButtons = {
+          LEFT: THREE.MOUSE.ROTATE,
+          MIDDLE: THREE.MOUSE.DOLLY,
+          RIGHT: THREE.MOUSE.PAN
+        };
+      } else {
+        // Fallback simple si no hay OrbitControls
+        let isDragging = false, lastX = 0, lastY = 0, isRight = false;
+        renderer.domElement.addEventListener('pointerdown', (e)=>{ isDragging = true; isRight = e.button===2; lastX = e.clientX; lastY = e.clientY; });
+        window.addEventListener('pointerup', ()=>{ isDragging = false; });
+        window.addEventListener('pointermove', (e)=>{
+          if (!isDragging) return;
+          const dx = (e.clientX - lastX) / window.innerWidth;
+          const dy = (e.clientY - lastY) / window.innerHeight;
+          if (isRight) { // PAN
+            const pan = new THREE.Vector3(-dx*2, dy*2, 0);
+            camera.position.add(pan);
+          } else { // ROTATE around origin
+            camera.position.applyAxisAngle(new THREE.Vector3(0,1,0), -dx * Math.PI);
+            camera.position.applyAxisAngle(new THREE.Vector3(1,0,0), -dy * Math.PI);
+            camera.lookAt(0,0,0);
+          }
+          lastX = e.clientX; lastY = e.clientY;
+        });
+      }
+      // Permitir botón derecho para pan sin menú contextual
+      renderer.domElement.addEventListener('contextmenu', (e)=> e.preventDefault());
+
+      // Luces
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x202030, 1.0));
+      const dir = new THREE.DirectionalLight(0xffffff, 1.2); dir.position.set(5,5,4); dir.castShadow = true; scene.add(dir);
+
+      // Suelo
+      const ground = new THREE.Mesh(new THREE.CircleGeometry(8, 64), new THREE.MeshStandardMaterial({ color: 0x10151f, metalness: 0.1, roughness: 0.9 }));
+      ground.rotation.x = -Math.PI/2; ground.position.y = -0.9; ground.receiveShadow = true; scene.add(ground);
+
+      // Parámetros y UI
+      const tubeInput = document.getElementById('tube');
+      const segInput  = document.getElementById('seg');
+      const wireInput = document.getElementById('wire');
+      const shapeSelect = document.getElementById('shape');
+
+      const params = {
+        tube: parseFloat(tubeInput.value),
+        tubularSegments: parseInt(segInput.value, 10),
+        radialSegments: 24
+      };
+
+      const palette = [0x8fd3ff, 0xffa7c4, 0x9fe8a8, 0xffd58a, 0xbfa8ff, 0xff9f86];
+      function mat(i){ return new THREE.MeshStandardMaterial({ color: palette[i % palette.length], metalness: 0.65, roughness: 0.25, wireframe: wireInput.checked }); }
+
+      class CircleCurve3 extends THREE.Curve {
+        constructor(center, radius, normal){ super(); this.center = center.clone(); this.radius = radius; this.normal = normal.clone().normalize();
+          const arbitrary = Math.abs(this.normal.y) < 0.9 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0);
+          this.u = new THREE.Vector3().crossVectors(this.normal, arbitrary).normalize();
+          this.v = new THREE.Vector3().crossVectors(this.normal, this.u).normalize();
+        }
+        getPoint(t){ const a = t * Math.PI * 2; return new THREE.Vector3().copy(this.center).addScaledVector(this.u, Math.cos(a) * this.radius).addScaledVector(this.v, Math.sin(a) * this.radius); }
+      }
+
+      class SuperEllipseCurve3 extends THREE.Curve {
+        constructor(center, rx, ry, n, normal){ super(); this.center = center.clone(); this.rx = rx; this.ry = ry; this.n = n; this.normal = normal.clone().normalize();
+          const arbitrary = Math.abs(this.normal.y) < 0.9 ? new THREE.Vector3(0,1,0) : new THREE.Vector3(1,0,0);
+          this.u = new THREE.Vector3().crossVectors(this.normal, arbitrary).normalize();
+          this.v = new THREE.Vector3().crossVectors(this.normal, this.u).normalize();
+        }
+        getPoint(t){ const a = t * Math.PI * 2; const c = Math.cos(a), s = Math.sin(a); const m = 2/this.n; const x = Math.sign(c)*Math.pow(Math.abs(c), m) * this.rx; const y = Math.sign(s)*Math.pow(Math.abs(s), m) * this.ry; return new THREE.Vector3().copy(this.center).addScaledVector(this.u, x).addScaledVector(this.v, y); }
+      }
+
+      function createTrefoil(){
+        const geo = new THREE.TorusKnotGeometry(1, params.tube, params.tubularSegments, params.radialSegments, 2, 3);
+        const mesh = new THREE.Mesh(geo, mat(0)); mesh.castShadow = true; return mesh;
+      }
+      function createCinquefoil(){
+        const geo = new THREE.TorusKnotGeometry(1, params.tube, params.tubularSegments, params.radialSegments, 2, 5);
+        const mesh = new THREE.Mesh(geo, mat(1)); mesh.castShadow = true; return mesh;
+      }
+      function createFigureEight(){
+        class Fig8Curve extends THREE.Curve { getPoint(t){ const a = t * Math.PI * 2; const x = (2 + Math.cos(2*a)) * Math.cos(3*a); const y = (2 + Math.cos(2*a)) * Math.sin(3*a); const z = Math.sin(4*a); return new THREE.Vector3(x, z, y).multiplyScalar(0.25); } }
+        const curve = new Fig8Curve();
+        const geo = new THREE.TubeGeometry(curve, params.tubularSegments, params.tube, params.radialSegments, true);
+        const mesh = new THREE.Mesh(geo, mat(2)); mesh.castShadow = true; return mesh;
+      }
+      function createHopf(){
+        const g = new THREE.Group();
+        const R = 1.0, d = 0.75;
+        const circleA = new CircleCurve3(new THREE.Vector3(0,0,0), R, new THREE.Vector3(0,0,1));
+        const circleB = new CircleCurve3(new THREE.Vector3(0, d, 0), R, new THREE.Vector3(0,1,0));
+        const meshA = new THREE.Mesh(new THREE.TubeGeometry(circleA, params.tubularSegments, params.tube, params.radialSegments, true), mat(3));
+        const meshB = new THREE.Mesh(new THREE.TubeGeometry(circleB, params.tubularSegments, params.tube, params.radialSegments, true), mat(4));
+        meshA.castShadow = true; meshB.castShadow = true; g.add(meshA, meshB);
+        return g;
+      }
+      function createBorromean(){
+        const g = new THREE.Group();
+        const R = 1.1, rx = R, ry = R*0.75, n = 3.2, offset = 0.9;
+        const c1 = new SuperEllipseCurve3(new THREE.Vector3(0, 0, 0), rx, ry, n, new THREE.Vector3(0,0,1));
+        const c2 = new SuperEllipseCurve3(new THREE.Vector3(0, offset, 0), rx, ry, n, new THREE.Vector3(0,1,0));
+        const c3 = new SuperEllipseCurve3(new THREE.Vector3(offset, 0, 0), rx, ry, n, new THREE.Vector3(1,0,0));
+        const m1 = new THREE.Mesh(new THREE.TubeGeometry(c1, params.tubularSegments, params.tube, params.radialSegments, true), mat(0));
+        const m2 = new THREE.Mesh(new THREE.TubeGeometry(c2, params.tubularSegments, params.tube, params.radialSegments, true), mat(1));
+        const m3 = new THREE.Mesh(new THREE.TubeGeometry(c3, params.tubularSegments, params.tube, params.radialSegments, true), mat(5));
+        m1.castShadow = m2.castShadow = m3.castShadow = true; g.add(m1, m2, m3);
+        return g;
+      }
+
+      let currentObj = null;
+      function setObject(obj){
+        if (currentObj){ currentObj.traverse(o=>{ if (o.geometry) o.geometry.dispose(); if (o.material && o.material.dispose) o.material.dispose(); }); scene.remove(currentObj); }
+        currentObj = obj; scene.add(currentObj);
+      }
+
+      function centerAndFrame(obj){
+        // Centrar el objeto en el origen y ajustar cámara/controles para que quede en pantalla
+        const box = new THREE.Box3().setFromObject(obj);
+        const size = new THREE.Vector3(); box.getSize(size);
+        const center = new THREE.Vector3(); box.getCenter(center);
+        obj.position.sub(center); // centra en (0,0,0)
+
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        let dist = (maxDim/2) / Math.tan(fov/2);
+        dist *= 1.4; // margen
+        camera.near = Math.max(0.001, dist/100);
+        camera.far = dist*100;
+        camera.updateProjectionMatrix();
+        camera.position.set(dist, dist*0.6, dist);
+        if (controls){
+          controls.target.set(0,0,0);
+          controls.update();
+        } else {
+          camera.lookAt(0,0,0);
+        }
+      }
+
+      function rebuild(){
+        params.tube = parseFloat(tubeInput.value);
+        params.tubularSegments = parseInt(segInput.value, 10);
+        const val = shapeSelect.value;
+        switch(val){
+          case 'trefoil': setObject(createTrefoil()); break;
+          case 'cinquefoil': setObject(createCinquefoil()); break;
+          case 'figure8': setObject(createFigureEight()); break;
+          case 'hopf': setObject(createHopf()); break;
+          case 'borromean': default: setObject(createBorromean()); break;
+        }
+        centerAndFrame(currentObj);
+      }
+
+      tubeInput.addEventListener('input', rebuild);
+      segInput.addEventListener('input', rebuild);
+      shapeSelect.addEventListener('change', rebuild);
+      wireInput.addEventListener('change', ()=>{
+        if (!currentObj) return;
+        currentObj.traverse(o=>{ if (o.material) o.material.wireframe = wireInput.checked; });
+      });
+
+      // Inicial
+      rebuild();
+
+      const clock = new THREE.Clock();
+      function animate(){
+        const t = clock.getElapsedTime();
+        if (currentObj) { currentObj.rotation.y = t * 0.25; currentObj.rotation.x = Math.sin(t * 0.15) * 0.1; }
+        controls && controls.update?.();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        if (currentObj) centerAndFrame(currentObj);
+      });
+
+      statusEl.textContent = 'OK';
+
+      setTimeout(()=>{
+        console.assert(scene.children.some(o=>o.type==='Group'||o.type==='Mesh'), 'TEST: escena contiene malla(s)');
+        if (currentObj){
+          let verts = 0; currentObj.traverse(o=>{ if (o.geometry && o.geometry.attributes && o.geometry.attributes.position) verts += o.geometry.attributes.position.count; });
+          console.assert(verts > 1000, 'TEST: geometría razonable (>1000 vértices). Actual: '+verts);
+        }
+      }, 200);
+    };
+  </script>
+</body>
+</html>
+

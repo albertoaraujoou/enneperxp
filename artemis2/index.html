@@ -1,1 +1,1138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artemis II - Simulación mejorada Tierra-Luna</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #fff;
+    }
 
+    #hud {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 20;
+      width: 370px;
+      max-width: calc(100vw - 24px);
+      background: rgba(0, 0, 0, 0.62);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 14px 14px 12px 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+    }
+
+    #hud h1 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    #hud .sub {
+      color: #cfcfcf;
+      font-size: 13px;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+
+    .row {
+      margin-bottom: 10px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: #c9d3df;
+      margin-bottom: 4px;
+    }
+
+    .value {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    #phaseBox {
+      background: rgba(255, 186, 80, 0.12);
+      border: 1px solid rgba(255, 186, 80, 0.28);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    #phaseTitle {
+      font-weight: bold;
+      color: #ffd37f;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    #phaseDesc {
+      font-size: 13px;
+      color: #e8e8e8;
+      line-height: 1.35;
+    }
+
+    #controls {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      z-index: 20;
+      background: rgba(0,0,0,0.60);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 12px 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.30);
+      backdrop-filter: blur(4px);
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr 1fr;
+      gap: 10px;
+      align-items: end;
+    }
+
+    @media (max-width: 980px) {
+      .controls-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .ctrl {
+      min-width: 0;
+    }
+
+    .ctrl label {
+      display: block;
+      font-size: 12px;
+      color: #c9d3df;
+      margin-bottom: 4px;
+    }
+
+    .ctrl input[type="range"] {
+      width: 100%;
+    }
+
+    button, select {
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 10px;
+      background: #1f6feb;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover, select:hover {
+      background: #3384ff;
+    }
+
+    select {
+      appearance: none;
+      background: #1f6feb;
+    }
+
+    #timeline {
+      margin-top: 10px;
+      max-height: 190px;
+      overflow: auto;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      padding-top: 10px;
+    }
+
+    .eventItem {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+    }
+
+    .eventTime {
+      color: #9ec4ff;
+      font-weight: bold;
+    }
+
+    .eventText {
+      color: #e6e6e6;
+    }
+
+    .eventItem.active .eventTime,
+    .eventItem.active .eventText {
+      color: #ffd37f;
+    }
+
+    #legend {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #bfc8d2;
+      line-height: 1.35;
+    }
+
+    #loading {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 25;
+      background: rgba(0,0,0,0.62);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #dfe8f2;
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">
+    <h1>Artemis II · Tierra → Luna → regreso</h1>
+    <div class="sub">
+      Simulación didáctica en Three.js inspirada en un perfil <b>free-return</b>:
+      órbita terrestre, inyección translunar, aproximación y sobrevuelo lunar, y retorno.
+    </div>
+
+    <div class="row">
+      <div class="label">Tiempo de misión</div>
+      <div class="value" id="missionClock">T+00:00:00</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Distancia nave → Tierra</div>
+      <div class="value" id="distEarth">0 km</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Distancia nave → Luna</div>
+      <div class="value" id="distMoon">0 km</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Velocidad visual</div>
+      <div class="value" id="speedReadout">1.00×</div>
+    </div>
+
+    <div id="phaseBox">
+      <div id="phaseTitle">Fase actual</div>
+      <div id="phaseDesc">Preparando simulación…</div>
+    </div>
+
+    <div id="timeline"></div>
+
+    <div id="legend">
+      Escala visual no real. El objetivo es mostrar la <b>geometría del cambio de órbita Tierra-Luna</b> y el carácter de una trayectoria de retorno libre, no reproducir efemérides exactas de NASA.
+    </div>
+  </div>
+
+  <div id="loading">Cargando texturas…</div>
+
+  <div id="controls">
+    <div class="controls-grid">
+      <div class="ctrl">
+        <label for="timeSlider">Progreso de misión</label>
+        <input id="timeSlider" type="range" min="0" max="1" step="0.0001" value="0">
+      </div>
+
+      <div class="ctrl">
+        <label for="speedSlider">Velocidad</label>
+        <input id="speedSlider" type="range" min="0.05" max="3" step="0.01" value="1.00">
+      </div>
+
+      <div class="ctrl">
+        <label>&nbsp;</label>
+        <button id="playBtn">Pausa</button>
+      </div>
+
+      <div class="ctrl">
+        <label>&nbsp;</label>
+        <button id="resetBtn">Reiniciar</button>
+      </div>
+
+      <div class="ctrl">
+        <label for="cameraSelect">Cámara</label>
+        <select id="cameraSelect">
+          <option value="free">Libre</option>
+          <option value="ship">Nave</option>
+          <option value="earth">Tierra</option>
+          <option value="moon">Luna</option>
+        </select>
+      </div>
+
+      <div class="ctrl">
+        <label>&nbsp;</label>
+        <button id="trailBtn">Ocultar rastro</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // ------------------------------------------------------------
+    // Configuración general
+    // ------------------------------------------------------------
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+
+    const camera = new THREE.PerspectiveCamera(
+      52,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      6000
+    );
+    camera.position.set(0, 110, 210);
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      powerPreference: "high-performance"
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 20;
+    controls.maxDistance = 1000;
+    controls.target.set(0, 0, 0);
+
+    const ambient = new THREE.AmbientLight(0x8899aa, 0.85);
+    scene.add(ambient);
+
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    sunLight.position.set(260, 120, 100);
+    scene.add(sunLight);
+
+    const fillLight = new THREE.PointLight(0x8899ff, 0.6, 0, 2);
+    fillLight.position.set(-180, -40, -140);
+    scene.add(fillLight);
+
+    // ------------------------------------------------------------
+    // Utilidades
+    // ------------------------------------------------------------
+    function lerpVec(a, b, t) {
+      return new THREE.Vector3().copy(a).lerp(b, t);
+    }
+
+    function quadraticBezier(p0, p1, p2, t) {
+      const a = lerpVec(p0, p1, t);
+      const b = lerpVec(p1, p2, t);
+      return lerpVec(a, b, t);
+    }
+
+    function cubicBezier(p0, p1, p2, p3, t) {
+      const a = quadraticBezier(p0, p1, p2, t);
+      const b = quadraticBezier(p1, p2, p3, t);
+      return lerpVec(a, b, t);
+    }
+
+    function formatKm(km) {
+      return Math.round(km).toLocaleString("es-ES") + " km";
+    }
+
+    function formatMissionTime(hoursTotal) {
+      const totalSeconds = Math.round(hoursTotal * 3600);
+      const days = Math.floor(totalSeconds / 86400);
+      const remDay = totalSeconds % 86400;
+      const h = Math.floor(remDay / 3600);
+      const remHour = remDay % 3600;
+      const m = Math.floor(remHour / 60);
+      const s = remHour % 60;
+
+      if (days > 0) {
+        return `T+${String(days).padStart(2, "0")}d ${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+      }
+      return `T+${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function makeLabel(text, color = "#ffffff", bg = "rgba(0,0,0,0.65)", border = "rgba(255,255,255,0.20)") {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 128;
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = bg;
+      roundRect(ctx, 8, 8, 496, 112, 18);
+      ctx.fill();
+
+      ctx.strokeStyle = border;
+      ctx.lineWidth = 3;
+      roundRect(ctx, 8, 8, 496, 112, 18);
+      ctx.stroke();
+
+      ctx.fillStyle = color;
+      ctx.font = "bold 42px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, 256, 64);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.minFilter = THREE.LinearFilter;
+
+      const mat = new THREE.SpriteMaterial({
+        map: tex,
+        transparent: true,
+        depthWrite: false
+      });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(26, 6.5, 1);
+      return sprite;
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function createStarfield(count = 5000, spread = 2600) {
+      const geo = new THREE.BufferGeometry();
+      const arr = new Float32Array(count * 3);
+
+      for (let i = 0; i < count; i++) {
+        const r = spread * (0.25 + Math.random() * 0.75);
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+
+        arr[i * 3 + 0] = r * Math.sin(phi) * Math.cos(theta);
+        arr[i * 3 + 1] = r * Math.cos(phi);
+        arr[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+      }
+
+      geo.setAttribute("position", new THREE.BufferAttribute(arr, 3));
+      const mat = new THREE.PointsMaterial({
+        size: 1.5,
+        sizeAttenuation: true,
+        color: 0xffffff
+      });
+
+      return new THREE.Points(geo, mat);
+    }
+
+    scene.add(createStarfield());
+
+    // ------------------------------------------------------------
+    // Escala visual
+    // ------------------------------------------------------------
+    const earthRadius = 12;
+    const moonRadius = 3.25;
+    const moonDistance = 118;
+
+    // Aproximación: 1 unidad visual ~ 3,250 km
+    const KM_PER_UNIT = 3250;
+
+    // ------------------------------------------------------------
+    // Tierra, atmósfera, nubes, Luna
+    // ------------------------------------------------------------
+    const earthGroup = new THREE.Group();
+    scene.add(earthGroup);
+
+    const moonPivot = new THREE.Group();
+    scene.add(moonPivot);
+
+    const textureLoader = new THREE.TextureLoader();
+    let texturesPending = 0;
+    const loadingEl = document.getElementById("loading");
+
+    function loadTexture(url, onLoad) {
+      texturesPending++;
+      loadingEl.style.display = "block";
+
+      textureLoader.load(
+        url,
+        function(tex) {
+          tex.encoding = THREE.sRGBEncoding;
+          tex.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+          texturesPending--;
+          if (texturesPending <= 0) loadingEl.style.display = "none";
+          onLoad(tex);
+        },
+        undefined,
+        function() {
+          texturesPending--;
+          if (texturesPending <= 0) loadingEl.style.display = "none";
+          onLoad(null);
+        }
+      );
+    }
+
+    const earthMat = new THREE.MeshPhongMaterial({
+      color: 0x2b6cff,
+      emissive: 0x061427,
+      shininess: 18
+    });
+
+    const earth = new THREE.Mesh(
+      new THREE.SphereGeometry(earthRadius, 72, 72),
+      earthMat
+    );
+    earthGroup.add(earth);
+
+    const nightGlow = new THREE.Mesh(
+      new THREE.SphereGeometry(earthRadius * 1.01, 64, 64),
+      new THREE.MeshBasicMaterial({
+        color: 0x112244,
+        transparent: true,
+        opacity: 0.12
+      })
+    );
+    earthGroup.add(nightGlow);
+
+    const clouds = new THREE.Mesh(
+      new THREE.SphereGeometry(earthRadius * 1.018, 64, 64),
+      new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.18,
+        depthWrite: false
+      })
+    );
+    earthGroup.add(clouds);
+
+    const atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(earthRadius * 1.09, 64, 64),
+      new THREE.MeshBasicMaterial({
+        color: 0x66bbff,
+        transparent: true,
+        opacity: 0.08,
+        side: THREE.BackSide
+      })
+    );
+    earthGroup.add(atmosphere);
+
+    const moonMat = new THREE.MeshPhongMaterial({
+      color: 0xbababa,
+      emissive: 0x111111,
+      shininess: 5
+    });
+
+    const moon = new THREE.Mesh(
+      new THREE.SphereGeometry(moonRadius, 48, 48),
+      moonMat
+    );
+    moon.position.set(moonDistance, 0, 0);
+    moonPivot.add(moon);
+
+    loadTexture("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg", tex => {
+      if (tex) earthMat.map = tex;
+      earthMat.needsUpdate = true;
+    });
+
+    loadTexture("https://threejs.org/examples/textures/planets/earth_specular_2048.jpg", tex => {
+      if (tex) {
+        earthMat.specularMap = tex;
+        earthMat.specular = new THREE.Color(0x555555);
+      }
+      earthMat.needsUpdate = true;
+    });
+
+    loadTexture("https://threejs.org/examples/textures/planets/earth_clouds_1024.png", tex => {
+      if (tex) clouds.material.map = tex;
+      clouds.material.needsUpdate = true;
+    });
+
+    loadTexture("https://threejs.org/examples/textures/planets/moon_1024.jpg", tex => {
+      if (tex) moonMat.map = tex;
+      moonMat.needsUpdate = true;
+    });
+
+    // ------------------------------------------------------------
+    // Órbitas visuales
+    // ------------------------------------------------------------
+    function makeCircleLine(radius, color, segments = 256) {
+      const pts = [];
+      for (let i = 0; i < segments; i++) {
+        const a = (i / segments) * Math.PI * 2;
+        pts.push(new THREE.Vector3(Math.cos(a) * radius, 0, Math.sin(a) * radius));
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.75 });
+      return new THREE.LineLoop(geo, mat);
+    }
+
+    const moonOrbit = makeCircleLine(moonDistance, 0x444444, 320);
+    scene.add(moonOrbit);
+
+    const leoOrbitRadius = earthRadius + 8;
+    const leoOrbit = makeCircleLine(leoOrbitRadius, 0x3b82ff, 220);
+    scene.add(leoOrbit);
+
+    // ------------------------------------------------------------
+    // Nave Orion simplificada
+    // ------------------------------------------------------------
+    const ship = new THREE.Group();
+    scene.add(ship);
+
+    const crewModule = new THREE.Mesh(
+      new THREE.ConeGeometry(1.15, 4.1, 22),
+      new THREE.MeshPhongMaterial({
+        color: 0xf0f0f0,
+        shininess: 90
+      })
+    );
+    crewModule.rotation.z = -Math.PI / 2;
+    ship.add(crewModule);
+
+    const serviceModule = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.72, 0.72, 3.1, 20),
+      new THREE.MeshPhongMaterial({
+        color: 0xb9892d,
+        shininess: 40
+      })
+    );
+    serviceModule.rotation.z = -Math.PI / 2;
+    serviceModule.position.x = -2.4;
+    ship.add(serviceModule);
+
+    const nozzle = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.38, 0.55, 0.9, 16),
+      new THREE.MeshPhongMaterial({
+        color: 0x777777
+      })
+    );
+    nozzle.rotation.z = -Math.PI / 2;
+    nozzle.position.x = -4.25;
+    ship.add(nozzle);
+
+    const panelGeo = new THREE.BoxGeometry(4.4, 0.08, 1.3);
+    const panelMat = new THREE.MeshPhongMaterial({
+      color: 0x2f67b7,
+      shininess: 18
+    });
+
+    const panel1 = new THREE.Mesh(panelGeo, panelMat);
+    panel1.position.set(-2.5, 1.65, 0);
+    ship.add(panel1);
+
+    const panel2 = new THREE.Mesh(panelGeo, panelMat);
+    panel2.position.set(-2.5, -1.65, 0);
+    ship.add(panel2);
+
+    const engineGlow = new THREE.PointLight(0xffaa55, 0.9, 14, 2);
+    engineGlow.position.set(-4.7, 0, 0);
+    ship.add(engineGlow);
+
+    const engineFlame = new THREE.Mesh(
+      new THREE.ConeGeometry(0.45, 2.1, 16),
+      new THREE.MeshBasicMaterial({
+        color: 0xffaa55,
+        transparent: true,
+        opacity: 0.0
+      })
+    );
+    engineFlame.rotation.z = Math.PI / 2;
+    engineFlame.position.set(-5.5, 0, 0);
+    ship.add(engineFlame);
+
+    // ------------------------------------------------------------
+    // Trayectoria tipo free-return
+    // ------------------------------------------------------------
+    // Segmentos:
+    // 0.00 - 0.14  órbita terrestre
+    // 0.14 - 0.18  TLI (inyección)
+    // 0.18 - 0.58  trayecto translunar
+    // 0.58 - 0.76  arco free-return alrededor de la Luna
+    // 0.76 - 1.00  regreso a la Tierra
+    function getMissionPosition(t) {
+      if (t < 0.14) {
+        const u = t / 0.14;
+        const a = 0.55 + u * Math.PI * 2.05;
+        return new THREE.Vector3(
+          Math.cos(a) * leoOrbitRadius,
+          0,
+          Math.sin(a) * leoOrbitRadius
+        );
+      }
+
+      if (t < 0.18) {
+        const u = (t - 0.14) / 0.04;
+        const p0 = new THREE.Vector3(Math.cos(0.55) * leoOrbitRadius, 0, Math.sin(0.55) * leoOrbitRadius);
+        const p1 = new THREE.Vector3(27, 2.5, -2);
+        const p2 = new THREE.Vector3(42, 5, -7);
+        const p3 = new THREE.Vector3(54, 7, -10);
+        return cubicBezier(p0, p1, p2, p3, u);
+      }
+
+      if (t < 0.58) {
+        const u = (t - 0.18) / 0.40;
+        const p0 = new THREE.Vector3(54, 7, -10);
+        const p1 = new THREE.Vector3(84, 16, -22);
+        const p2 = new THREE.Vector3(104, 11, -17);
+        const p3 = new THREE.Vector3(moonDistance - 17, 3, -10);
+        return cubicBezier(p0, p1, p2, p3, u);
+      }
+
+      if (t < 0.76) {
+        const u = (t - 0.58) / 0.18;
+        // Arco que pasa por detrás de la Luna y regresa sin capturarse en órbita.
+        const angleStart = Math.PI * 1.12;
+        const angleEnd = -Math.PI * 0.20;
+        const angle = angleStart + (angleEnd - angleStart) * u;
+        const r = 17.5 + Math.sin(u * Math.PI) * 2.0;
+
+        const x = moon.position.x + Math.cos(angle) * r;
+        const y = Math.sin(u * Math.PI) * 5.5;
+        const z = moon.position.z + Math.sin(angle) * r - 2.0;
+        return new THREE.Vector3(x, y, z);
+      }
+
+      const u = (t - 0.76) / 0.24;
+      const p0 = new THREE.Vector3(moon.position.x + 17.0, 0.0, -8.0);
+      const p1 = new THREE.Vector3(96, 15, 30);
+      const p2 = new THREE.Vector3(36, -6, 16);
+      const p3 = new THREE.Vector3(earthRadius + 6, 0, 0);
+      return cubicBezier(p0, p1, p2, p3, u);
+    }
+
+    function getMissionTangent(t) {
+      const eps = 0.0007;
+      const t1 = Math.max(0, t - eps);
+      const t2 = Math.min(1, t + eps);
+      const p1 = getMissionPosition(t1);
+      const p2 = getMissionPosition(t2);
+      return p2.sub(p1).normalize();
+    }
+
+    function buildLineFromPath(samples, color, opacity = 1, width = 1) {
+      const pts = [];
+      for (let i = 0; i <= samples; i++) {
+        pts.push(getMissionPosition(i / samples));
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const mat = new THREE.LineBasicMaterial({
+        color,
+        transparent: opacity < 1,
+        opacity
+      });
+      return new THREE.Line(geo, mat);
+    }
+
+    const trajectoryLine = buildLineFromPath(1200, 0xffb347, 1);
+    scene.add(trajectoryLine);
+
+    // ------------------------------------------------------------
+    // Rastro dinámico
+    // ------------------------------------------------------------
+    let trailVisible = true;
+    const trailPoints = [];
+    const trailMaxPoints = 500;
+
+    const trailGeometry = new THREE.BufferGeometry();
+    const trailPositions = new Float32Array(trailMaxPoints * 3);
+    trailGeometry.setAttribute("position", new THREE.BufferAttribute(trailPositions, 3));
+    trailGeometry.setDrawRange(0, 0);
+
+    const trailMaterial = new THREE.LineBasicMaterial({
+      color: 0x66e0ff,
+      transparent: true,
+      opacity: 0.95
+    });
+
+    const trailLine = new THREE.Line(trailGeometry, trailMaterial);
+    scene.add(trailLine);
+
+    function resetTrail() {
+      trailPoints.length = 0;
+      trailGeometry.setDrawRange(0, 0);
+    }
+
+    function addTrailPoint(p) {
+      if (!trailVisible) return;
+      trailPoints.push(p.clone());
+      if (trailPoints.length > trailMaxPoints) trailPoints.shift();
+
+      for (let i = 0; i < trailPoints.length; i++) {
+        trailPositions[i * 3 + 0] = trailPoints[i].x;
+        trailPositions[i * 3 + 1] = trailPoints[i].y;
+        trailPositions[i * 3 + 2] = trailPoints[i].z;
+      }
+      trailGeometry.attributes.position.needsUpdate = true;
+      trailGeometry.setDrawRange(0, trailPoints.length);
+    }
+
+    // ------------------------------------------------------------
+    // Marcadores y etiquetas 3D
+    // ------------------------------------------------------------
+    function makeMarker(position, color = 0xffffff, r = 0.8) {
+      const m = new THREE.Mesh(
+        new THREE.SphereGeometry(r, 18, 18),
+        new THREE.MeshBasicMaterial({ color })
+      );
+      m.position.copy(position);
+      scene.add(m);
+      return m;
+    }
+
+    const keyPoints = [
+      {
+        t: 0.00,
+        label: "Inicio",
+        color: 0x66ccff,
+        desc: "Orion en órbita terrestre inicial."
+      },
+      {
+        t: 0.14,
+        label: "LEO",
+        color: 0x3b82ff,
+        desc: "Fin de la órbita inicial baja alrededor de la Tierra."
+      },
+      {
+        t: 0.18,
+        label: "TLI",
+        color: 0xffb347,
+        desc: "Inyección translunar: el impulso cambia la órbita para interceptar la región lunar."
+      },
+      {
+        t: 0.58,
+        label: "Aprox. lunar",
+        color: 0xd9d9d9,
+        desc: "La nave entra en la vecindad gravitatoria de la Luna."
+      },
+      {
+        t: 0.67,
+        label: "Perilunio",
+        color: 0xf4f4f4,
+        desc: "Paso más cercano a la Luna durante el arco de retorno libre."
+      },
+      {
+        t: 0.76,
+        label: "Salida lunar",
+        color: 0xa4d8ff,
+        desc: "La trayectoria regresa hacia la Tierra."
+      },
+      {
+        t: 1.00,
+        label: "Regreso",
+        color: 0xff6666,
+        desc: "Fin de la visualización de retorno."
+      }
+    ];
+
+    const labelSprites = [];
+
+    keyPoints.forEach((kp, idx) => {
+      const pos = getMissionPosition(kp.t);
+      makeMarker(pos, kp.color, idx === 2 || idx === 6 ? 1.0 : 0.75);
+
+      const label = makeLabel(kp.label, "#ffffff");
+      label.position.copy(pos.clone().add(new THREE.Vector3(0, 5.3, 0)));
+      scene.add(label);
+      labelSprites.push(label);
+    });
+
+    const earthLabel = makeLabel("Tierra", "#dcefff");
+    earthLabel.position.set(0, earthRadius + 10.5, 0);
+    scene.add(earthLabel);
+
+    const moonLabel = makeLabel("Luna", "#f2f2f2");
+    moonLabel.position.copy(moon.position.clone().add(new THREE.Vector3(0, moonRadius + 9.5, 0)));
+    scene.add(moonLabel);
+
+    // ------------------------------------------------------------
+    // Línea Tierra -> Luna para referencia
+    // ------------------------------------------------------------
+    const earthMoonAxisGeo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(moonDistance, 0, 0)
+    ]);
+    const earthMoonAxisLine = new THREE.Line(
+      earthMoonAxisGeo,
+      new THREE.LineDashedMaterial({
+        color: 0x555555,
+        dashSize: 2.2,
+        gapSize: 1.5
+      })
+    );
+    earthMoonAxisLine.computeLineDistances();
+    scene.add(earthMoonAxisLine);
+
+    // ------------------------------------------------------------
+    // Timeline / misión
+    // ------------------------------------------------------------
+    const totalMissionHours = 240; // 10 días visuales
+    const missionEvents = [
+      { t: 0.00, time: "T+00:00", text: "Inserción inicial en órbita terrestre." },
+      { t: 0.14, time: "T+08:00", text: "Última fase de la órbita baja terrestre." },
+      { t: 0.18, time: "T+10:00", text: "TLI: inyección translunar." },
+      { t: 0.36, time: "T+03d 00:00", text: "Crucero translunar." },
+      { t: 0.58, time: "T+05d 18:00", text: "Aproximación a la Luna." },
+      { t: 0.67, time: "T+06d 12:00", text: "Perilunio / sobrevuelo lunar." },
+      { t: 0.76, time: "T+07d 06:00", text: "Retorno libre hacia la Tierra." },
+      { t: 0.90, time: "T+09d 00:00", text: "Tránsito de regreso." },
+      { t: 1.00, time: "T+10d 00:00", text: "Fin visual del retorno." }
+    ];
+
+    const timelineEl = document.getElementById("timeline");
+    missionEvents.forEach((ev, index) => {
+      const div = document.createElement("div");
+      div.className = "eventItem";
+      div.dataset.index = index;
+      div.innerHTML = `<div class="eventTime">${ev.time}</div><div class="eventText">${ev.text}</div>`;
+      timelineEl.appendChild(div);
+    });
+
+    function updateTimeline(t) {
+      const items = timelineEl.querySelectorAll(".eventItem");
+      let activeIndex = 0;
+
+      for (let i = 0; i < missionEvents.length; i++) {
+        if (t >= missionEvents[i].t) activeIndex = i;
+      }
+
+      items.forEach((item, idx) => {
+        item.classList.toggle("active", idx === activeIndex);
+      });
+    }
+
+    // ------------------------------------------------------------
+    // Fases
+    // ------------------------------------------------------------
+    function getPhaseInfo(t) {
+      if (t < 0.14) {
+        return {
+          title: "Órbita terrestre",
+          desc: "La nave permanece en órbita baja alrededor de la Tierra mientras se prepara la geometría de salida."
+        };
+      }
+      if (t < 0.18) {
+        return {
+          title: "Inyección translunar (TLI)",
+          desc: "El encendido principal aumenta la energía orbital: la trayectoria deja de ser una órbita baja y se convierte en una transferencia hacia la Luna."
+        };
+      }
+      if (t < 0.58) {
+        return {
+          title: "Trayecto translunar",
+          desc: "La nave sigue una gran elipse de transferencia dominada todavía en gran parte por la gravedad terrestre."
+        };
+      }
+      if (t < 0.76) {
+        return {
+          title: "Arco de retorno libre",
+          desc: "La nave pasa por la vecindad lunar y la geometría de la trayectoria la devuelve hacia la Tierra sin necesidad de capturarse en órbita lunar."
+        };
+      }
+      return {
+        title: "Regreso a la Tierra",
+        desc: "Tras el sobrevuelo lunar, la nave vuelve hacia la Tierra siguiendo la rama de retorno de la trayectoria."
+      };
+    }
+
+    // ------------------------------------------------------------
+    // UI
+    // ------------------------------------------------------------
+    const timeSlider = document.getElementById("timeSlider");
+    const speedSlider = document.getElementById("speedSlider");
+    const playBtn = document.getElementById("playBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const trailBtn = document.getElementById("trailBtn");
+    const cameraSelect = document.getElementById("cameraSelect");
+
+    const missionClockEl = document.getElementById("missionClock");
+    const distEarthEl = document.getElementById("distEarth");
+    const distMoonEl = document.getElementById("distMoon");
+    const speedReadoutEl = document.getElementById("speedReadout");
+    const phaseTitleEl = document.getElementById("phaseTitle");
+    const phaseDescEl = document.getElementById("phaseDesc");
+
+    let missionT = 0;
+    let playing = true;
+    let lastTrailSampleT = -1;
+    let activeCamera = "free";
+
+    playBtn.addEventListener("click", () => {
+      playing = !playing;
+      playBtn.textContent = playing ? "Pausa" : "Play";
+    });
+
+    resetBtn.addEventListener("click", () => {
+      missionT = 0;
+      timeSlider.value = 0;
+      resetTrail();
+      lastTrailSampleT = -1;
+    });
+
+    trailBtn.addEventListener("click", () => {
+      trailVisible = !trailVisible;
+      trailLine.visible = trailVisible;
+      trailBtn.textContent = trailVisible ? "Ocultar rastro" : "Mostrar rastro";
+      if (!trailVisible) resetTrail();
+    });
+
+    cameraSelect.addEventListener("change", () => {
+      activeCamera = cameraSelect.value;
+      controls.enabled = activeCamera === "free";
+      if (activeCamera === "free") {
+        controls.target.set(0, 0, 0);
+      }
+    });
+
+    timeSlider.addEventListener("input", () => {
+      missionT = parseFloat(timeSlider.value);
+    });
+
+    // ------------------------------------------------------------
+    // Cámaras
+    // ------------------------------------------------------------
+    function updateCamera() {
+      const shipPos = ship.position.clone();
+      const tangent = getMissionTangent(missionT);
+
+      if (activeCamera === "free") {
+        controls.update();
+        return;
+      }
+
+      if (activeCamera === "ship") {
+        const desired = shipPos.clone()
+          .add(tangent.clone().multiplyScalar(-15))
+          .add(new THREE.Vector3(0, 5.5, 0));
+        camera.position.lerp(desired, 0.08);
+        camera.lookAt(shipPos.clone().add(tangent.clone().multiplyScalar(12)));
+        return;
+      }
+
+      if (activeCamera === "earth") {
+        const desired = new THREE.Vector3(-42, 18, 38);
+        camera.position.lerp(desired, 0.05);
+        camera.lookAt(shipPos);
+        return;
+      }
+
+      if (activeCamera === "moon") {
+        const moonPos = moon.getWorldPosition(new THREE.Vector3());
+        const desired = moonPos.clone().add(new THREE.Vector3(24, 12, 26));
+        camera.position.lerp(desired, 0.06);
+        camera.lookAt(shipPos);
+      }
+    }
+
+    // ------------------------------------------------------------
+    // Actualización nave
+    // ------------------------------------------------------------
+    function updateShip(t) {
+      const pos = getMissionPosition(t);
+      const tangent = getMissionTangent(t);
+      ship.position.copy(pos);
+
+      const target = pos.clone().add(tangent);
+      ship.lookAt(target);
+      ship.rotateY(Math.PI / 2);
+
+      let flame = 0.0;
+      if (t >= 0.14 && t <= 0.19) {
+        const u = (t - 0.14) / 0.05;
+        flame = 1.0 - Math.abs(u - 0.5) * 1.6;
+        flame = Math.max(0, flame);
+      }
+
+      engineGlow.intensity = 0.6 + flame * 2.8;
+      engineFlame.material.opacity = flame * 0.85;
+      engineFlame.scale.set(1, 1 + flame * 0.9, 1);
+    }
+
+    // ------------------------------------------------------------
+    // Distancias y HUD
+    // ------------------------------------------------------------
+    function updateHUD(t) {
+      const shipPos = ship.position.clone();
+      const moonPos = moon.getWorldPosition(new THREE.Vector3());
+
+      const dEarthUnits = shipPos.length();
+      const dMoonUnits = shipPos.distanceTo(moonPos);
+
+      const dEarthKm = dEarthUnits * KM_PER_UNIT;
+      const dMoonKm = dMoonUnits * KM_PER_UNIT;
+
+      const missionHours = t * totalMissionHours;
+      missionClockEl.textContent = formatMissionTime(missionHours);
+      distEarthEl.textContent = formatKm(dEarthKm);
+      distMoonEl.textContent = formatKm(dMoonKm);
+      speedReadoutEl.textContent = parseFloat(speedSlider.value).toFixed(2) + "×";
+
+      const phase = getPhaseInfo(t);
+      phaseTitleEl.textContent = phase.title;
+      phaseDescEl.textContent = phase.desc;
+
+      updateTimeline(t);
+    }
+
+    // ------------------------------------------------------------
+    // Etiquetas siempre mirando a cámara
+    // ------------------------------------------------------------
+    function updateLabels() {
+      labelSprites.forEach(s => s.lookAt(camera.position));
+      earthLabel.lookAt(camera.position);
+      moonLabel.lookAt(camera.position);
+    }
+
+    // ------------------------------------------------------------
+    // Animación principal
+    // ------------------------------------------------------------
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const dt = clock.getDelta();
+
+      earth.rotation.y += dt * 0.17;
+      clouds.rotation.y += dt * 0.22;
+      moon.rotation.y += dt * 0.03;
+
+      // Ligero movimiento orbital visual de la Luna
+      moonPivot.rotation.y += dt * 0.012;
+
+      // Mantener etiqueta Luna en su nueva posición
+      const currentMoonPos = moon.getWorldPosition(new THREE.Vector3());
+      moonLabel.position.copy(currentMoonPos.clone().add(new THREE.Vector3(0, moonRadius + 9.5, 0)));
+
+      if (playing) {
+        missionT += dt * 0.022 * parseFloat(speedSlider.value);
+        if (missionT > 1) missionT = 1;
+      }
+
+      timeSlider.value = missionT.toFixed(4);
+
+      updateShip(missionT);
+      updateHUD(missionT);
+
+      if (trailVisible) {
+        if (lastTrailSampleT < 0 || Math.abs(missionT - lastTrailSampleT) > 0.0025) {
+          addTrailPoint(ship.position);
+          lastTrailSampleT = missionT;
+        }
+      }
+
+      updateCamera();
+      updateLabels();
+      renderer.render(scene, camera);
+    }
+
+    updateShip(0);
+    updateHUD(0);
+    animate();
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

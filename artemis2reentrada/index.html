@@ -3,50 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Artemis II - Reentrada atmosférica (offline)</title>
+  <title>Artemis II - Reentrada autocontenida</title>
   <style>
     html, body {
       margin: 0;
       height: 100%;
       overflow: hidden;
-      background: radial-gradient(circle at 50% 30%, #081120 0%, #02050b 55%, #000 100%);
+      background: #02050b;
       font-family: Arial, Helvetica, sans-serif;
-      color: #e8f2ff;
+      color: #eaf3ff;
     }
-    #container {
+    #wrap {
+      position: relative;
       width: 100%;
       height: 100%;
-      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 30%, #0a1730 0%, #06101f 35%, #02050b 65%, #000 100%);
     }
-    #hud {
+    canvas {
       position: absolute;
-      top: 14px;
-      left: 14px;
-      width: min(420px, calc(100vw - 28px));
-      background: rgba(7, 15, 28, 0.72);
-      border: 1px solid rgba(150, 200, 255, 0.25);
-      border-radius: 14px;
-      padding: 14px 16px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #hud, #legend, #footer {
+      position: absolute;
+      background: rgba(7, 15, 28, 0.68);
+      border: 1px solid rgba(150, 200, 255, 0.24);
       backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
       z-index: 5;
     }
-    #hud h1 {
-      margin: 0 0 8px 0;
-      font-size: 20px;
-      line-height: 1.15;
+    #hud {
+      top: 14px;
+      left: 14px;
+      width: min(430px, calc(100vw - 28px));
+      border-radius: 14px;
+      padding: 14px 16px;
     }
-    #hud p {
-      margin: 8px 0;
-      font-size: 14px;
-      line-height: 1.45;
-      color: #d8e6ff;
+    #legend {
+      top: 14px;
+      right: 14px;
+      width: min(330px, calc(100vw - 28px));
+      border-radius: 14px;
+      padding: 14px 16px;
     }
+    #footer {
+      left: 14px;
+      bottom: 14px;
+      max-width: min(650px, calc(100vw - 28px));
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #d6e7ff;
+    }
+    h1, h2 { margin: 0 0 8px 0; }
+    h1 { font-size: 20px; line-height: 1.15; }
+    h2 { font-size: 16px; }
+    p, li { font-size: 14px; line-height: 1.45; color: #d7e6ff; }
     #phaseTitle {
       font-size: 17px;
       font-weight: 700;
       color: #9fd0ff;
       margin-top: 10px;
+      margin-bottom: 6px;
     }
     #controls {
       margin-top: 12px;
@@ -55,9 +76,10 @@
       gap: 8px;
       align-items: center;
     }
+    input[type="range"] { width: 100%; }
     button {
       background: linear-gradient(180deg, #1c67c6, #124686);
-      color: white;
+      color: #fff;
       border: none;
       border-radius: 10px;
       padding: 10px 14px;
@@ -65,82 +87,9 @@
       font-weight: 700;
     }
     button:hover { filter: brightness(1.08); }
-    input[type="range"] { width: 100%; }
-    #legend {
-      position: absolute;
-      right: 14px;
-      top: 14px;
-      width: min(330px, calc(100vw - 28px));
-      background: rgba(7, 15, 28, 0.62);
-      border: 1px solid rgba(150, 200, 255, 0.22);
-      border-radius: 14px;
-      padding: 14px 16px;
-      z-index: 5;
-      backdrop-filter: blur(10px);
-    }
-    #legend h2 {
-      margin: 0 0 8px 0;
-      font-size: 16px;
-    }
-    #legend ol {
-      margin: 0;
-      padding-left: 18px;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #d8e6ff;
-    }
-    #legend li { margin-bottom: 6px; }
-    #footer {
-      position: absolute;
-      left: 14px;
-      bottom: 14px;
-      background: rgba(7, 15, 28, 0.65);
-      border: 1px solid rgba(150, 200, 255, 0.22);
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 12px;
-      z-index: 5;
-      color: #cfe2ff;
-      max-width: min(560px, calc(100vw - 28px));
-    }
-    #bootError {
-      position: absolute;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at 50% 30%, rgba(8,17,32,.96) 0%, rgba(2,5,11,.98) 55%, rgba(0,0,0,1) 100%);
-      z-index: 20;
-      padding: 24px;
-      box-sizing: border-box;
-    }
-    #bootError .panel {
-      width: min(760px, 100%);
-      background: rgba(7, 15, 28, 0.9);
-      border: 1px solid rgba(255, 130, 130, 0.35);
-      border-radius: 16px;
-      padding: 18px 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-    }
-    #bootError h2 {
-      margin: 0 0 10px 0;
-      color: #ffb6b6;
-    }
-    #bootError p, #bootError li {
-      color: #e9f2ff;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-    #bootError code {
-      background: rgba(255,255,255,0.08);
-      padding: 2px 6px;
-      border-radius: 6px;
-    }
-    .stat {
-      display: inline-block;
-      margin-right: 14px;
-      margin-top: 6px;
-    }
+    ol { margin: 0; padding-left: 18px; }
+    li { margin-bottom: 6px; }
+    .stat { display: inline-block; margin-right: 14px; margin-top: 6px; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
     @media (max-width: 900px) {
       #legend {
@@ -150,32 +99,17 @@
         max-height: 42vh;
         overflow: auto;
       }
-      #footer {
-        display: none;
-      }
+      #footer { display: none; }
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <div id="bootError">
-      <div class="panel">
-        <h2>Faltan archivos locales para la versión offline</h2>
-        <p>Esta versión está preparada para ejecutarse <b>sin Internet</b>, pero necesita que estos archivos estén en la misma carpeta que este HTML:</p>
-        <ul>
-          <li><code>./three.min.js</code></li>
-          <li><code>./OrbitControls.js</code></li>
-        </ul>
-        <p>Estructura recomendada:</p>
-        <p><code>/artemis-offline/artemis_ii_reentrada_threejs_offline.html</code><br><code>/artemis-offline/three.min.js</code><br><code>/artemis-offline/OrbitControls.js</code></p>
-        <p>Después abre el HTML directamente con doble clic o con un servidor local sencillo.</p>
-      </div>
-    </div>
+  <div id="wrap">
+    <canvas id="scene"></canvas>
+
     <div id="hud">
       <h1>Reentrada de Artemis II en la atmósfera</h1>
-      <p>
-        Visualización <b>didáctica offline</b> en Three.js de las fases principales de la reentrada de la cápsula Orion.
-      </p>
+      <p>Versión <b>autocontenida en un único HTML</b>, sin librerías externas, con representación didáctica del retorno de la cápsula Orion.</p>
       <div id="phaseTitle">Fase 1</div>
       <p id="phaseText"></p>
       <div>
@@ -192,45 +126,26 @@
     <div id="legend">
       <h2>Secuencia visual</h2>
       <ol>
-        <li><b>Separación del módulo de servicio</b>: queda solo la cápsula tripulada preparada para la entrada.</li>
-        <li><b>Orientación del escudo térmico</b>: la cápsula gira para presentar su base ablativa al flujo de aire.</li>
-        <li><b>Entrada atmosférica</b>: comienza el encuentro con las capas altas de la atmósfera a velocidad muy elevada.</li>
-        <li><b>Calentamiento y plasma</b>: el aire comprimido se calienta intensamente y aparece una envoltura luminosa.</li>
-        <li><b>Desaceleración guiada</b>: la cápsula usa su actitud y sustentación ligera para controlar cargas y trayectoria.</li>
-        <li><b>Despliegue de paracaídas piloto/drogue</b>: estabilizan y reducen aún más la velocidad.</li>
-        <li><b>Paracaídas principales</b>: gran reducción final de velocidad antes del amerizaje.</li>
-        <li><b>Amerizaje</b>: contacto con el océano y recuperación posterior.</li>
+        <li><b>Separación</b>: el módulo de servicio se desacopla y la cápsula queda sola.</li>
+        <li><b>Orientación</b>: el escudo térmico se coloca hacia delante.</li>
+        <li><b>Entrada alta</b>: empieza el contacto con la atmósfera superior.</li>
+        <li><b>Plasma</b>: la compresión del aire genera un resplandor intenso alrededor de la cápsula.</li>
+        <li><b>Frenado guiado</b>: la cápsula desacelera y corrige su trayectoria.</li>
+        <li><b>Paracaídas drogue</b>: estabilizan la caída.</li>
+        <li><b>Paracaídas principales</b>: frenado final antes del mar.</li>
+        <li><b>Amerizaje</b>: contacto con el océano y recuperación.</li>
       </ol>
     </div>
 
     <div id="footer">
-      Esta edición offline no usa CDN. Coloca <span class="mono">three.min.js</span> y <span class="mono">OrbitControls.js</span>
-      en la misma carpeta que el HTML. Arrastra para orbitar y usa el deslizador para recorrer la reentrada.
+      Guarda este archivo como <span class="mono">artemis_ii_reentrada_autocontenida.html</span> y ábrelo con doble clic. No necesita Internet ni archivos adicionales.
     </div>
   </div>
-  <script src="./Three.js"></script>
-  <script src="./three.min.js"></script>
-  <script src="./OrbitControls.js"></script>
+
   <script>
-    const bootError = document.getElementById('bootError');
-    function failBoot(message) {
-      bootError.style.display = 'flex';
-      const panel = bootError.querySelector('.panel');
-      const extra = document.createElement('p');
-      extra.innerHTML = message;
-      panel.appendChild(extra);
-      throw new Error(message.replace(/<[^>]+>/g, ' '));
-    }
+    const canvas = document.getElementById('scene');
+    const ctx = canvas.getContext('2d');
 
-    if (typeof THREE === 'undefined') {
-     // failBoot('No se pudo cargar <code>three.min.js</code>. Comprueba que el archivo exista en la misma carpeta que este HTML.');
-    }
-    if (typeof THREE.OrbitControls === 'undefined') {
-    //  failBoot('No se pudo cargar <code>OrbitControls.js</code> o no es compatible con esta versión de Three.js. Usa una versión clásica no-módulo compatible con <code>THREE.OrbitControls</code>.');
-    }
-
-    try {
-    const container = document.getElementById('container');
     const phaseTitleEl = document.getElementById('phaseTitle');
     const phaseTextEl = document.getElementById('phaseText');
     const altitudeEl = document.getElementById('altitude');
@@ -239,484 +154,35 @@
     const playBtn = document.getElementById('playBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x02050b, 0.015);
-
-    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 2000);
-    camera.position.set(0, 34, 96);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.06;
-    controls.minDistance = 35;
-    controls.maxDistance = 220;
-    controls.target.set(0, 0, 0);
-
-    const ambient = new THREE.AmbientLight(0x7aa7ff, 0.9);
-    scene.add(ambient);
-
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1.25);
-    sunLight.position.set(80, 30, 90);
-    scene.add(sunLight);
-
-    const rimLight = new THREE.DirectionalLight(0x66aaff, 0.75);
-    rimLight.position.set(-50, 20, -70);
-    scene.add(rimLight);
-
-    // Stars
-    const starGeo = new THREE.BufferGeometry();
-    const starCount = 2500;
-    const starPositions = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      const r = 500 + Math.random() * 800;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      starPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      starPositions[i * 3 + 1] = r * Math.cos(phi);
-      starPositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+    let w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    function resize() {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      makeStars();
     }
-    starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    const stars = new THREE.Points(
-      starGeo,
-      new THREE.PointsMaterial({ color: 0xffffff, size: 1.3, sizeAttenuation: true })
-    );
-    scene.add(stars);
+    window.addEventListener('resize', resize);
 
-    // Earth
-    const earthGroup = new THREE.Group();
-    scene.add(earthGroup);
-
-    const earthRadius = 30;
-    const earth = new THREE.Mesh(
-      new THREE.SphereGeometry(earthRadius, 64, 64),
-      new THREE.MeshPhongMaterial({
-        color: 0x2f6fd6,
-        emissive: 0x081a35,
-        specular: 0x335577,
-        shininess: 15,
-        flatShading: false
-      })
-    );
-    earthGroup.add(earth);
-
-    const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(earthRadius * 1.055, 64, 64),
-      new THREE.MeshPhongMaterial({
-        color: 0x69aaff,
-        transparent: true,
-        opacity: 0.10,
-        side: THREE.DoubleSide,
-        emissive: 0x2d7eff,
-        depthWrite: false
-      })
-    );
-    earthGroup.add(atmosphere);
-
-    const cloud = new THREE.Mesh(
-      new THREE.SphereGeometry(earthRadius * 1.018, 64, 64),
-      new THREE.MeshPhongMaterial({
-        color: 0xbfd6ee,
-        transparent: true,
-        opacity: 0.06,
-        depthWrite: false
-      })
-    );
-    earthGroup.add(cloud);
-
-    // Very simple continents effect
-    const landMat = new THREE.MeshPhongMaterial({ color: 0x487a40, transparent: true, opacity: 0.9 });
-    const landGroup = new THREE.Group();
-    earthGroup.add(landGroup);
-    function addLand(lat, lon, sx, sy, sz, ry = 0) {
-      const g = new THREE.Mesh(new THREE.SphereGeometry(1.0, 12, 12), landMat);
-      const r = earthRadius * 1.002;
-      const phi = (90 - lat) * Math.PI / 180;
-      const theta = (lon + 180) * Math.PI / 180;
-      g.position.set(
-        -r * Math.sin(phi) * Math.cos(theta),
-        r * Math.cos(phi),
-        r * Math.sin(phi) * Math.sin(theta)
-      );
-      g.lookAt(0,0,0);
-      g.scale.set(sx, sy, sz);
-      g.rotateZ(ry);
-      landGroup.add(g);
-    }
-    addLand(10, -100, 5.5, 1.6, 3.2, 0.4);
-    addLand(-15, -60, 3.2, 1.3, 2.4, -0.2);
-    addLand(50, 10, 4.8, 1.2, 2.2, 0.3);
-    addLand(5, 20, 3.7, 1.3, 2.5, 0.1);
-    addLand(30, 100, 6.4, 1.5, 3.0, -0.1);
-    addLand(-25, 135, 2.6, 1.1, 2.1, 0.0);
-
-    // Ocean plane for splashdown
-    const ocean = new THREE.Mesh(
-      new THREE.CircleGeometry(24, 64),
-      new THREE.MeshPhongMaterial({
-        color: 0x0c315d,
-        transparent: true,
-        opacity: 0.78,
-        side: THREE.DoubleSide,
-        shininess: 80
-      })
-    );
-    ocean.rotation.x = -Math.PI / 2;
-    ocean.position.set(52, -22, 0);
-    scene.add(ocean);
-
-    // Reentry path
-    const pathPoints = [
-      new THREE.Vector3(-58, 44, -16),
-      new THREE.Vector3(-34, 36, -8),
-      new THREE.Vector3(-10, 28, 0),
-      new THREE.Vector3(8, 17, 5),
-      new THREE.Vector3(25, 4, 2),
-      new THREE.Vector3(42, -10, 0),
-      new THREE.Vector3(52, -19, 0)
-    ];
-    const curve = new THREE.CatmullRomCurve3(pathPoints);
-    const pathGeometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(240));
-    const pathLine = new THREE.Line(
-      pathGeometry,
-      new THREE.LineDashedMaterial({ color: 0x88c8ff, dashSize: 1.6, gapSize: 1.0, transparent: true, opacity: 0.85 })
-    );
-    pathLine.computeLineDistances();
-    scene.add(pathLine);
-
-    // Capsule Orion-like simplified model
-    const capsuleGroup = new THREE.Group();
-    scene.add(capsuleGroup);
-
-    const body = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.1, 1.7, 2.3, 28, 1, false),
-      new THREE.MeshPhongMaterial({ color: 0xd0d5db, shininess: 50 })
-    );
-    body.rotation.z = Math.PI / 2;
-    capsuleGroup.add(body);
-
-    const heatShield = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.8, 1.8, 0.24, 28),
-      new THREE.MeshPhongMaterial({ color: 0x2c221a, shininess: 10 })
-    );
-    heatShield.rotation.z = Math.PI / 2;
-    heatShield.position.x = 1.08;
-    capsuleGroup.add(heatShield);
-
-    const nose = new THREE.Mesh(
-      new THREE.SphereGeometry(0.78, 22, 22),
-      new THREE.MeshPhongMaterial({ color: 0xf2f4f6, shininess: 55 })
-    );
-    nose.scale.set(1, 0.9, 0.9);
-    nose.position.x = -1.15;
-    capsuleGroup.add(nose);
-
-    // Detached service module (only visible early)
-    const serviceModule = new THREE.Group();
-    const smBody = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.3, 1.3, 3.2, 24),
-      new THREE.MeshPhongMaterial({ color: 0x9aa6b2, shininess: 25 })
-    );
-    smBody.rotation.z = Math.PI / 2;
-    serviceModule.add(smBody);
-    for (let i = 0; i < 2; i++) {
-      const panel = new THREE.Mesh(
-        new THREE.BoxGeometry(0.1, 4.4, 1.6),
-        new THREE.MeshPhongMaterial({ color: 0x29466e, emissive: 0x10253f })
-      );
-      panel.position.set(0, i === 0 ? 3 : -3, 0);
-      serviceModule.add(panel);
-    }
-    scene.add(serviceModule);
-
-    // Plasma shell
-    const plasma = new THREE.Mesh(
-      new THREE.SphereGeometry(2.8, 28, 28),
-      new THREE.MeshPhongMaterial({
-        color: 0xff7b2c,
-        emissive: 0xff5b00,
-        transparent: true,
-        opacity: 0,
-        depthWrite: false
-      })
-    );
-    plasma.scale.set(1.35, 0.82, 0.82);
-    capsuleGroup.add(plasma);
-
-    // Shock glow cone
-    const shockCone = new THREE.Mesh(
-      new THREE.ConeGeometry(1.3, 5.2, 32, 1, true),
-      new THREE.MeshPhongMaterial({
-        color: 0xffb04a,
-        emissive: 0xff6a00,
-        transparent: true,
-        opacity: 0,
-        side: THREE.DoubleSide,
-        depthWrite: false
-      })
-    );
-    shockCone.rotation.z = -Math.PI / 2;
-    shockCone.position.x = -3.0;
-    capsuleGroup.add(shockCone);
-
-    // Wake trail
-    const trailPoints = [];
-    for (let i = 0; i < 40; i++) trailPoints.push(new THREE.Vector3(0,0,0));
-    const trailGeo = new THREE.BufferGeometry().setFromPoints(trailPoints);
-    const trailMat = new THREE.LineBasicMaterial({ color: 0xff9f45, transparent: true, opacity: 0.75 });
-    const trail = new THREE.Line(trailGeo, trailMat);
-    scene.add(trail);
-
-    // Parachutes
-    const chuteGroup = new THREE.Group();
-    scene.add(chuteGroup);
-
-    function createChute(color, radius, depth) {
-      const g = new THREE.Group();
-      const canopy = new THREE.Mesh(
-        new THREE.SphereGeometry(radius, 24, 24, 0, Math.PI * 2, 0, Math.PI / 2.2),
-        new THREE.MeshPhongMaterial({ color, side: THREE.DoubleSide, shininess: 30 })
-      );
-      canopy.rotation.x = Math.PI;
-      canopy.position.y = depth;
-      g.add(canopy);
-      for (let i = 0; i < 8; i++) {
-        const ang = (i / 8) * Math.PI * 2;
-        const pts = [
-          new THREE.Vector3(Math.cos(ang) * radius * 0.8, depth - 0.05, Math.sin(ang) * radius * 0.8),
-          new THREE.Vector3(0, -2.2, 0)
-        ];
-        const geo = new THREE.BufferGeometry().setFromPoints(pts);
-        const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 }));
-        g.add(line);
+    const stars = [];
+    function makeStars() {
+      stars.length = 0;
+      const n = Math.floor((w * h) / 2500);
+      for (let i = 0; i < n; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h * 0.72,
+          r: Math.random() * 1.6 + 0.2,
+          a: Math.random() * 0.8 + 0.2
+        });
       }
-      return g;
     }
-
-    const drogue1 = createChute(0xf3f3f3, 1.2, 0.6);
-    const drogue2 = createChute(0xf3f3f3, 1.2, 0.6);
-    const main1 = createChute(0xff6a3a, 2.6, 1.1);
-    const main2 = createChute(0xffffff, 2.6, 1.1);
-    const main3 = createChute(0xff6a3a, 2.6, 1.1);
-
-    drogue1.position.x = -1.6;
-    drogue2.position.x = 1.6;
-    main1.position.x = -4.0;
-    main2.position.x = 0.0;
-    main3.position.x = 4.0;
-
-    chuteGroup.add(drogue1, drogue2, main1, main2, main3);
 
     const phases = [
-      {
-        start: 0.00,
-        end: 0.10,
-        title: '1. Separación del módulo de servicio',
-        text: 'Antes de entrar en la atmósfera, la cápsula Orion se separa del módulo de servicio. Solo la cápsula tripulada continúa hacia la Tierra.'
-      },
-      {
-        start: 0.10,
-        end: 0.22,
-        title: '2. Orientación del escudo térmico',
-        text: 'La cápsula ajusta su actitud para que el escudo térmico quede orientado hacia el flujo de entrada. Esa base absorberá y disipará la mayor parte del calor.'
-      },
-      {
-        start: 0.22,
-        end: 0.38,
-        title: '3. Entrada en las capas altas',
-        text: 'Empieza el contacto con la atmósfera superior. Aunque el aire es tenue, la velocidad es enorme y la compresión del gas inicia el calentamiento intenso.'
-      },
-      {
-        start: 0.38,
-        end: 0.57,
-        title: '4. Pico térmico y plasma',
-        text: 'La compresión extrema del aire genera plasma alrededor de la cápsula. La temperatura externa se dispara y el escudo térmico ablativo protege a la tripulación.'
-      },
-      {
-        start: 0.57,
-        end: 0.73,
-        title: '5. Desaceleración guiada',
-        text: 'La cápsula sigue frenando con grandes cargas g. Su ligera sustentación permite modular la trayectoria y repartir mejor la energía durante la bajada.'
-      },
-      {
-        start: 0.73,
-        end: 0.84,
-        title: '6. Paracaídas drogue',
-        text: 'Se despliegan paracaídas pequeños de estabilización. Su función es orientar y frenar lo suficiente como para permitir la apertura segura de los principales.'
-      },
-      {
-        start: 0.84,
-        end: 0.95,
-        title: '7. Paracaídas principales',
-        text: 'Se abren los tres paracaídas principales. La velocidad cae bruscamente y la cápsula pasa a una fase final de descenso suave.'
-      },
-      {
-        start: 0.95,
-        end: 1.01,
-        title: '8. Amerizaje',
-        text: 'La cápsula impacta suavemente con el océano y queda flotando a la espera de los equipos de recuperación.'
-      }
-    ];
-
-    let t = 0;
-    let playing = true;
-
-    function smoothstep(a, b, x) {
-      const u = THREE.MathUtils.clamp((x - a) / (b - a), 0, 1);
-      return u * u * (3 - 2 * u);
-    }
-
-    function getPhase(progress) {
-      for (const phase of phases) {
-        if (progress >= phase.start && progress < phase.end) return phase;
-      }
-      return phases[phases.length - 1];
-    }
-
-    function kmFromDisplayY(progress) {
-      const high = 122;
-      const low = 0;
-      const alt = THREE.MathUtils.lerp(high, low, Math.pow(progress, 0.9));
-      return Math.max(0, alt);
-    }
-
-    function speedFromProgress(progress) {
-      const start = 39000;
-      const end = 32;
-      const value = start * Math.pow(1 - progress, 2.2) + end;
-      return value;
-    }
-
-    function updateTrail(head) {
-      trailPoints.pop();
-      trailPoints.unshift(head.clone());
-      trail.geometry.setFromPoints(trailPoints);
-      trail.geometry.attributes.position.needsUpdate = true;
-    }
-
-    function updateScene(progress) {
-      const pos = curve.getPointAt(Math.min(progress, 1));
-      const tangent = curve.getTangentAt(Math.min(progress, 0.999)).normalize();
-      capsuleGroup.position.copy(pos);
-      const lookTarget = pos.clone().add(tangent);
-      capsuleGroup.lookAt(lookTarget);
-      capsuleGroup.rotateY(Math.PI / 2);
-      capsuleGroup.rotateZ(Math.PI);
-
-      // Service module separation early in sequence
-      const sep = smoothstep(0.00, 0.10, progress);
-      const serviceOffset = new THREE.Vector3(-8 - sep * 10, 2 + sep * 6, 0);
-      serviceModule.position.copy(pos.clone().add(serviceOffset));
-      serviceModule.rotation.copy(capsuleGroup.rotation);
-      serviceModule.visible = progress < 0.16;
-      serviceModule.scale.setScalar(1 - sep * 0.25);
-
-      // Plasma / heating intensity
-      const heating = smoothstep(0.28, 0.45, progress) * (1 - smoothstep(0.58, 0.76, progress));
-      plasma.material.opacity = 0.15 + heating * 0.42;
-      plasma.visible = heating > 0.02;
-      plasma.scale.set(1.25 + heating * 1.2, 0.82 + heating * 0.28, 0.82 + heating * 0.28);
-      shockCone.material.opacity = heating * 0.58;
-      shockCone.visible = heating > 0.03;
-      shockCone.scale.set(1 + heating * 0.45, 1 + heating * 1.1, 1 + heating * 0.45);
-
-      const pulse = 0.9 + Math.sin(performance.now() * 0.02) * 0.08;
-      plasma.material.emissiveIntensity = 0.8 + heating * 1.5 * pulse;
-      shockCone.material.emissiveIntensity = 0.8 + heating * 1.4;
-
-      // Trail fades later
-      trail.visible = progress < 0.83;
-      trail.material.opacity = 0.18 + heating * 0.6;
-      updateTrail(pos.clone());
-
-      // Chutes
-      const drogueOpen = smoothstep(0.73, 0.80, progress);
-      const mainOpen = smoothstep(0.84, 0.91, progress);
-      chuteGroup.visible = progress > 0.71;
-      chuteGroup.position.copy(pos.clone().add(new THREE.Vector3(-3.3, 4.6, 0)));
-      drogue1.visible = drogue2.visible = drogueOpen > 0.02 && mainOpen < 0.95;
-      main1.visible = main2.visible = main3.visible = mainOpen > 0.02;
-      drogue1.scale.setScalar(drogueOpen);
-      drogue2.scale.setScalar(drogueOpen);
-      main1.scale.setScalar(mainOpen);
-      main2.scale.setScalar(mainOpen);
-      main3.scale.setScalar(mainOpen);
-      chuteGroup.rotation.y += 0.002;
-
-      // Ocean splash
-      const splash = smoothstep(0.95, 1.00, progress);
-      ocean.material.opacity = 0.55 + splash * 0.35;
-      ocean.scale.setScalar(1 + Math.sin(performance.now() * 0.002) * 0.02);
-
-      // Earth slow rotation
-      earthGroup.rotation.y += 0.0009;
-      cloud.rotation.y += 0.0013;
-      stars.rotation.y += 0.00008;
-
-      const phase = getPhase(progress);
-      phaseTitleEl.textContent = phase.title;
-      phaseTextEl.textContent = phase.text;
-      altitudeEl.textContent = kmFromDisplayY(progress).toFixed(0) + ' km';
-      speedEl.textContent = Math.max(0, speedFromProgress(progress)).toFixed(progress < 0.84 ? 0 : 1) + ' km/h';
-      timelineEl.value = progress.toFixed(3);
-    }
-
-    timelineEl.addEventListener('input', () => {
-      t = parseFloat(timelineEl.value);
-      playing = false;
-      playBtn.textContent = 'Reproducir';
-      updateScene(t);
-    });
-
-    playBtn.addEventListener('click', () => {
-      playing = !playing;
-      playBtn.textContent = playing ? 'Pausar' : 'Reproducir';
-    });
-
-    resetBtn.addEventListener('click', () => {
-      t = 0;
-      playing = true;
-      playBtn.textContent = 'Pausar';
-      updateScene(t);
-    });
-
-    let last = performance.now();
-    function animate(now) {
-      requestAnimationFrame(animate);
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-
-      if (playing) {
-        t += dt * 0.07;
-        if (t > 1) t = 1;
-      }
-
-      // camera slight follow feeling
-      const desiredTarget = curve.getPointAt(Math.min(t + 0.05, 1));
-      controls.target.lerp(desiredTarget, 0.03);
-      controls.update();
-      updateScene(t);
-      renderer.render(scene, camera);
-    }
-
-    updateScene(0);
-    animate(performance.now());
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-    } catch (err) {
-      if (bootError.style.display !== 'flex') {
-        failBoot('La escena no pudo iniciarse correctamente. Revisa la consola del navegador para ver el error exacto.');
-      }
-    }
-  </script>
-</body>
-</html>
-
+      { start: 0.00, end: 0.10, title: '1. Separación del módulo de servicio', text: 'La cápsula Orion se separa del módulo de servicio. A partir de aquí solo la cápsula tripulada continúa hacia la Tierra.' },
+      { start: 0.10, end: 0.22, title: '2. Orientación del escudo térmico', text: 'La cápsula ajusta su actitud para presentar el escudo térmico hacia el flujo de entrada y proteger a la tripulación.' },
+      { start:

@@ -185,4 +185,360 @@
     const phases = [
       { start: 0.00, end: 0.10, title: '1. Separación del módulo de servicio', text: 'La cápsula Orion se separa del módulo de servicio. A partir de aquí solo la cápsula tripulada continúa hacia la Tierra.' },
       { start: 0.10, end: 0.22, title: '2. Orientación del escudo térmico', text: 'La cápsula ajusta su actitud para presentar el escudo térmico hacia el flujo de entrada y proteger a la tripulación.' },
-      { start:
+      { start: 0.22, end: 0.38, title: '3. Entrada en las capas altas', text: 'Empieza el encuentro con la atmósfera superior. Aunque el aire es tenue, la velocidad sigue siendo enorme.' },
+      { start: 0.38, end: 0.57, title: '4. Pico térmico y plasma', text: 'La compresión del aire genera temperaturas extremas y una envoltura luminosa de plasma alrededor de la cápsula.' },
+      { start: 0.57, end: 0.73, title: '5. Desaceleración guiada', text: 'La cápsula reduce velocidad y usa una trayectoria controlada para repartir las cargas y llegar al punto previsto.' },
+      { start: 0.73, end: 0.84, title: '6. Paracaídas drogue', text: 'Se despliegan paracaídas pequeños para estabilizar la cápsula y preparar la apertura segura de los principales.' },
+      { start: 0.84, end: 0.95, title: '7. Paracaídas principales', text: 'Se abren los tres paracaídas principales y la velocidad cae de forma muy marcada antes del amerizaje.' },
+      { start: 0.95, end: 1.01, title: '8. Amerizaje', text: 'La cápsula toca el océano suavemente y queda lista para su recuperación por los equipos de rescate.' }
+    ];
+
+    function getPhase(t) {
+      for (const p of phases) if (t >= p.start && t < p.end) return p;
+      return phases[phases.length - 1];
+    }
+    function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function smoothstep(a, b, x) {
+      const u = clamp((x - a) / (b - a), 0, 1);
+      return u * u * (3 - 2 * u);
+    }
+
+    function kmFromProgress(t) {
+      return Math.max(0, lerp(122, 0, Math.pow(t, 0.92)));
+    }
+    function speedFromProgress(t) {
+      return 39000 * Math.pow(1 - t, 2.2) + 32;
+    }
+
+    function pathPoint(t) {
+      const pts = [
+        { x: -0.08*w, y: 0.17*h },
+        { x: 0.18*w, y: 0.22*h },
+        { x: 0.36*w, y: 0.31*h },
+        { x: 0.52*w, y: 0.48*h },
+        { x: 0.68*w, y: 0.66*h },
+        { x: 0.80*w, y: 0.81*h },
+        { x: 0.88*w, y: 0.87*h }
+      ];
+      const n = pts.length - 1;
+      const u = clamp(t * n, 0, n - 1e-6);
+      const i = Math.floor(u);
+      const f = u - i;
+      const p0 = pts[Math.max(0, i - 1)];
+      const p1 = pts[i];
+      const p2 = pts[Math.min(n, i + 1)];
+      const p3 = pts[Math.min(n, i + 2)];
+      const f2 = f*f, f3 = f2*f;
+      return {
+        x: 0.5 * ((2*p1.x) + (-p0.x + p2.x)*f + (2*p0.x - 5*p1.x + 4*p2.x - p3.x)*f2 + (-p0.x + 3*p1.x - 3*p2.x + p3.x)*f3),
+        y: 0.5 * ((2*p1.y) + (-p0.y + p2.y)*f + (2*p0.y - 5*p1.y + 4*p2.y - p3.y)*f2 + (-p0.y + 3*p1.y - 3*p2.y + p3.y)*f3)
+      };
+    }
+
+    function pathTangent(t) {
+      const a = pathPoint(clamp(t - 0.002, 0, 1));
+      const b = pathPoint(clamp(t + 0.002, 0, 1));
+      return Math.atan2(b.y - a.y, b.x - a.x);
+    }
+
+    function drawBackground() {
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, '#071323');
+      g.addColorStop(0.35, '#06101e');
+      g.addColorStop(0.7, '#03101e');
+      g.addColorStop(1, '#031a2c');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+
+      for (const s of stars) {
+        ctx.globalAlpha = s.a;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function drawEarth() {
+      const cx = w * 0.48;
+      const cy = h * 1.18;
+      const r = Math.max(w, h) * 0.62;
+
+      const sea = ctx.createRadialGradient(cx - r*0.12, cy - r*0.48, r*0.12, cx, cy, r);
+      sea.addColorStop(0, '#73c0ff');
+      sea.addColorStop(0.32, '#1f77dd');
+      sea.addColorStop(0.66, '#0d3f7d');
+      sea.addColorStop(1, '#062149');
+      ctx.fillStyle = sea;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, Math.PI, 0);
+      ctx.lineTo(cx + r, h);
+      ctx.lineTo(cx - r, h);
+      ctx.closePath();
+      ctx.fill();
+
+      const at = ctx.createRadialGradient(cx, cy - r*0.8, r*0.25, cx, cy, r*1.04);
+      at.addColorStop(0, 'rgba(170,220,255,0.0)');
+      at.addColorStop(0.72, 'rgba(98,175,255,0.0)');
+      at.addColorStop(0.93, 'rgba(98,175,255,0.24)');
+      at.addColorStop(1, 'rgba(98,175,255,0.0)');
+      ctx.fillStyle = at;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r*1.03, Math.PI, 0);
+      ctx.lineTo(cx + r*1.03, h);
+      ctx.lineTo(cx - r*1.03, h);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r*0.98, Math.PI, 0);
+      ctx.clip();
+
+      ctx.fillStyle = 'rgba(110, 168, 104, 0.45)';
+      const land = [
+        [cx-r*0.42, cy-r*0.12, r*0.18, r*0.07],
+        [cx-r*0.18, cy-r*0.18, r*0.14, r*0.05],
+        [cx+r*0.05, cy-r*0.16, r*0.24, r*0.06],
+        [cx+r*0.34, cy-r*0.08, r*0.16, r*0.05]
+      ];
+      land.forEach(([x,y,rx,ry]) => {
+        ctx.beginPath();
+        ctx.ellipse(x, y, rx, ry, -0.2, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      for (let i = 0; i < 14; i++) {
+        ctx.fillStyle = 'rgba(255,255,255,' + (0.03 + (i%4)*0.015) + ')';
+        ctx.beginPath();
+        ctx.ellipse(cx - r*0.45 + i*r*0.08, cy - r*(0.18 + (i%3)*0.02), r*0.06, r*0.018, Math.sin(i)*0.4, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      const oceanX = w * 0.86, oceanY = h * 0.89;
+      const og = ctx.createRadialGradient(oceanX, oceanY, 4, oceanX, oceanY, 70);
+      og.addColorStop(0, 'rgba(160,220,255,0.55)');
+      og.addColorStop(1, 'rgba(0,65,130,0.15)');
+      ctx.fillStyle = og;
+      ctx.beginPath();
+      ctx.ellipse(oceanX, oceanY, 74, 20, 0, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    function drawPath() {
+      ctx.save();
+      ctx.setLineDash([8, 7]);
+      ctx.strokeStyle = 'rgba(136,200,255,0.82)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 180; i++) {
+        const p = pathPoint(i / 180);
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawServiceModule(x, y, ang, sep) {
+      ctx.save();
+      ctx.translate(x - 50 - sep*90, y - 5 - sep*40);
+      ctx.rotate(ang);
+      ctx.globalAlpha = 1 - sep*0.9;
+      ctx.fillStyle = '#9aa6b2';
+      ctx.beginPath();
+      ctx.roundRect(-28, -10, 56, 20, 8);
+      ctx.fill();
+      ctx.fillStyle = '#29466e';
+      ctx.fillRect(-12, -34, 24, 18);
+      ctx.fillRect(-12, 16, 24, 18);
+      ctx.restore();
+      ctx.globalAlpha = 1;
+    }
+
+    function drawCapsule(x, y, ang, heating) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(ang);
+
+      if (heating > 0.02) {
+        const rg = ctx.createRadialGradient(0, 0, 8, 0, 0, 36 + heating*34);
+        rg.addColorStop(0, 'rgba(255,255,255,0.05)');
+        rg.addColorStop(0.25, 'rgba(255,180,80,' + (0.10 + heating*0.15) + ')');
+        rg.addColorStop(0.55, 'rgba(255,90,0,' + (0.22 + heating*0.22) + ')');
+        rg.addColorStop(1, 'rgba(255,70,0,0)');
+        ctx.fillStyle = rg;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 42 + heating*16, 24 + heating*9, 0, 0, Math.PI*2);
+        ctx.fill();
+
+        const cg = ctx.createLinearGradient(-62, 0, -10, 0);
+        cg.addColorStop(0, 'rgba(255,180,80,0)');
+        cg.addColorStop(0.5, 'rgba(255,120,40,' + (0.12 + heating*0.25) + ')');
+        cg.addColorStop(1, 'rgba(255,220,140,' + (0.18 + heating*0.18) + ')');
+        ctx.fillStyle = cg;
+        ctx.beginPath();
+        ctx.moveTo(-62, -16);
+        ctx.quadraticCurveTo(-22, -22, -8, -10);
+        ctx.lineTo(-8, 10);
+        ctx.quadraticCurveTo(-22, 22, -62, 16);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      ctx.fillStyle = '#cfd5db';
+      ctx.beginPath();
+      ctx.moveTo(18, 0);
+      ctx.lineTo(6, -16);
+      ctx.quadraticCurveTo(-18, -12, -24, 0);
+      ctx.quadraticCurveTo(-18, 12, 6, 16);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#f4f6f7';
+      ctx.beginPath();
+      ctx.ellipse(-19, 0, 5, 8, 0, 0, Math.PI*2);
+      ctx.fill();
+
+      ctx.fillStyle = '#2f2319';
+      ctx.beginPath();
+      ctx.ellipse(16, 0, 6, 17, 0, 0, Math.PI*2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-8, -10);
+      ctx.lineTo(8, -5);
+      ctx.moveTo(-8, 10);
+      ctx.lineTo(8, 5);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawParachute(x, y, scale, color) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(0, 0, 22, Math.PI, 0);
+      ctx.lineTo(22, 0);
+      ctx.quadraticCurveTo(0, 12, -22, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      ctx.lineWidth = 1;
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * 7, 2);
+        ctx.lineTo(0, 42);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawSplash(x, y, a) {
+      if (a <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = a;
+      ctx.strokeStyle = 'rgba(210,240,255,0.9)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.ellipse(x, y + i*4, 18 + i*10, 5 + i*1.4, 0, 0, Math.PI*2);
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.globalAlpha = 1;
+    }
+
+    let t = 0;
+    let playing = true;
+    let last = performance.now();
+
+    timelineEl.addEventListener('input', () => {
+      t = parseFloat(timelineEl.value);
+      playing = false;
+      playBtn.textContent = 'Reproducir';
+      updateHUD();
+    });
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? 'Pausar' : 'Reproducir';
+    });
+    resetBtn.addEventListener('click', () => {
+      t = 0;
+      playing = true;
+      playBtn.textContent = 'Pausar';
+      updateHUD();
+    });
+
+    function updateHUD() {
+      const p = getPhase(t);
+      phaseTitleEl.textContent = p.title;
+      phaseTextEl.textContent = p.text;
+      altitudeEl.textContent = kmFromProgress(t).toFixed(0) + ' km';
+      speedEl.textContent = speedFromProgress(t).toFixed(t < 0.84 ? 0 : 1) + ' km/h';
+      timelineEl.value = t.toFixed(3);
+    }
+
+    function render(now) {
+      requestAnimationFrame(render);
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (playing) t = Math.min(1, t + dt * 0.07);
+      updateHUD();
+
+      drawBackground();
+      drawEarth();
+      drawPath();
+
+      const p = pathPoint(t);
+      const ang = pathTangent(t);
+      const heating = smoothstep(0.28, 0.45, t) * (1 - smoothstep(0.58, 0.76, t));
+      const sep = smoothstep(0.00, 0.10, t);
+      if (t < 0.16) drawServiceModule(p.x, p.y, ang, sep);
+
+      if (t < 0.83) {
+        ctx.save();
+        const n = 26;
+        for (let i = 0; i < n; i++) {
+          const tt = clamp(t - i * 0.008, 0, 1);
+          const q = pathPoint(tt);
+          const a = (1 - i / n) * (0.16 + heating * 0.75);
+          ctx.fillStyle = 'rgba(255,140,60,' + a.toFixed(3) + ')';
+          ctx.beginPath();
+          ctx.arc(q.x, q.y, 10 * (1 - i / n), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      drawCapsule(p.x, p.y, ang, heating);
+
+      const drogueOpen = smoothstep(0.73, 0.80, t);
+      const mainOpen = smoothstep(0.84, 0.91, t);
+      if (drogueOpen > 0.02 && mainOpen < 0.95) {
+        drawParachute(p.x - 24, p.y - 54, drogueOpen * 0.9, '#eeeeee');
+        drawParachute(p.x + 24, p.y - 54, drogueOpen * 0.9, '#eeeeee');
+      }
+      if (mainOpen > 0.02) {
+        drawParachute(p.x - 54, p.y - 84, mainOpen * 1.15, '#ff6a3a');
+        drawParachute(p.x,      p.y - 94, mainOpen * 1.15, '#ffffff');
+        drawParachute(p.x + 54, p.y - 84, mainOpen * 1.15, '#ff6a3a');
+      }
+
+      drawSplash(w * 0.88, h * 0.89, smoothstep(0.95, 1.0, t));
+    }
+
+    resize();
+    updateHUD();
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>

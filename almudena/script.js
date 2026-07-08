@@ -28,7 +28,7 @@ function createRedirectButton() {
   redirectButton.classList.add('redirect-button');
   redirectButton.addEventListener('click', function () {
     alert("A ver se che gusta a tua nova web!");
-    window.location.href = '/fotis/';
+    window.location.href = '/almudena/fotis/';
   });
 
   body.appendChild(redirectButton);

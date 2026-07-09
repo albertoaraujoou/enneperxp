@@ -3,6 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
@@ -14,9 +27,11 @@
   </head>
   <body>
     <div class="slider-container">
+     
       <div
         class="slide active"
-        style="
+     
+     style="
           background-image: url('../2.jpg');
         "
       ></div>
@@ -69,15 +84,44 @@
         "
       ></div>
 
-
+    
       <button class="arrow left-arrow" id="left">
         <i class="fas fa-arrow-left"></i>
       </button>
+
+
+
+
 
       <button class="arrow right-arrow" id="right">
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
     <script src="script.js"></script>
+ <button id="btnFullscreen">FS</button>
+
+    <script>
+        const boton = document.getElementById("btnFullscreen");
+
+        boton.addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+                // Entrar en pantalla completa
+                document.documentElement.requestFullscreen();
+            } else {
+                // Salir de pantalla completa
+                document.exitFullscreen();
+            }
+        });
+
+        // Cambiar texto del botón según el estado
+        document.addEventListener("fullscreenchange", () => {
+            if (document.fullscreenElement) {
+                boton.textContent = "XFS";
+            } else {
+                boton.textContent = "FS";
+            }
+        });
+    </script>
+
   </body>
 </html>

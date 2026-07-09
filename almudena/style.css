@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+}
+
+.bg {
+  background: url('https://enneperxp.vercel.app/almudena/almudena.jpg')
+    no-repeat center center/cover;
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: calc(100vw + 60px);
+  height: calc(100vh + 60px);
+  z-index: -1;
+  filter: blur(0px);
+}
+
+.loading-text {
+  font-size: 50px;
+  color: #fff;
+}
+  #textoEnneperFX {
+    position: absolute; /* Establece la posición absoluta */
+    left: 0; /* Alinea la div a la derecha */
+    top: 0;
+    width: 600px;
+    text-decoration: none;
+    color: rgb(0, 0, 0); /* Color del texto por defecto */
+    transition: color 0.3s; /* Agregar transición para un cambio suave de color */
+
+    /*cursor: help;*/ /* Cambia el cursor a una mano cuando se pasa por encima */
+  }
+  #textoEnneperFX:hover {
+    color: rgb(255, 0, 0); /* Cambiar el color del texto a verde */
+    text-decoration: wavy;
+  }
+

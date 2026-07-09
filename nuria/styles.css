@@ -29,7 +29,7 @@ body {
 .loading-text {
   font-size: 50px;
   color: #fff;
-}
+} 
   #textoEnneperFX {
     position: absolute; /* Establece la posición absoluta */
     left: 0; /* Alinea la div a la derecha */

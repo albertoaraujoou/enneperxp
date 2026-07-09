@@ -1,14 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+
     <link rel="stylesheet" href="style.css" />
     <title>Carga Borrosa</title>
   </head>
   <body>
     <section class="bg"></section>
     <div class="loading-text">0%</div>
+    
+    <button id="btnFullscreen">FS</button>
+
+    <script>
+        const boton = document.getElementById("btnFullscreen");
+
+        boton.addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+                // Entrar en pantalla completa
+                document.documentElement.requestFullscreen();
+            } else {
+                // Salir de pantalla completa
+                document.exitFullscreen();
+            }
+        });
+
+        // Cambiar texto del botón según el estado
+        document.addEventListener("fullscreenchange", () => {
+            if (document.fullscreenElement) {
+                boton.textContent = "XFS";
+            } else {
+                boton.textContent = "FS";
+            }
+        });
+    </script>
 
     <script src="script.js"></script>
  

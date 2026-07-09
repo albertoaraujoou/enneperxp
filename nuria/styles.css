@@ -36,7 +36,7 @@ body {
     top: 0;
     width: 600px;
     text-decoration: none;
-    color: rgb(255, 0, 0); /* Color del texto por defecto */
+    color: rgb(37, 227, 50); /* Color del texto por defecto */
     transition: color 0.3s; /* Agregar transición para un cambio suave de color */
 
     /*cursor: help;*/ /* Cambia el cursor a una mano cuando se pasa por encima */

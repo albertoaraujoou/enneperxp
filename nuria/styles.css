@@ -36,12 +36,12 @@ body {
     top: 0;
     width: 600px;
     text-decoration: none;
-    color: rgb(0, 0, 0); /* Color del texto por defecto */
+    color: rgb(255, 254, 254); /* Color del texto por defecto */
     transition: color 0.3s; /* Agregar transición para un cambio suave de color */
 
     /*cursor: help;*/ /* Cambia el cursor a una mano cuando se pasa por encima */
   }
   #textoEnneperFX:hover {
-    color: rgb(255, 0, 0); /* Cambiar el color del texto a verde */
+    color: rgb(0, 155, 295); /* Cambiar el color del texto a verde */
     text-decoration: wavy;
   }

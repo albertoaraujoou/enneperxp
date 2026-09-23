@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>Rotación por cuaterniones · Three.js</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #111827;
+      color: #f9fafb;
+      font-family: system-ui, sans-serif;
+    }
+
+    #visor {
+      position: fixed;
+      inset: 0;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .panel {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(90%, 420px);
+      padding: 20px;
+      border: 1px solid #475569;
+      border-radius: 16px;
+      background: #111827ee;
+      text-align: center;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 1.15rem; }
+    p { margin: 0 0 16px; color: #cbd5e1; }
+
+    button {
+      padding: 10px 20px;
+      border: 0;
+      border-radius: 8px;
+      background: #93c5fd;
+      color: #111827;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    button:disabled { opacity: 0.5; cursor: default; }
+    #error { margin-top: 16px; color: #fca5a5; }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <main>
+    <div id="visor"></div>
+
+    <section class="panel" aria-labelledby="titulo">
+      <h1 id="titulo">Rotación por cuaterniones</h1>
+      <p>Un cubo gira alrededor de un eje inclinado.</p>
+      <button id="pausa" type="button" disabled>
+        Pausar animación
+      </button>
+      <p id="error" role="alert" hidden></p>
+      <noscript>Activa JavaScript para ver la escena 3D.</noscript>
+    </section>
+  </main>
+
+  <script type="module">
+    const visor = document.querySelector('#visor');
+    const boton = document.querySelector('#pausa');
+    const error = document.querySelector('#error');
+
+    function mostrarError(mensaje) {
+      error.textContent = mensaje;
+      error.hidden = false;
+      boton.disabled = true;
+    }
+
+    try {
+      const THREE = await import('three');
+
+      // Escena y cámara.
+      const escena = new THREE.Scene();
+      escena.background = new THREE.Color('#111827');
+
+      const camara = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+      camara.position.set(3.8, 2.8, 5);
+      camara.lookAt(0, 0, 0);
+
+      // Renderizador.
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      visor.appendChild(renderer.domElement);
+
+      renderer.domElement.setAttribute('role', 'img');
+      renderer.domElement.setAttribute(
+        'aria-label',
+        'Cubo de colores que gira alrededor de un eje inclinado'
+      );
+
+      // Cubo: este material permite ver las caras sin añadir luces.
+      const geometria = new THREE.BoxGeometry(1.7, 1.7, 1.7);
+      const material = new THREE.MeshNormalMaterial();
+      const cubo = new THREE.Mesh(geometria, material);
+      escena.add(cubo);
+
+      // Eje normalizado y cuaternión reutilizable.
+      const eje = new THREE.Vector3(1, 1, 0).normalize();
+      const incremento = new THREE.Quaternion();
+      const velocidad = THREE.MathUtils.degToRad(45); // Radianes/segundo.
+
+      // Respeta inicialmente la preferencia de movimiento reducido.
+      const movimientoReducido = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      );
+
+      let animando = !movimientoReducido.matches;
+      let instanteAnterior = null;
+      let contextoPerdido = false;
+
+      function actualizarBoton() {
+        boton.textContent = animando
+          ? 'Pausar animación'
+          : 'Reanudar animación';
+      }
+
+      function renderizar() {
+        if (!contextoPerdido) renderer.render(escena, camara);
+      }
+
+      function ajustarTamano() {
+        const ancho = Math.max(1, visor.clientWidth);
+        const alto = Math.max(1, visor.clientHeight);
+
+        // Limita la carga en pantallas con alta densidad de píxeles.
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setSize(ancho, alto, false);
+
+        camara.aspect = ancho / alto;
+        camara.updateProjectionMatrix();
+        renderizar();
+      }
+
+      function actualizar(tiempo) {
+        if (instanteAnterior === null) instanteAnterior = tiempo;
+
+        // Evita saltos grandes después de interrupciones.
+        const delta = Math.min((tiempo - instanteAnterior) / 1000, 0.05);
+        instanteAnterior = tiempo;
+
+        incremento.setFromAxisAngle(eje, velocidad * delta);
+
+        // Aplica el giro en los ejes del padre.
+        // Como el cubo es hijo directo de la escena, son los ejes globales.
+        cubo.quaternion.premultiply(incremento).normalize();
+
+        renderizar();
+      }
+
+      function sincronizarAnimacion() {
+        instanteAnterior = null;
+
+        const ejecutar = animando && !document.hidden && !contextoPerdido;
+        renderer.setAnimationLoop(ejecutar ? actualizar : null);
+
+        if (!ejecutar) renderizar();
+      }
+
+      boton.addEventListener('click', () => {
+        animando = !animando;
+        actualizarBoton();
+        sincronizarAnimacion();
+      });
+
+      document.addEventListener('visibilitychange', sincronizarAnimacion);
+      window.addEventListener('resize', ajustarTamano);
+
+      renderer.domElement.addEventListener('webglcontextlost', (evento) => {
+        evento.preventDefault();
+        contextoPerdido = true;
+        renderer.setAnimationLoop(null);
+        mostrarError('La conexión con la GPU se ha interrumpido.');
+      });
+
+      renderer.domElement.addEventListener('webglcontextrestored', () => {
+        contextoPerdido = false;
+        error.hidden = true;
+        boton.disabled = false;
+        ajustarTamano();
+        sincronizarAnimacion();
+      });
+
+      boton.disabled = false;
+      actualizarBoton();
+      ajustarTamano();
+      sincronizarAnimacion();
+    } catch (causa) {
+      console.error('No se pudo iniciar la escena 3D:', causa);
+      mostrarError(
+        'No se pudo cargar la escena. Comprueba tu conexión y que WebGL esté disponible.'
+      );
+    }
+  </script>
+</body>
+</html>

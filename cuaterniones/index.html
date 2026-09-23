@@ -1,228 +1,774 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111827">
-  <title>Rotación por cuaterniones · Three.js</title>
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Demostración interactiva de rotaciones por cuaterniones aplicadas a una botella de Klein con Three.js.">
+  <title>Botella de Klein y cuaterniones · Three.js</title>
 
   <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --panel: rgba(10, 24, 42, .90);
+      --panel-solid: #0a182a;
+      --line: rgba(148, 190, 219, .22);
+      --text: #edf7ff;
+      --muted: #a8bfd0;
+      --cyan: #58e1ff;
+      --pink: #ff82bd;
+      --gold: #ffd166;
+      --green: #74e39a;
+      --radius: 18px;
+    }
+
     * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
+      min-width: 320px;
       min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(45, 127, 157, .20), transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      font: 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+
+    button, select, input[type="range"] { accent-color: var(--cyan); }
+
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+      min-height: 100vh;
+    }
+
+    .stage {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 520px;
       overflow: hidden;
-      background: #111827;
-      color: #f9fafb;
-      font-family: system-ui, sans-serif;
+      background: linear-gradient(180deg, rgba(8, 25, 43, .25), rgba(3, 10, 19, .8));
     }
 
-    #visor {
-      position: fixed;
-      inset: 0;
-    }
-
-    canvas {
+    #viewport,
+    #viewport canvas {
       display: block;
       width: 100%;
       height: 100%;
     }
 
-    .panel {
-      position: fixed;
-      bottom: 24px;
+    .stage-copy {
+      position: absolute;
+      z-index: 2;
+      top: clamp(16px, 3vw, 36px);
+      left: clamp(16px, 3vw, 40px);
+      max-width: 620px;
+      pointer-events: none;
+      text-shadow: 0 2px 20px #000;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--cyan);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { line-height: 1.15; text-wrap: balance; }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2rem, 5vw, 4.8rem);
+      letter-spacing: -.045em;
+    }
+
+    .lede {
+      max-width: 54ch;
+      margin: 14px 0 0;
+      color: #d4e8f5;
+      font-size: clamp(.94rem, 1.4vw, 1.1rem);
+    }
+
+    .drag-hint {
+      position: absolute;
+      z-index: 2;
       left: 50%;
+      bottom: 18px;
       transform: translateX(-50%);
-      width: min(90%, 420px);
+      margin: 0;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(5, 14, 26, .72);
+      color: var(--muted);
+      font-size: .82rem;
+      pointer-events: none;
+      white-space: nowrap;
+      backdrop-filter: blur(10px);
+    }
+
+    .content {
+      position: relative;
+      z-index: 3;
+      padding: 18px;
+      border-left: 1px solid var(--line);
+      background: rgba(4, 12, 23, .72);
+      backdrop-filter: blur(18px);
+    }
+
+    .card {
+      margin-bottom: 16px;
       padding: 20px;
-      border: 1px solid #475569;
-      border-radius: 16px;
-      background: #111827ee;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 18px 55px rgba(0, 0, 0, .24);
+    }
+
+    .card h2 { margin: 0 0 14px; font-size: 1.15rem; }
+    .card h3 { margin: 20px 0 8px; font-size: 1rem; }
+    .card p { margin: 9px 0; }
+    .muted, small { color: var(--muted); }
+
+    .control { margin: 14px 0; }
+
+    .control > label,
+    .control > .label-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+      color: #dceefa;
+      font-size: .9rem;
+      font-weight: 650;
+    }
+
+    input[type="range"], select { width: 100%; }
+
+    select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #0d2137;
+      color: var(--text);
+    }
+
+    input[type="range"] { cursor: pointer; }
+
+    .axis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .axis-grid label {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .axis-grid input { grid-column: 1 / -1; width: 100%; }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    button {
+      min-height: 42px;
+      padding: 9px 13px;
+      border: 1px solid rgba(88, 225, 255, .35);
+      border-radius: 11px;
+      background: rgba(35, 103, 129, .28);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    button:hover { background: rgba(49, 147, 181, .38); transform: translateY(-1px); }
+    button.primary { background: var(--cyan); color: #04202a; }
+    button.primary:hover { background: #8deaff; }
+
+    .checks {
+      display: grid;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .checks label {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      color: #d7e8f3;
+      font-size: .9rem;
+    }
+
+    .readout {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      margin: 14px 0;
+    }
+
+    .readout div {
+      padding: 10px 6px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #071421;
       text-align: center;
     }
 
-    h1 { margin: 0 0 8px; font-size: 1.15rem; }
-    p { margin: 0 0 16px; color: #cbd5e1; }
+    .readout span { display: block; color: var(--muted); font-size: .72rem; }
+    .readout output { color: var(--gold); font: 700 .83rem ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-    button {
-      padding: 10px 20px;
-      border: 0;
-      border-radius: 8px;
-      background: #93c5fd;
-      color: #111827;
-      font: inherit;
-      font-weight: 600;
-      cursor: pointer;
+    .equation, pre {
+      overflow-x: auto;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #06111e;
+      color: #d7f5ff;
+      font: .78rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
 
-    button:focus-visible {
-      outline: 3px solid white;
-      outline-offset: 4px;
+    .equation { white-space: pre; }
+
+    code {
+      padding: .1em .35em;
+      border-radius: 5px;
+      background: rgba(88, 225, 255, .1);
+      color: #a9efff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
 
-    button:disabled { opacity: 0.5; cursor: default; }
-    #error { margin-top: 16px; color: #fca5a5; }
+    pre code { padding: 0; background: transparent; color: inherit; }
+
+    details {
+      border-top: 1px solid var(--line);
+      padding: 13px 0 0;
+      margin-top: 13px;
+    }
+
+    summary { color: var(--cyan); font-weight: 750; cursor: pointer; }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .swatch { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 50%; }
+    .x { background: #ff5d68; } .y { background: #74e39a; } .z { background: #5f9cff; }
+
+    #status {
+      position: fixed;
+      z-index: 20;
+      inset: auto 18px 18px 18px;
+      max-width: 680px;
+      margin: auto;
+      padding: 12px 16px;
+      border: 1px solid #ffb36b;
+      border-radius: 12px;
+      background: #341b0d;
+      color: #ffe5cb;
+    }
+
+    footer { color: var(--muted); font-size: .78rem; }
+
+    @media (max-width: 900px) {
+      .layout { display: block; }
+      .stage { position: relative; height: 72vh; min-height: 520px; }
+      .content { border-top: 1px solid var(--line); border-left: 0; }
+      .content-inner { max-width: 720px; margin: auto; }
+    }
+
+    @media (max-width: 520px) {
+      .stage { height: 66vh; min-height: 470px; }
+      .stage-copy { right: 16px; }
+      .lede { font-size: .9rem; }
+      .content { padding: 10px; }
+      .card { padding: 16px; }
+      .axis-grid { grid-template-columns: 1fr; }
+      .actions { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      button { transition: none; }
+    }
   </style>
 
   <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
       }
     }
   </script>
 </head>
 
 <body>
-  <main>
-    <div id="visor"></div>
-
-    <section class="panel" aria-labelledby="titulo">
-      <h1 id="titulo">Rotación por cuaterniones</h1>
-      <p>Un cubo gira alrededor de un eje inclinado.</p>
-      <button id="pausa" type="button" disabled>
-        Pausar animación
-      </button>
-      <p id="error" role="alert" hidden></p>
-      <noscript>Activa JavaScript para ver la escena 3D.</noscript>
+  <main class="layout">
+    <section class="stage" aria-labelledby="page-title">
+      <div class="stage-copy">
+        <p class="eyebrow">Three.js · geometría paramétrica</p>
+        <h1 id="page-title">Botella de Klein en rotación</h1>
+        <p class="lede">Una demostración de composición, normalización e interpolación de cuaterniones sobre una superficie no orientable.</p>
+      </div>
+      <div id="viewport"></div>
+      <p class="drag-hint">Arrastra para orbitar · rueda o pellizca para acercar</p>
     </section>
+
+    <aside class="content" aria-label="Controles y explicación">
+      <div class="content-inner">
+        <section class="card" aria-labelledby="controls-title">
+          <p class="eyebrow">Laboratorio interactivo</p>
+          <h2 id="controls-title">Control de la rotación</h2>
+
+          <div class="control">
+            <label for="reference">Marco de referencia</label>
+            <select id="reference">
+              <option value="world">Global: premultiply(qΔ)</option>
+              <option value="local">Local: multiply(qΔ)</option>
+            </select>
+          </div>
+
+          <div class="control">
+            <div class="label-row"><label for="speed">Velocidad angular</label><output id="speed-value">28°/s</output></div>
+            <input id="speed" type="range" min="0" max="120" step="1" value="28">
+          </div>
+
+          <div class="control">
+            <div class="label-row"><span>Eje de rotación (se normaliza)</span><output id="axis-value">(0.51, 0.85, 0.17)</output></div>
+            <div class="axis-grid">
+              <label>X <output id="x-value">0.6</output><input id="axis-x" type="range" min="-1" max="1" step="0.1" value="0.6"></label>
+              <label>Y <output id="y-value">1.0</output><input id="axis-y" type="range" min="-1" max="1" step="0.1" value="1"></label>
+              <label>Z <output id="z-value">0.2</output><input id="axis-z" type="range" min="-1" max="1" step="0.1" value="0.2"></label>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="toggle" class="primary" type="button">Pausar</button>
+            <button id="reset" type="button">Identidad</button>
+            <button id="target-a" type="button">SLERP → vista A</button>
+            <button id="target-b" type="button">rotateTowards → vista B</button>
+          </div>
+
+          <div class="checks">
+            <label><input id="wireframe" type="checkbox"> Mostrar malla paramétrica</label>
+            <label><input id="axes" type="checkbox" checked> Mostrar ejes globales</label>
+          </div>
+
+          <h3>Cuaternión actual <span class="muted">q = (x, y, z, w)</span></h3>
+          <div class="readout" aria-live="off">
+            <div><span>x</span><output id="qx">0.0000</output></div>
+            <div><span>y</span><output id="qy">0.0000</output></div>
+            <div><span>z</span><output id="qz">0.0000</output></div>
+            <div><span>w</span><output id="qw">1.0000</output></div>
+          </div>
+          <p class="muted">Norma: <output id="q-length">1.000000</output>. Three.js espera cuaterniones unitarios para representar rotaciones puras.</p>
+
+          <div class="legend" aria-label="Colores de los ejes">
+            <span><i class="swatch x" aria-hidden="true">&nbsp;</i>X rojo</span>
+            <span><i class="swatch y" aria-hidden="true">&nbsp;</i>Y verde</span>
+            <span><i class="swatch z" aria-hidden="true">&nbsp;</i>Z azul</span>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="math-title">
+          <p class="eyebrow">La superficie</p>
+          <h2 id="math-title">Parametrización clásica por tramos</h2>
+          <p>Los parámetros <em>u</em> y <em>v</em> recorren <code>[0, 2π]</code>. Cada pareja produce un punto <code>(x, y, z)</code>. La función se divide en dos tramos para formar el cuello que vuelve y atraviesa el cuerpo.</p>
+          <div class="equation" role="img" aria-label="Ecuaciones paramétricas de la botella de Klein">a = 2(1 − cos(u)/2)
+
+Si 0 ≤ u &lt; π:
+  x = 3 cos(u)(1 + sin(u)) + a cos(u) cos(v)
+  z = −8 sin(u) − a sin(u) cos(v)
+
+Si π ≤ u ≤ 2π:
+  x = 3 cos(u)(1 + sin(u)) + a cos(v + π)
+  z = −8 sin(u)
+
+En ambos tramos:
+  y = −a sin(v)</div>
+          <p>Es una inmersión de la botella de Klein en tres dimensiones: la zona donde el cuello atraviesa el cuerpo es una <strong>autointersección inevitable</strong> de esta representación, no un agujero ni un error de WebGL.</p>
+          <p>La botella de Klein es <strong>no orientable</strong>: no puede elegirse una normal continua y coherente para toda la superficie. Por eso el material usa <code>DoubleSide</code>. Las normales que calcula la malla son locales y sirven para iluminar, pero no constituyen una orientación global.</p>
+        </section>
+
+        <section class="card" aria-labelledby="api-title">
+          <p class="eyebrow">API de Three.js</p>
+          <h2 id="api-title">Qué hace cada operación</h2>
+
+          <details open>
+            <summary>Quaternion y setFromAxisAngle</summary>
+            <p><code>new THREE.Quaternion()</code> crea la identidad <code>(0, 0, 0, 1)</code>. <code>setFromAxisAngle(eje, ángulo)</code> crea un giro alrededor de un eje unitario; el ángulo se expresa en radianes.</p>
+            <pre><code>eje.normalize();
+incremento.setFromAxisAngle(eje, velocidad * delta);</code></pre>
+          </details>
+
+          <details>
+            <summary>multiply frente a premultiply</summary>
+            <p>La multiplicación no conmuta. <code>objeto.quaternion.multiply(qΔ)</code> añade el giro después de la orientación actual y hace que el eje viaje con el objeto. <code>premultiply(qΔ)</code> antepone el giro y conserva el eje en el marco del padre; aquí coincide con el mundo porque la botella cuelga directamente de la escena.</p>
+          </details>
+
+          <details>
+            <summary>normalize</summary>
+            <p>Un cuaternión de rotación debe tener norma uno. Los productos repetidos pueden acumular un pequeño error de coma flotante, por eso el ejemplo llama periódicamente a <code>normalize()</code>.</p>
+          </details>
+
+          <details>
+            <summary>slerp y rotateTowards</summary>
+            <p><code>slerpQuaternions(origen, destino, t)</code> interpola esféricamente con <code>t</code> entre 0 y 1; el botón “vista A” muestra este recorrido durante 1,5 segundos. Para una velocidad angular constante, <code>rotateTowards(destino, paso)</code> es más directo: avanza un número de radianes por fotograma y nunca sobrepasa el destino. El botón “vista B” muestra esa segunda operación.</p>
+          </details>
+
+          <details>
+            <summary>copy, clone, invert y angleTo</summary>
+            <p><code>copy</code> reemplaza los cuatro componentes; <code>clone</code> crea una instancia independiente; <code>invert</code> obtiene la rotación inversa de un cuaternión unitario; y <code>angleTo</code> mide en radianes la separación angular entre dos orientaciones.</p>
+          </details>
+
+          <details>
+            <summary>setFromUnitVectors y applyQuaternion</summary>
+            <p><code>setFromUnitVectors(a, b)</code> construye el giro que alinea una dirección con otra. <code>vector.applyQuaternion(q)</code> rota un vector sin modificar una malla; resulta útil para cámaras, direcciones y fuerzas.</p>
+          </details>
+        </section>
+
+        <section class="card" aria-labelledby="loop-title">
+          <p class="eyebrow">Núcleo del bucle</p>
+          <h2 id="loop-title">Rotación independiente de los FPS</h2>
+          <pre><code>const delta = Math.min(clock.getDelta(), 0.05);
+const angulo = velocidadRadPorSegundo * delta;
+
+incremento.setFromAxisAngle(ejeNormalizado, angulo);
+
+if (marco === 'local') {
+  botella.quaternion.multiply(incremento);
+} else {
+  botella.quaternion.premultiply(incremento);
+}
+
+botella.quaternion.normalize();</code></pre>
+          <p>Multiplicar la velocidad por <code>delta</code> mantiene la misma velocidad perceptiva a 30, 60 o 144 fotogramas por segundo. El límite de 0,05 s evita saltos grandes al regresar a una pestaña que estuvo inactiva.</p>
+        </section>
+
+        <section class="card">
+          <h2>Notas para producción</h2>
+          <p>La versión de Three.js está fijada para evitar cambios inesperados. En una aplicación real conviene instalarla con npm, servir los módulos desde tu propio paquete y definir una política CSP sin código inline.</p>
+          <p>El renderizador limita la densidad a dos píxeles físicos por píxel CSS, se adapta al contenedor, pausa al ocultar la pestaña, respeta la preferencia de movimiento reducido y comunica la pérdida del contexto WebGL.</p>
+          <footer>Necesita un navegador con WebGL 2 y acceso al CDN. Sírvelo por HTTP(S); por ejemplo, con <code>npx serve</code>.</footer>
+        </section>
+      </div>
+    </aside>
   </main>
 
-  <script type="module">
-    const visor = document.querySelector('#visor');
-    const boton = document.querySelector('#pausa');
-    const error = document.querySelector('#error');
+  <p id="status" role="alert" hidden></p>
 
-    function mostrarError(mensaje) {
-      error.textContent = mensaje;
-      error.hidden = false;
-      boton.disabled = true;
-    }
+  <script type="module">
+    const status = document.querySelector('#status');
 
     try {
       const THREE = await import('three');
+      const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+      const { ParametricGeometry } = await import('three/addons/geometries/ParametricGeometry.js');
 
-      // Escena y cámara.
-      const escena = new THREE.Scene();
-      escena.background = new THREE.Color('#111827');
+      const viewport = document.querySelector('#viewport');
+      const ui = {
+        reference: document.querySelector('#reference'),
+        speed: document.querySelector('#speed'),
+        speedValue: document.querySelector('#speed-value'),
+        axisX: document.querySelector('#axis-x'),
+        axisY: document.querySelector('#axis-y'),
+        axisZ: document.querySelector('#axis-z'),
+        xValue: document.querySelector('#x-value'),
+        yValue: document.querySelector('#y-value'),
+        zValue: document.querySelector('#z-value'),
+        axisValue: document.querySelector('#axis-value'),
+        toggle: document.querySelector('#toggle'),
+        reset: document.querySelector('#reset'),
+        targetA: document.querySelector('#target-a'),
+        targetB: document.querySelector('#target-b'),
+        wireframe: document.querySelector('#wireframe'),
+        axes: document.querySelector('#axes'),
+        qx: document.querySelector('#qx'),
+        qy: document.querySelector('#qy'),
+        qz: document.querySelector('#qz'),
+        qw: document.querySelector('#qw'),
+        qLength: document.querySelector('#q-length')
+      };
 
-      const camara = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-      camara.position.set(3.8, 2.8, 5);
-      camara.lookAt(0, 0, 0);
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07111f);
+      scene.fog = new THREE.FogExp2(0x07111f, 0.032);
 
-      // Renderizador.
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+      camera.position.set(12, 8.5, 15);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
       renderer.outputColorSpace = THREE.SRGBColorSpace;
-      visor.appendChild(renderer.domElement);
-
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      viewport.appendChild(renderer.domElement);
+      renderer.domElement.setAttribute('aria-label', 'Visualización tridimensional interactiva de una botella de Klein en rotación');
       renderer.domElement.setAttribute('role', 'img');
-      renderer.domElement.setAttribute(
-        'aria-label',
-        'Cubo de colores que gira alrededor de un eje inclinado'
-      );
 
-      // Cubo: este material permite ver las caras sin añadir luces.
-      const geometria = new THREE.BoxGeometry(1.7, 1.7, 1.7);
-      const material = new THREE.MeshNormalMaterial();
-      const cubo = new THREE.Mesh(geometria, material);
-      escena.add(cubo);
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.minDistance = 8;
+      controls.maxDistance = 34;
+      controls.target.set(0, 0, 0);
 
-      // Eje normalizado y cuaternión reutilizable.
-      const eje = new THREE.Vector3(1, 1, 0).normalize();
-      const incremento = new THREE.Quaternion();
-      const velocidad = THREE.MathUtils.degToRad(45); // Radianes/segundo.
+      // Parametrización clásica incluida explícitamente para poder estudiarla.
+      function klein(u01, v01, target) {
+        const u = u01 * Math.PI * 2;
+        const v = v01 * Math.PI * 2;
+        const a = 2 * (1 - Math.cos(u) / 2);
+        let x;
+        let z;
 
-      // Respeta inicialmente la preferencia de movimiento reducido.
-      const movimientoReducido = window.matchMedia(
-        '(prefers-reduced-motion: reduce)'
-      );
+        if (u < Math.PI) {
+          x = 3 * Math.cos(u) * (1 + Math.sin(u)) + a * Math.cos(u) * Math.cos(v);
+          z = -8 * Math.sin(u) - a * Math.sin(u) * Math.cos(v);
+        } else {
+          x = 3 * Math.cos(u) * (1 + Math.sin(u)) + a * Math.cos(v + Math.PI);
+          z = -8 * Math.sin(u);
+        }
 
-      let animando = !movimientoReducido.matches;
-      let instanteAnterior = null;
-      let contextoPerdido = false;
-
-      function actualizarBoton() {
-        boton.textContent = animando
-          ? 'Pausar animación'
-          : 'Reanudar animación';
+        const y = -a * Math.sin(v);
+        target.set(x, y, z).multiplyScalar(0.62);
       }
 
-      function renderizar() {
-        if (!contextoPerdido) renderer.render(escena, camara);
-      }
+      const geometry = new ParametricGeometry(klein, 96, 32);
+      geometry.computeVertexNormals();
+      geometry.center();
 
-      function ajustarTamano() {
-        const ancho = Math.max(1, visor.clientWidth);
-        const alto = Math.max(1, visor.clientHeight);
-
-        // Limita la carga en pantallas con alta densidad de píxeles.
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        renderer.setSize(ancho, alto, false);
-
-        camara.aspect = ancho / alto;
-        camara.updateProjectionMatrix();
-        renderizar();
-      }
-
-      function actualizar(tiempo) {
-        if (instanteAnterior === null) instanteAnterior = tiempo;
-
-        // Evita saltos grandes después de interrupciones.
-        const delta = Math.min((tiempo - instanteAnterior) / 1000, 0.05);
-        instanteAnterior = tiempo;
-
-        incremento.setFromAxisAngle(eje, velocidad * delta);
-
-        // Aplica el giro en los ejes del padre.
-        // Como el cubo es hijo directo de la escena, son los ejes globales.
-        cubo.quaternion.premultiply(incremento).normalize();
-
-        renderizar();
-      }
-
-      function sincronizarAnimacion() {
-        instanteAnterior = null;
-
-        const ejecutar = animando && !document.hidden && !contextoPerdido;
-        renderer.setAnimationLoop(ejecutar ? actualizar : null);
-
-        if (!ejecutar) renderizar();
-      }
-
-      boton.addEventListener('click', () => {
-        animando = !animando;
-        actualizarBoton();
-        sincronizarAnimacion();
+      const material = new THREE.MeshPhysicalMaterial({
+        color: 0x4cd8ee,
+        emissive: 0x071f2d,
+        emissiveIntensity: 0.8,
+        metalness: 0.08,
+        roughness: 0.28,
+        clearcoat: 0.65,
+        clearcoatRoughness: 0.2,
+        side: THREE.DoubleSide
       });
 
-      document.addEventListener('visibilitychange', sincronizarAnimacion);
-      window.addEventListener('resize', ajustarTamano);
+      const bottle = new THREE.Mesh(geometry, material);
+      bottle.rotation.set(-0.12, 0, 0.08);
+      scene.add(bottle);
 
-      renderer.domElement.addEventListener('webglcontextlost', (evento) => {
-        evento.preventDefault();
-        contextoPerdido = true;
-        renderer.setAnimationLoop(null);
-        mostrarError('La conexión con la GPU se ha interrumpido.');
+      // Una segunda malla ligeramente mayor evita el z-fighting de la retícula.
+      const wireMaterial = new THREE.MeshBasicMaterial({ color: 0xe9fbff, wireframe: true, transparent: true, opacity: 0.18 });
+      const wire = new THREE.Mesh(geometry, wireMaterial);
+      wire.scale.setScalar(1.003);
+      wire.visible = false;
+      bottle.add(wire);
+
+      const axes = new THREE.AxesHelper(5.2);
+      axes.position.set(-5.7, -3.4, -2.5);
+      scene.add(axes);
+
+      scene.add(new THREE.HemisphereLight(0xbdeeff, 0x12213d, 2.1));
+      const key = new THREE.DirectionalLight(0xffffff, 4.2);
+      key.position.set(7, 10, 8);
+      scene.add(key);
+      const rim = new THREE.DirectionalLight(0xff69b4, 3.4);
+      rim.position.set(-8, 3, -7);
+      scene.add(rim);
+
+      const floor = new THREE.Mesh(
+        new THREE.CircleGeometry(11, 96),
+        new THREE.MeshBasicMaterial({ color: 0x0b1b2c, transparent: true, opacity: 0.68, side: THREE.DoubleSide })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -5.2;
+      scene.add(floor);
+
+      const clock = new THREE.Clock();
+      const axis = new THREE.Vector3(0.6, 1, 0.2).normalize();
+      const increment = new THREE.Quaternion();
+      const targetQuaternion = new THREE.Quaternion();
+      const slerpStartQuaternion = new THREE.Quaternion();
+      const identity = new THREE.Quaternion();
+      const targetA = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.25, 1.2, -0.45));
+      const targetB = new THREE.Quaternion().setFromEuler(new THREE.Euler(-1.05, -0.35, 0.7));
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      let running = !reduceMotion.matches;
+      let slerping = false;
+      let transitionMode = 'rotateTowards';
+      let slerpElapsed = 0;
+      let contextLost = false;
+      let normalizationCounter = 0;
+
+      function updateAxis() {
+        const raw = new THREE.Vector3(
+          Number(ui.axisX.value),
+          Number(ui.axisY.value),
+          Number(ui.axisZ.value)
+        );
+
+        if (raw.lengthSq() < 1e-8) raw.set(0, 1, 0);
+        axis.copy(raw).normalize();
+
+        ui.xValue.value = Number(ui.axisX.value).toFixed(1);
+        ui.yValue.value = Number(ui.axisY.value).toFixed(1);
+        ui.zValue.value = Number(ui.axisZ.value).toFixed(1);
+        ui.axisValue.value = `(${axis.x.toFixed(2)}, ${axis.y.toFixed(2)}, ${axis.z.toFixed(2)})`;
+      }
+
+      function updateReadout() {
+        const q = bottle.quaternion;
+        ui.qx.value = q.x.toFixed(4);
+        ui.qy.value = q.y.toFixed(4);
+        ui.qz.value = q.z.toFixed(4);
+        ui.qw.value = q.w.toFixed(4);
+        ui.qLength.value = q.length().toFixed(6);
+      }
+
+      function animate() {
+        if (contextLost) return;
+
+        const delta = Math.min(clock.getDelta(), 0.05);
+        controls.update();
+
+        if (slerping) {
+          if (transitionMode === 'slerp') {
+            slerpElapsed += delta;
+            const t = Math.min(slerpElapsed / 1.5, 1);
+            bottle.quaternion.slerpQuaternions(slerpStartQuaternion, targetQuaternion, t);
+            if (t >= 1) slerping = false;
+          } else {
+            const step = THREE.MathUtils.degToRad(90) * delta;
+            bottle.quaternion.rotateTowards(targetQuaternion, step);
+            if (bottle.quaternion.angleTo(targetQuaternion) < 1e-5) slerping = false;
+          }
+        } else if (running) {
+          const angle = THREE.MathUtils.degToRad(Number(ui.speed.value)) * delta;
+          increment.setFromAxisAngle(axis, angle);
+
+          if (ui.reference.value === 'local') {
+            bottle.quaternion.multiply(increment);
+          } else {
+            bottle.quaternion.premultiply(increment);
+          }
+
+          if (++normalizationCounter >= 120) {
+            bottle.quaternion.normalize();
+            normalizationCounter = 0;
+          }
+        }
+
+        updateReadout();
+        renderer.render(scene, camera);
+      }
+
+      function resize() {
+        const width = Math.max(1, viewport.clientWidth);
+        const height = Math.max(1, viewport.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
+
+      function refreshToggle() {
+        ui.toggle.textContent = running ? 'Pausar' : 'Reanudar';
+        ui.toggle.setAttribute('aria-pressed', String(!running));
+      }
+
+      ui.toggle.addEventListener('click', () => {
+        running = !running;
+        slerping = false;
+        refreshToggle();
+      });
+
+      ui.reset.addEventListener('click', () => {
+        running = false;
+        slerping = true;
+        transitionMode = 'rotateTowards';
+        targetQuaternion.copy(identity);
+        refreshToggle();
+      });
+
+      ui.targetA.addEventListener('click', () => {
+        running = false;
+        slerping = true;
+        transitionMode = 'slerp';
+        slerpElapsed = 0;
+        slerpStartQuaternion.copy(bottle.quaternion);
+        targetQuaternion.copy(targetA);
+        refreshToggle();
+      });
+
+      ui.targetB.addEventListener('click', () => {
+        running = false;
+        slerping = true;
+        transitionMode = 'rotateTowards';
+        targetQuaternion.copy(targetB);
+        refreshToggle();
+      });
+
+      ui.speed.addEventListener('input', () => { ui.speedValue.value = `${ui.speed.value}°/s`; });
+      [ui.axisX, ui.axisY, ui.axisZ].forEach(input => input.addEventListener('input', updateAxis));
+      ui.wireframe.addEventListener('change', () => { wire.visible = ui.wireframe.checked; });
+      ui.axes.addEventListener('change', () => { axes.visible = ui.axes.checked; });
+
+      window.addEventListener('resize', resize, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) clock.getDelta();
+      });
+
+      renderer.domElement.addEventListener('webglcontextlost', event => {
+        event.preventDefault();
+        contextLost = true;
+        status.textContent = 'Se ha perdido el contexto WebGL. La animación se reanudará si el navegador consigue restaurarlo.';
+        status.hidden = false;
       });
 
       renderer.domElement.addEventListener('webglcontextrestored', () => {
-        contextoPerdido = false;
-        error.hidden = true;
-        boton.disabled = false;
-        ajustarTamano();
-        sincronizarAnimacion();
+        contextLost = false;
+        status.hidden = true;
+        resize();
       });
 
-      boton.disabled = false;
-      actualizarBoton();
-      ajustarTamano();
-      sincronizarAnimacion();
-    } catch (causa) {
-      console.error('No se pudo iniciar la escena 3D:', causa);
-      mostrarError(
-        'No se pudo cargar la escena. Comprueba tu conexión y que WebGL esté disponible.'
-      );
+      updateAxis();
+      updateReadout();
+      refreshToggle();
+      resize();
+      renderer.setAnimationLoop(animate);
+    } catch (error) {
+      console.error('No se pudo iniciar la demostración:', error);
+      status.textContent = 'No se pudo cargar la escena 3D. Comprueba la conexión, la compatibilidad con WebGL y que la página se sirva por HTTP(S).';
+      status.hidden = false;
     }
   </script>
 </body>

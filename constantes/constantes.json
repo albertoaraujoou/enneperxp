@@ -1,0 +1,1374 @@
+[
+  {
+    "id": "c",
+    "name": "Velocidad de la luz",
+    "symbol": "c",
+    "key": "speed of light in vacuum",
+    "group": "universales",
+    "year": "1676 · finitud de la velocidad; 1865 · teoría electromagnética",
+    "people": [
+      "romer",
+      "fizeau",
+      "maxwell"
+    ],
+    "history": "Ole Rømer detectó el retraso de los eclipses de Ío (1676); Hippolyte Fizeau realizó una medición terrestre (1849). James Clerk Maxwell identificó la luz con ondas electromagnéticas. No hay un descubridor único del valor moderno.",
+    "formulas": [
+      "E = mc² — equivalencia masa–energía",
+      "c = λν — propagación de la luz en el vacío",
+      "γ = 1/√(1 − v²/c²) — factor relativista"
+    ],
+    "exp": {
+      "name": "Frecuencia y longitud de onda de un láser estabilizado",
+      "year": "1972",
+      "authors": "K. M. Evenson, J. S. Wells, F. R. Petersen, B. L. Danielson, G. W. Day, R. L. Barger y J. L. Hall (NBS).",
+      "photos": [
+        "hall"
+      ],
+      "result": "c = 299 792 456,2 m s⁻¹",
+      "error": "± 1,1 m s⁻¹; incertidumbre publicada, anterior a la definición del metro de 1983.",
+      "steps": [
+        "Estabilizar un láser de helio-neón con una transición del metano.",
+        "Comparar su frecuencia con el patrón de tiempo mediante una cadena de síntesis.",
+        "Medir la longitud de onda por interferometría respecto al patrón de longitud de criptón.",
+        "Multiplicar c = λν y evaluar las incertidumbres de ambos patrones."
+      ],
+      "source": "https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir6618.pdf"
+    },
+    "cosmos": "No existe un intervalo universal de colapso para esta constante dimensional por separado. Debe fijarse qué razones adimensionales cambian y qué parámetros permanecen constantes. A velocidad material v fija, aumentar c reduce v/c y los efectos relativistas; la comparación tiene sentido sólo dentro del modelo y sistema de unidades especificados.",
+    "refs": [
+      [
+        "Historia y medida",
+        "https://www.nist.gov/si-redefinition/meter"
+      ]
+    ],
+    "kind": "Exacta",
+    "value": "299 792 458",
+    "unc": "(exact)",
+    "unit": "m s^-1"
+  },
+  {
+    "id": "G",
+    "name": "Gravitación universal",
+    "symbol": "G",
+    "key": "Newtonian constant of gravitation",
+    "group": "universales",
+    "year": "1687 · ley; 1798 · experimento",
+    "people": [
+      "newton",
+      "cavendish"
+    ],
+    "history": "Isaac Newton formuló la gravitación universal. Henry Cavendish midió la atracción entre masas para determinar la densidad terrestre; no publicó G en la notación SI actual.",
+    "formulas": [
+      "F = Gm₁m₂/r² — gravitación newtoniana",
+      "rₛ = 2GM/c² — radio de Schwarzschild",
+      "H² = 8πGρ/3 + Λc²/3 − kc²/a² — ecuación de Friedmann"
+    ],
+    "exp": {
+      "name": "Balanza de torsión: densidad de la Tierra",
+      "year": "1797–1798",
+      "authors": "Henry Cavendish, a partir del instrumento concebido por John Michell.",
+      "photos": [
+        "cavendish"
+      ],
+      "result": "ρTierra / ρagua = 5,48 (publicado). Equivale aproximadamente a G ≈ 6,75 × 10⁻¹¹ m³ kg⁻¹ s⁻².",
+      "error": "No se atribuye un ± moderno al resultado original. El valor de G es una reconstrucción aproximada, no la magnitud que publicó Cavendish.",
+      "steps": [
+        "Suspender una varilla con dos esferas pequeñas de plomo de un hilo de torsión.",
+        "Acercar dos grandes masas de plomo y observar el giro desde fuera del recinto.",
+        "Medir el período de oscilación para calibrar la rigidez del hilo.",
+        "Comparar la atracción entre esferas con el peso terrestre y deducir la densidad media de la Tierra."
+      ],
+      "source": "https://doi.org/10.1098/rstl.1798.0022"
+    },
+    "cosmos": "No existe un intervalo universal de colapso para esta constante dimensional por separado. Debe fijarse qué razones adimensionales cambian y qué parámetros permanecen constantes. En el modelo newtoniano, a masa y radio fijos, G × 4 reduce a la mitad el tiempo dinámico ∝ 1/√G. G = 0 elimina la atracción gravitatoria newtoniana. Estos límites no predicen por sí solos el destino de todo el universo.",
+    "refs": [
+      [
+        "Explicación del experimento",
+        "https://www.nist.gov/how-do-you-measure-it/how-do-you-measure-strength-gravity"
+      ]
+    ],
+    "kind": "Medida",
+    "value": "6.674 30 e-11",
+    "unc": "0.000 15 e-11",
+    "unit": "m^3 kg^-1 s^-2"
+  },
+  {
+    "id": "h",
+    "name": "Constante de Planck",
+    "symbol": "h",
+    "key": "Planck constant",
+    "group": "universales",
+    "year": "1900",
+    "people": [
+      "planck"
+    ],
+    "history": "Max Planck introdujo el cuanto de acción al estudiar la radiación térmica. Su valor numérico en el SI es exacto desde 2019.",
+    "formulas": [
+      "E = hν — energía de un fotón",
+      "λ = h/p — longitud de onda de de Broglie",
+      "Eₙ = (n + ½)hν — oscilador armónico"
+    ],
+    "exp": {
+      "name": "Balanza de Kibble NIST-4",
+      "year": "2015–2017 · publicación: 2017",
+      "authors": "D. Haddad, F. Seifert, L. S. Chao, A. Possolo, D. B. Newell, J. R. Pratt, C. J. Williams y S. Schlamminger.",
+      "photos": [
+        "haddad"
+      ],
+      "result": "h = 6,626 069 934(89) × 10⁻³⁴ J s",
+      "error": "u = 0,000 000 089 × 10⁻³⁴ J s; incertidumbre estándar relativa: 13 × 10⁻⁹.",
+      "steps": [
+        "En modo fuerza, equilibrar el peso de una masa con la fuerza sobre una bobina.",
+        "En modo velocidad, mover la bobina y medir la tensión inducida.",
+        "Relacionar potencia mecánica mgv con potencia eléctrica usando patrones Josephson y Hall cuántico.",
+        "Antes de 2019, la masa patrón permitía determinar h; hoy el h definido permite realizar el kilogramo."
+      ],
+      "source": "https://arxiv.org/abs/1708.02473"
+    },
+    "cosmos": "No existe un intervalo universal de colapso para esta constante dimensional por separado. Debe fijarse qué razones adimensionales cambian y qué parámetros permanecen constantes. A p fijo, h × 2 duplica λ de de Broglie. El límite formal h → 0 suprime interferencias a escalas de acción fijas, pero no constituye una predicción cosmológica consistente manteniendo toda la química inalterada.",
+    "refs": [],
+    "kind": "Exacta",
+    "value": "6.626 070 15 e-34",
+    "unc": "(exact)",
+    "unit": "J Hz^-1"
+  },
+  {
+    "id": "hbar",
+    "name": "Planck reducida",
+    "symbol": "ℏ",
+    "key": "reduced Planck constant",
+    "group": "universales",
+    "year": "1900 · origen de h",
+    "people": [
+      "planck"
+    ],
+    "history": "ℏ = h/(2π) es una forma derivada de la constante de Planck. No corresponde a un descubrimiento ni a un experimento independiente.",
+    "formulas": [
+      "E = ℏω",
+      "Δx Δp ≥ ℏ/2",
+      "iℏ ∂ψ/∂t = Ĥψ"
+    ],
+    "exp": {
+      "name": "Determinación indirecta desde h · NIST-4",
+      "year": "2015–2017 · publicación: 2017",
+      "authors": "D. Haddad, F. Seifert, L. S. Chao, A. Possolo, D. B. Newell, J. R. Pratt, C. J. Williams y S. Schlamminger.",
+      "photos": [
+        "haddad"
+      ],
+      "result": "h = 6,626 069 934(89) × 10⁻³⁴ J s; ℏ se obtiene dividiendo por 2π.",
+      "error": "La incertidumbre absoluta de ℏ es u(h)/(2π); la relativa es la misma.",
+      "steps": [
+        "En modo fuerza, equilibrar el peso de una masa con la fuerza sobre una bobina.",
+        "En modo velocidad, mover la bobina y medir la tensión inducida.",
+        "Relacionar potencia mecánica mgv con potencia eléctrica usando patrones Josephson y Hall cuántico.",
+        "Antes de 2019, la masa patrón permitía determinar h; hoy el h definido permite realizar el kilogramo."
+      ],
+      "source": "https://arxiv.org/abs/1708.02473"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. A potencial y masa fijos, cambia las escalas de interferencia y los niveles cuánticos.",
+    "refs": [],
+    "kind": "Derivada exacta",
+    "value": "1.054 571 817... e-34",
+    "unc": "(exact)",
+    "unit": "J s"
+  },
+  {
+    "id": "e",
+    "name": "Carga elemental",
+    "symbol": "e",
+    "key": "elementary charge",
+    "group": "electromagnetismo",
+    "year": "1891 · nombre electrón; 1909–1913 · medición precisa",
+    "people": [
+      "thomson",
+      "millikan"
+    ],
+    "history": "George Johnstone Stoney propuso una unidad elemental de carga y el término electrón. J. J. Thomson identificó el electrón en 1897; Millikan y Fletcher desarrollaron el método de gotas. No se debe atribuir toda esta historia a una sola persona.",
+    "formulas": [
+      "q = ne — carga cuantizada en unidades de e para cuerpos ordinarios",
+      "F = qE — fuerza eléctrica",
+      "α = e²/(4πε₀ℏc)"
+    ],
+    "exp": {
+      "name": "Gotas de aceite",
+      "year": "1909–1913 · resultado: 1913",
+      "authors": "Robert A. Millikan; Harvey Fletcher contribuyó al desarrollo del método.",
+      "photos": [
+        "millikan"
+      ],
+      "result": "e = (4,774 ± 0,009) × 10⁻¹⁰ statC ≈ (1,5924 ± 0,0030) × 10⁻¹⁹ C",
+      "error": "Error declarado en el trabajo histórico; no equivale automáticamente a una incertidumbre estándar moderna. El sesgo por viscosidad explica parte de la diferencia con el valor actual.",
+      "steps": [
+        "Pulverizar gotas de aceite entre placas metálicas y observarlas al microscopio.",
+        "Obtener el tamaño de cada gota a partir de su velocidad terminal, corrigiendo la ley de Stokes.",
+        "Aplicar un campo eléctrico y medir su efecto en el movimiento.",
+        "Calcular las cargas y encontrar una unidad común en sus múltiplos enteros."
+      ],
+      "source": "https://www.nasonline.org/wp-content/uploads/2024/06/millikan-robert.pdf"
+    },
+    "cosmos": "No existe un intervalo universal de colapso para esta constante dimensional por separado. Debe fijarse qué razones adimensionales cambian y qué parámetros permanecen constantes. A ε₀, ℏ y c fijos, e × 2 implica α × 4. La alteración física relevante es la de α, que modifica espectros y enlaces.",
+    "refs": [],
+    "kind": "Exacta",
+    "value": "1.602 176 634 e-19",
+    "unc": "(exact)",
+    "unit": "C"
+  },
+  {
+    "id": "alpha",
+    "name": "Estructura fina",
+    "symbol": "α",
+    "key": "fine-structure constant",
+    "group": "electromagnetismo",
+    "year": "1916",
+    "people": [
+      "sommerfeld"
+    ],
+    "history": "Arnold Sommerfeld introdujo α en su extensión relativista del modelo atómico de Bohr. Es una constante adimensional; el valor tabulado corresponde al límite de baja energía.",
+    "formulas": [
+      "α = e²/(4πε₀ℏc)",
+      "Eₙ ≈ −mₑc²α²/(2n²) — hidrógeno no relativista",
+      "a₀ = ℏ/(mₑcα)"
+    ],
+    "exp": {
+      "name": "Retroceso atómico de rubidio",
+      "year": "2020",
+      "authors": "Léo Morel, Zhibin Yao, Pierre Cladé y Saïda Guellati-Khélifa.",
+      "photos": [
+        "guellati"
+      ],
+      "result": "α⁻¹ = 137,035 999 206(11)",
+      "error": "u(α⁻¹) = 0,000 000 011; incertidumbre relativa: 81 × 10⁻¹².",
+      "steps": [
+        "Enfriar átomos de rubidio y controlar su velocidad mediante pulsos láser.",
+        "Medir el retroceso al absorber fotones por interferometría de ondas de materia.",
+        "Extraer h/mRb y combinarlo con masas relativas y R∞ para inferir α."
+      ],
+      "source": "https://www.nature.com/articles/s41586-020-2964-7"
+    },
+    "cosmos": "En el modelo no relativista, con mₑ, ℏ y c fijos, α × 2 reduce a₀ a la mitad y multiplica por cuatro la energía de enlace. Es una comparación aproximada, no un límite de habitabilidad. Cuando Zα se aproxima a 1 falla la descripción atómica perturbativa habitual; no significa que el universo colapse. No hay un intervalo único aceptado de α que garantice estrellas, química o vida.",
+    "refs": [
+      [
+        "Estrellas en otros universos",
+        "https://arxiv.org/abs/1511.06958"
+      ]
+    ],
+    "kind": "Medida",
+    "value": "7.297 352 5643 e-3",
+    "unc": "0.000 000 0011 e-3",
+    "unit": ""
+  },
+  {
+    "id": "kb",
+    "name": "Constante de Boltzmann",
+    "symbol": "kB",
+    "key": "Boltzmann constant",
+    "group": "termica",
+    "year": "1877 · entropía estadística; 1900 · formulación de Planck",
+    "people": [
+      "boltzmann",
+      "planck"
+    ],
+    "history": "Ludwig Boltzmann estableció la relación estadística entre entropía y multiplicidad. Max Planck formuló y utilizó la constante microscópica k en su teoría de radiación.",
+    "formulas": [
+      "S = kB ln Ω",
+      "⟨Ecin⟩ = 3kBT/2 — gas monoatómico clásico",
+      "pV = NkBT"
+    ],
+    "exp": {
+      "name": "Termometría acústica de helio-4",
+      "year": "2017",
+      "authors": "L. Pitre, F. Sparasci, M. R. Moldover, C. Guianvarc’h, C. Martin, M. Himbert, M. Plimmer, J. B. Mehl, G. Albo, B. Gao y L. Risegari.",
+      "photos": [
+        "moldover"
+      ],
+      "result": "kB = 1,380 648 49(81) × 10⁻²³ J K⁻¹",
+      "error": "u = 0,000 000 81 × 10⁻²³ J K⁻¹; u relativa = 0,59 ppm.",
+      "steps": [
+        "Llenar una cavidad casi esférica de 3 litros con helio-4 a temperatura conocida.",
+        "Medir resonancias acústicas y dimensiones de la cavidad para hallar la velocidad del sonido.",
+        "Extrapolar a densidad nula y usar v² = (5/3)kBT/m."
+      ],
+      "source": "https://www.nist.gov/publications/new-measurement-boltzmann-constant-k-acoustic-thermometry-helium-4-gas"
+    },
+    "cosmos": "kB convierte temperatura en energía. Cambiar sólo su número equivale a cambiar la escala de temperatura: no existe un rango de kB que destruya el universo. Si cambia la razón kBT/E de un sistema, cambian la ionización, las reacciones y los estados térmicos; el resultado depende de T y de la escala energética elegida.",
+    "refs": [],
+    "kind": "Exacta",
+    "value": "1.380 649 e-23",
+    "unc": "(exact)",
+    "unit": "J K^-1"
+  },
+  {
+    "id": "na",
+    "name": "Constante de Avogadro",
+    "symbol": "NA",
+    "key": "Avogadro constant",
+    "group": "termica",
+    "year": "1811 · hipótesis; 1908–1909 · medidas de Perrin",
+    "people": [
+      "avogadro",
+      "perrin"
+    ],
+    "history": "Amedeo Avogadro propuso que volúmenes iguales de gases ideales en las mismas condiciones contienen igual número de moléculas. Jean Perrin conectó el número de Avogadro con observaciones del movimiento browniano. Avogadro no midió su valor.",
+    "formulas": [
+      "N = nNA",
+      "R = NAkB",
+      "F = NAe"
+    ],
+    "exp": {
+      "name": "Conteo de átomos por densidad cristalina de silicio-28",
+      "year": "2015",
+      "authors": "Y. Azuma y 28 colaboradores de la International Avogadro Coordination; la publicación enlazada recoge la lista completa.",
+      "photos": [
+        "azuma"
+      ],
+      "result": "NA = 6,022 140 76(12) × 10²³ mol⁻¹",
+      "error": "u = 0,000 000 12 × 10²³ mol⁻¹; u relativa = 2,0 × 10⁻⁸.",
+      "steps": [
+        "Fabricar dos esferas de silicio enriquecido en ²⁸Si y caracterizar su superficie.",
+        "Medir masa, volumen por interferometría y parámetro de red mediante rayos X.",
+        "Medir la composición isotópica para conocer la masa molar.",
+        "Usar NA = 8M/(ρa³), pues la celda cúbica del silicio contiene ocho átomos."
+      ],
+      "source": "https://arxiv.org/abs/1512.05642"
+    },
+    "cosmos": "NA establece cuántas entidades hay en un mol. Cambiar la definición del mol no altera átomos, estrellas ni cosmología. No corresponde un rango de colapso físico para esta constante de conversión.",
+    "refs": [],
+    "kind": "Exacta",
+    "value": "6.022 140 76 e23",
+    "unc": "(exact)",
+    "unit": "mol^-1"
+  },
+  {
+    "id": "me",
+    "name": "Masa del electrón",
+    "symbol": "mₑ",
+    "key": "electron mass",
+    "group": "materia",
+    "year": "1897 · identificación del electrón",
+    "people": [
+      "thomson"
+    ],
+    "history": "J. J. Thomson midió la relación carga/masa en rayos catódicos. Determinar la masa absoluta requirió conocer la carga. El valor moderno procede de medidas de alta precisión y de un ajuste de constantes.",
+    "formulas": [
+      "E₀ = mₑc²",
+      "ωc = |e|B/mₑ — electrón libre no relativista",
+      "a₀ = ℏ/(mₑcα)"
+    ],
+    "exp": {
+      "name": "Trampa de Penning y factor g de carbono hidrogenoide",
+      "year": "2014",
+      "authors": "S. Sturm, F. Köhler, J. Zatorski, A. Wagner, Z. Harman, G. Werth, W. Quint, C. H. Keitel y K. Blaum.",
+      "photos": [
+        "sturm"
+      ],
+      "result": "me = 0,000 548 579 909 067(14)(9)(2) u",
+      "error": "Tres contribuciones publicadas: 14, 9 y 2 en las últimas cifras; la última es teórica. Se conserva la descomposición original.",
+      "steps": [
+        "Confinar un ion ¹²C⁵⁺ en una trampa de Penning.",
+        "Comparar la frecuencia ciclotrón del ion con la frecuencia de precesión de su único electrón.",
+        "Combinar ese cociente con el factor g ligado calculado por electrodinámica cuántica."
+      ],
+      "source": "https://www.nature.com/articles/nature13026"
+    },
+    "cosmos": "A α, ℏ y c fijos, mₑ × 2 reduce el radio de Bohr a la mitad y duplica las energías atómicas. La razón mₑ/mp influye en las escalas vibracionales moleculares. No existe un umbral de colapso basado únicamente en mₑ en kilogramos.",
+    "refs": [],
+    "kind": "Medida",
+    "value": "9.109 383 7139 e-31",
+    "unc": "0.000 000 0028 e-31",
+    "unit": "kg"
+  },
+  {
+    "id": "mp",
+    "name": "Masa del protón",
+    "symbol": "mₚ",
+    "key": "proton mass",
+    "group": "materia",
+    "year": "1917–1919 · identificación nuclear",
+    "people": [
+      "rutherford"
+    ],
+    "history": "Ernest Rutherford identificó núcleos de hidrógeno emitidos en reacciones nucleares. La masa del protón está dominada por la dinámica de la interacción fuerte, no sólo por las masas de los quarks que lo componen.",
+    "formulas": [
+      "E₀ = mₚc²",
+      "αG = Gmₚ²/(ℏc)",
+      "μ = mₚ/mₑ"
+    ],
+    "exp": {
+      "name": "Comparación ciclotrón de un protón y carbono-12",
+      "year": "2017",
+      "authors": "Fabian Heiße, Florian Köhler-Langes, Sascha Rau, Jamin Hou, Sven Junck, Anke Kracke, Andreas Mooser, Wolfgang Quint, Stefan Ulmer, Günter Werth, Klaus Blaum y Sven Sturm.",
+      "photos": [
+        "sturm"
+      ],
+      "result": "mp = 1,007 276 466 583(15)(29) u",
+      "error": "Incertidumbres estadística (15) y sistemática (29); combinada relativa ≈ 32 partes por billón (32 × 10⁻¹²).",
+      "steps": [
+        "Atrapar alternadamente un protón y un ion ¹²C⁶⁺ en un campo magnético común.",
+        "Medir sus frecuencias ciclotrón, inversamente proporcionales a las masas.",
+        "Corregir desplazamientos de frecuencia y energías de ionización; calcular la razón de masas."
+      ],
+      "source": "https://arxiv.org/abs/1706.06780"
+    },
+    "cosmos": "Importan mₚ/mₑ y Gmₚ²/(ℏc). A G, ℏ y c fijos, duplicar mₚ cuadruplica αG. La estabilidad nuclear requiere además las diferencias de masa y las energías de enlace; no puede asignarse un intervalo universal en kg.",
+    "refs": [],
+    "kind": "Medida",
+    "value": "1.672 621 925 95 e-27",
+    "unc": "0.000 000 000 52 e-27",
+    "unit": "kg"
+  },
+  {
+    "id": "mn",
+    "name": "Masa del neutrón",
+    "symbol": "mₙ",
+    "key": "neutron mass",
+    "group": "materia",
+    "year": "1932",
+    "people": [
+      "chadwick"
+    ],
+    "history": "James Chadwick descubrió el neutrón. La masa se refinó usando balances energéticos de reacciones nucleares; identificar la partícula y medir su masa con precisión son hitos distintos.",
+    "formulas": [
+      "n → p + e⁻ + ν̄e",
+      "Qβ = (mₙ − mₚ − mₑ)c²",
+      "E₀ = mₙc²"
+    ],
+    "exp": {
+      "name": "Fotodesintegración del deuterón",
+      "year": "1935",
+      "authors": "James Chadwick, Norman Feather y Egon Bretscher; masas de referencia de Oliphant, Kempton y Rutherford.",
+      "photos": [
+        "chadwick"
+      ],
+      "result": "mn ≈ 1,0085 en la escala histórica de masas atómicas (no identificar exactamente con la u actual).",
+      "error": "No se aporta aquí una incertidumbre numérica: la conferencia original presenta una estimación, no un ± moderno.",
+      "steps": [
+        "Irradiar deuterio con rayos gamma de aproximadamente 2,62 MeV.",
+        "Medir protones de unos 180 keV; reconstruir la energía cinética liberada.",
+        "Deducir la energía de enlace y combinarla con las masas de hidrógeno y deuterio."
+      ],
+      "source": "https://www.nobelprize.org/uploads/2018/06/chadwick-lecture.pdf"
+    },
+    "cosmos": "Con las demás masas y las interacciones fijas, mₙ − mₚ &lt; mₑ impide la desintegración beta habitual del neutrón libre. Si mₙ &lt; mₚ + mₑ, la captura electrónica del hidrógeno es energéticamente posible (salvo la pequeña corrección de enlace). Hoy (mₙ − mₚ)c² ≈ 1,293 MeV y mₑc² ≈ 0,511 MeV. Es un umbral cinemático, no una condición de colapso universal.",
+    "refs": [],
+    "kind": "Medida",
+    "value": "1.674 927 500 56 e-27",
+    "unc": "0.000 000 000 85 e-27",
+    "unit": "kg"
+  },
+  {
+    "id": "rydberg",
+    "name": "Constante de Rydberg",
+    "symbol": "R∞",
+    "key": "Rydberg constant",
+    "group": "materia",
+    "year": "1888",
+    "people": [
+      "rydberg"
+    ],
+    "history": "Johannes Rydberg organizó las series espectrales con una fórmula común. R∞ representa el límite ideal de un núcleo infinitamente pesado; los átomos reales necesitan correcciones por masa reducida y estructura nuclear.",
+    "formulas": [
+      "1/λ = R∞Z²(1/n₁² − 1/n₂²) — límite ideal",
+      "R∞ = α²mₑc/(2h)",
+      "Eion = hcR∞ — hidrógeno de masa nuclear infinita"
+    ],
+    "exp": {
+      "name": "Espectroscopia láser del hidrógeno",
+      "year": "2017",
+      "authors": "Axel Beyer, Lothar Maisenbacher, Arthur Matveev, Randolf Pohl, Ksenia Khabarova, Alexey Grinin, Tobias Lamour, Dylan C. Yost, Theodor W. Hänsch, Nikolai Kolachevsky y Thomas Udem.",
+      "photos": [
+        "hansch"
+      ],
+      "result": "R∞ = 10 973 731,568 076(96) m⁻¹",
+      "error": "u = 0,000 096 m⁻¹; extracción conjunta con el radio del protón.",
+      "steps": [
+        "Preparar un haz criogénico de hidrógeno.",
+        "Medir por láser la transición 2S–4P y modelar la interferencia de resonancias vecinas.",
+        "Combinar con otra transición y la teoría atómica para separar R∞ y el radio del protón."
+      ],
+      "source": "https://doi.org/10.1126/science.aah6677"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. A h y c fijos, multiplicar R∞ por dos duplica la escala energética ideal del hidrógeno.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "10 973 731.568 157",
+    "unc": "0.000 012",
+    "unit": "m^-1"
+  },
+  {
+    "id": "gf",
+    "name": "Acoplamiento de Fermi",
+    "symbol": "GF",
+    "key": "Fermi coupling constant",
+    "group": "interacciones",
+    "year": "1933–1934",
+    "people": [
+      "fermi"
+    ],
+    "history": "Enrico Fermi formuló la teoría de la desintegración beta. GF describe la interacción débil a baja energía; las unidades GeV⁻² usan la convención ℏ = c = 1.",
+    "formulas": [
+      "1/τμ ≈ GF²mμ⁵/(192π³) — unidades naturales, antes de correcciones",
+      "GF = 1/(√2 v²) — relación a nivel árbol",
+      "n → p + e⁻ + ν̄e — proceso débil"
+    ],
+    "exp": {
+      "name": "Vida media del muón positivo · MuLan",
+      "year": "2006–2007 · publicación: 2011",
+      "authors": "Colaboración MuLan; D. M. Webber y colaboradores.",
+      "photos": [
+        "hertzog"
+      ],
+      "result": "τμ = 2 196 980,3(2,2) ps; GF = 1,166 378 8(7) × 10⁻⁵ GeV⁻²",
+      "error": "u(τμ) = 2,2 ps; u(GF) = 0,000 000 7 × 10⁻⁵ GeV⁻², en la extracción de 2011.",
+      "steps": [
+        "Detener pulsos de muones positivos en blancos distintos.",
+        "Registrar más de 10¹² desintegraciones mediante detectores de centelleo.",
+        "Ajustar la distribución exponencial de tiempos y aplicar correcciones radiativas al extraer GF."
+      ],
+      "source": "https://arxiv.org/abs/1109.6689"
+    },
+    "cosmos": "A masas y demás factores fijos, GF × 2 reduce aproximadamente a un cuarto la vida media del muón. Cambia el desacoplamiento neutrínico y la proporción primordial de neutrones. No hay un único rango que prohíba estrellas o cause un colapso: depende también de las condiciones cosmológicas iniciales.",
+    "refs": [],
+    "kind": "Medida",
+    "value": "1.166 3787 e-5",
+    "unc": "0.000 0006 e-5",
+    "unit": "GeV^-2"
+  },
+  {
+    "id": "epsilon",
+    "name": "Permitividad del vacío",
+    "symbol": "ε₀",
+    "key": "vacuum electric permittivity",
+    "group": "electromagnetismo",
+    "year": "siglo XIX · formulación electromagnética",
+    "people": [
+      "maxwell"
+    ],
+    "history": "La permitividad del vacío expresa el electromagnetismo en unidades SI. No tiene un descubridor individual. Desde 2019 deja de ser exacta porque depende de α medida.",
+    "formulas": [
+      "F = q₁q₂/(4πε₀r²)",
+      "ε₀ = e²/(2αhc)",
+      "∇·E = ρ/ε₀"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Retroceso atómico de rubidio",
+      "year": "2020",
+      "authors": "Léo Morel, Zhibin Yao, Pierre Cladé y Saïda Guellati-Khélifa.",
+      "photos": [
+        "guellati"
+      ],
+      "result": "Dato experimental de entrada: α⁻¹ = 137,035 999 206(11)",
+      "error": "No es una medición independiente de esta constante. u(α⁻¹) = 0,000 000 011; incertidumbre relativa: 81 × 10⁻¹². Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Enfriar átomos de rubidio y controlar su velocidad mediante pulsos láser.",
+        "Medir el retroceso al absorber fotones por interferometría de ondas de materia.",
+        "Extraer h/mRb y combinarlo con masas relativas y R∞ para inferir α."
+      ],
+      "source": "https://www.nature.com/articles/s41586-020-2964-7"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Si se fija e, ℏ y c, ε₀ × 2 reduce α a la mitad; hay que interpretar el cambio a través de α.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "8.854 187 8188 e-12",
+    "unc": "0.000 000 0014 e-12",
+    "unit": "F m^-1"
+  },
+  {
+    "id": "mu0",
+    "name": "Permeabilidad del vacío",
+    "symbol": "μ₀",
+    "key": "vacuum mag. permeability",
+    "group": "electromagnetismo",
+    "year": "siglo XIX · formulación electromagnética",
+    "people": [
+      "maxwell"
+    ],
+    "history": "La permeabilidad del vacío relaciona magnitudes eléctricas y magnéticas en el SI. Su antiguo valor exacto 4π × 10⁻⁷ N A⁻² dejó de ser una definición en 2019.",
+    "formulas": [
+      "μ₀ = 2αh/(e²c)",
+      "c² = 1/(ε₀μ₀)",
+      "B = μ₀I/(2πr) — hilo recto ideal"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Retroceso atómico de rubidio",
+      "year": "2020",
+      "authors": "Léo Morel, Zhibin Yao, Pierre Cladé y Saïda Guellati-Khélifa.",
+      "photos": [
+        "guellati"
+      ],
+      "result": "Dato experimental de entrada: α⁻¹ = 137,035 999 206(11)",
+      "error": "No es una medición independiente de esta constante. u(α⁻¹) = 0,000 000 011; incertidumbre relativa: 81 × 10⁻¹². Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Enfriar átomos de rubidio y controlar su velocidad mediante pulsos láser.",
+        "Medir el retroceso al absorber fotones por interferometría de ondas de materia.",
+        "Extraer h/mRb y combinarlo con masas relativas y R∞ para inferir α."
+      ],
+      "source": "https://www.nature.com/articles/s41586-020-2964-7"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. No es coherente variar μ₀ manteniendo a la vez ε₀ y c fijos: están relacionadas exactamente.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "1.256 637 061 27 e-6",
+    "unc": "0.000 000 000 20 e-6",
+    "unit": "N A^-2"
+  },
+  {
+    "id": "z0",
+    "name": "Impedancia del vacío",
+    "symbol": "Z₀",
+    "key": "characteristic impedance of vacuum",
+    "group": "electromagnetismo",
+    "year": "siglo XIX · ondas electromagnéticas",
+    "people": [
+      "maxwell"
+    ],
+    "history": "Z₀ es una combinación de las constantes electromagnéticas, no una nueva interacción.",
+    "formulas": [
+      "Z₀ = μ₀c = √(μ₀/ε₀)",
+      "E/H = Z₀ — onda plana en vacío"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Retroceso atómico de rubidio",
+      "year": "2020",
+      "authors": "Léo Morel, Zhibin Yao, Pierre Cladé y Saïda Guellati-Khélifa.",
+      "photos": [
+        "guellati"
+      ],
+      "result": "Dato experimental de entrada: α⁻¹ = 137,035 999 206(11)",
+      "error": "No es una medición independiente de esta constante. u(α⁻¹) = 0,000 000 011; incertidumbre relativa: 81 × 10⁻¹². Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Enfriar átomos de rubidio y controlar su velocidad mediante pulsos láser.",
+        "Medir el retroceso al absorber fotones por interferometría de ondas de materia.",
+        "Extraer h/mRb y combinarlo con masas relativas y R∞ para inferir α."
+      ],
+      "source": "https://www.nature.com/articles/s41586-020-2964-7"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Modifica la relación numérica E/H en una onda; para discutir otro universo hay que especificar α y las convenciones eléctricas.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "376.730 313 412",
+    "unc": "0.000 000 059",
+    "unit": "ohm"
+  },
+  {
+    "id": "R",
+    "name": "Constante de los gases",
+    "symbol": "R",
+    "key": "molar gas constant",
+    "group": "termica",
+    "year": "1834 · ecuación de Clapeyron",
+    "people": [
+      "boltzmann",
+      "avogadro"
+    ],
+    "history": "Émile Clapeyron sistematizó la ecuación del gas ideal. R = NAkB conecta la descripción molar y la molecular; no es independiente de ambas constantes.",
+    "formulas": [
+      "pV = nRT",
+      "R = NAkB",
+      "Cp − Cv = R — por mol de gas ideal"
+    ],
+    "exp": {
+      "name": "Termometría acústica de helio-4",
+      "year": "2017",
+      "authors": "L. Pitre, F. Sparasci, M. R. Moldover, C. Guianvarc’h, C. Martin, M. Himbert, M. Plimmer, J. B. Mehl, G. Albo, B. Gao y L. Risegari.",
+      "photos": [
+        "moldover"
+      ],
+      "result": "R = 8,314 459 7(49) J mol⁻¹ K⁻¹",
+      "error": "u = 0,000 004 9 J mol⁻¹ K⁻¹, resultado experimental de 2017; el valor actual es derivado exacto.",
+      "steps": [
+        "Llenar una cavidad casi esférica de 3 litros con helio-4 a temperatura conocida.",
+        "Medir resonancias acústicas y dimensiones de la cavidad para hallar la velocidad del sonido.",
+        "Extrapolar a densidad nula y usar v² = (5/3)kBT/m."
+      ],
+      "source": "https://www.nist.gov/publications/new-measurement-boltzmann-constant-k-acoustic-thermometry-helium-4-gas"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Una redefinición del kelvin o del mol no cambia la física del gas.",
+    "refs": [],
+    "kind": "Derivada exacta",
+    "value": "8.314 462 618...",
+    "unc": "(exact)",
+    "unit": "J mol^-1 K^-1"
+  },
+  {
+    "id": "F",
+    "name": "Constante de Faraday",
+    "symbol": "F",
+    "key": "Faraday constant",
+    "group": "termica",
+    "year": "1833–1834",
+    "people": [
+      "faraday"
+    ],
+    "history": "Michael Faraday formuló las leyes de la electrólisis. La carga de un mol de cargas elementales es F = NAe.",
+    "formulas": [
+      "Q = nzF — electrólisis",
+      "F = NAe",
+      "E = E° − RT ln Qr/(zF) — Nernst"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Gotas de aceite",
+      "year": "1909–1913 · resultado: 1913",
+      "authors": "Robert A. Millikan; Harvey Fletcher contribuyó al desarrollo del método.",
+      "photos": [
+        "millikan"
+      ],
+      "result": "Dato experimental de entrada: e = (4,774 ± 0,009) × 10⁻¹⁰ statC ≈ (1,5924 ± 0,0030) × 10⁻¹⁹ C",
+      "error": "No es una medición independiente de esta constante. Error declarado en el trabajo histórico; no equivale automáticamente a una incertidumbre estándar moderna. El sesgo por viscosidad explica parte de la diferencia con el valor actual. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Pulverizar gotas de aceite entre placas metálicas y observarlas al microscopio.",
+        "Obtener el tamaño de cada gota a partir de su velocidad terminal, corrigiendo la ley de Stokes.",
+        "Aplicar un campo eléctrico y medir su efecto en el movimiento.",
+        "Calcular las cargas y encontrar una unidad común en sus múltiplos enteros."
+      ],
+      "source": "https://www.nasonline.org/wp-content/uploads/2024/06/millikan-robert.pdf"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. No añade un grado de libertad: con e y NA fijos, F permanece fija.",
+    "refs": [],
+    "kind": "Derivada exacta",
+    "value": "96 485.332 12...",
+    "unc": "(exact)",
+    "unit": "C mol^-1"
+  },
+  {
+    "id": "sigma",
+    "name": "Stefan–Boltzmann",
+    "symbol": "σ",
+    "key": "Stefan-Boltzmann constant",
+    "group": "termica",
+    "year": "1879 · ley; 1884 · derivación",
+    "people": [
+      "stefan",
+      "boltzmann"
+    ],
+    "history": "Josef Stefan estableció empíricamente la ley de potencia radiada; Ludwig Boltzmann la dedujo con termodinámica y electromagnetismo. Su expresión microscópica deriva de la ley de Planck.",
+    "formulas": [
+      "P = εσAT⁴ — cuerpo gris",
+      "σ = 2π⁵kB⁴/(15h³c²)",
+      "L = 4πR⋆²σTef⁴"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de Kibble NIST-4",
+      "year": "2015–2017 · publicación: 2017",
+      "authors": "D. Haddad, F. Seifert, L. S. Chao, A. Possolo, D. B. Newell, J. R. Pratt, C. J. Williams y S. Schlamminger.",
+      "photos": [
+        "haddad"
+      ],
+      "result": "Dato experimental de entrada: h = 6,626 069 934(89) × 10⁻³⁴ J s",
+      "error": "No es una medición independiente de esta constante. u = 0,000 000 089 × 10⁻³⁴ J s; incertidumbre estándar relativa: 13 × 10⁻⁹. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "En modo fuerza, equilibrar el peso de una masa con la fuerza sobre una bobina.",
+        "En modo velocidad, mover la bobina y medir la tensión inducida.",
+        "Relacionar potencia mecánica mgv con potencia eléctrica usando patrones Josephson y Hall cuántico.",
+        "Antes de 2019, la masa patrón permitía determinar h; hoy el h definido permite realizar el kilogramo."
+      ],
+      "source": "https://arxiv.org/abs/1708.02473"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. A área, emisividad y temperatura fijas, la potencia cambia linealmente con σ. No se puede cambiar σ de forma independiente de h, kB y c.",
+    "refs": [],
+    "kind": "Derivada exacta",
+    "value": "5.670 374 419... e-8",
+    "unc": "(exact)",
+    "unit": "W m^-2 K^-4"
+  },
+  {
+    "id": "wien",
+    "name": "Desplazamiento de Wien",
+    "symbol": "b",
+    "key": "Wien wavelength displacement law constant",
+    "group": "termica",
+    "year": "1893",
+    "people": [
+      "wien"
+    ],
+    "history": "Wilhelm Wien relacionó la temperatura de la radiación térmica con su distribución espectral. b se refiere al máximo por unidad de longitud de onda; el máximo por frecuencia no es su simple inverso.",
+    "formulas": [
+      "λmáx T = b",
+      "b = hc/(4,965114231… kB)"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de Kibble NIST-4",
+      "year": "2015–2017 · publicación: 2017",
+      "authors": "D. Haddad, F. Seifert, L. S. Chao, A. Possolo, D. B. Newell, J. R. Pratt, C. J. Williams y S. Schlamminger.",
+      "photos": [
+        "haddad"
+      ],
+      "result": "Dato experimental de entrada: h = 6,626 069 934(89) × 10⁻³⁴ J s",
+      "error": "No es una medición independiente de esta constante. u = 0,000 000 089 × 10⁻³⁴ J s; incertidumbre estándar relativa: 13 × 10⁻⁹. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "En modo fuerza, equilibrar el peso de una masa con la fuerza sobre una bobina.",
+        "En modo velocidad, mover la bobina y medir la tensión inducida.",
+        "Relacionar potencia mecánica mgv con potencia eléctrica usando patrones Josephson y Hall cuántico.",
+        "Antes de 2019, la masa patrón permitía determinar h; hoy el h definido permite realizar el kilogramo."
+      ],
+      "source": "https://arxiv.org/abs/1708.02473"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. A T fija, duplicar b duplica la longitud de onda del máximo. Es un cambio de las constantes de entrada, no un umbral cosmológico autónomo.",
+    "refs": [],
+    "kind": "Derivada exacta",
+    "value": "2.897 771 955... e-3",
+    "unc": "(exact)",
+    "unit": "m K"
+  },
+  {
+    "id": "bohr",
+    "name": "Radio de Bohr",
+    "symbol": "a₀",
+    "key": "Bohr radius",
+    "group": "materia",
+    "year": "1913",
+    "people": [
+      "bohr"
+    ],
+    "history": "Niels Bohr introdujo una escala de radio en su modelo del hidrógeno. Es una longitud característica, no una órbita literal del electrón en la mecánica cuántica moderna.",
+    "formulas": [
+      "a₀ = ℏ/(mₑcα)",
+      "⟨r⟩1s = 3a₀/2 — hidrógeno ideal"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Retroceso atómico de rubidio",
+      "year": "2020",
+      "authors": "Léo Morel, Zhibin Yao, Pierre Cladé y Saïda Guellati-Khélifa.",
+      "photos": [
+        "guellati"
+      ],
+      "result": "Dato experimental de entrada: α⁻¹ = 137,035 999 206(11)",
+      "error": "No es una medición independiente de esta constante. u(α⁻¹) = 0,000 000 011; incertidumbre relativa: 81 × 10⁻¹². Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Enfriar átomos de rubidio y controlar su velocidad mediante pulsos láser.",
+        "Medir el retroceso al absorber fotones por interferometría de ondas de materia.",
+        "Extraer h/mRb y combinarlo con masas relativas y R∞ para inferir α."
+      ],
+      "source": "https://www.nature.com/articles/s41586-020-2964-7"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Su tamaño responde a α y mₑ; una variación de a₀ cambia las escalas de la química frente a otras longitudes físicas.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "5.291 772 105 44 e-11",
+    "unc": "0.000 000 000 82 e-11",
+    "unit": "m"
+  },
+  {
+    "id": "magneton",
+    "name": "Magnetón de Bohr",
+    "symbol": "μB",
+    "key": "Bohr magneton",
+    "group": "materia",
+    "year": "1913 · escala atómica",
+    "people": [
+      "bohr"
+    ],
+    "history": "Escala natural de momento magnético del electrón; su nombre alude a Niels Bohr. El momento real incluye el factor g.",
+    "formulas": [
+      "μB = eℏ/(2mₑ)",
+      "ΔE = g mJ μB B — régimen Zeeman lineal"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Trampa de Penning y factor g de carbono hidrogenoide",
+      "year": "2014",
+      "authors": "S. Sturm, F. Köhler, J. Zatorski, A. Wagner, Z. Harman, G. Werth, W. Quint, C. H. Keitel y K. Blaum.",
+      "photos": [
+        "sturm"
+      ],
+      "result": "Dato experimental de entrada: me = 0,000 548 579 909 067(14)(9)(2) u",
+      "error": "No es una medición independiente de esta constante. Tres contribuciones publicadas: 14, 9 y 2 en las últimas cifras; la última es teórica. Se conserva la descomposición original. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Confinar un ion ¹²C⁵⁺ en una trampa de Penning.",
+        "Comparar la frecuencia ciclotrón del ion con la frecuencia de precesión de su único electrón.",
+        "Combinar ese cociente con el factor g ligado calculado por electrodinámica cuántica."
+      ],
+      "source": "https://www.nature.com/articles/nature13026"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. A B fijo, modifica las separaciones magnéticas de niveles; el efecto físico depende de razones entre energías.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "9.274 010 0657 e-24",
+    "unc": "0.000 000 0029 e-24",
+    "unit": "J T^-1"
+  },
+  {
+    "id": "compton",
+    "name": "Longitud de Compton",
+    "symbol": "λC",
+    "key": "Compton wavelength",
+    "group": "materia",
+    "year": "1923",
+    "people": [
+      "compton"
+    ],
+    "history": "Arthur H. Compton explicó el desplazamiento de longitud de onda en la dispersión de fotones por electrones. Aquí λC = h/(mₑc), no la longitud reducida ℏ/(mₑc).",
+    "formulas": [
+      "λC = h/(mₑc)",
+      "Δλ = λC(1 − cos θ)"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Trampa de Penning y factor g de carbono hidrogenoide",
+      "year": "2014",
+      "authors": "S. Sturm, F. Köhler, J. Zatorski, A. Wagner, Z. Harman, G. Werth, W. Quint, C. H. Keitel y K. Blaum.",
+      "photos": [
+        "sturm"
+      ],
+      "result": "Dato experimental de entrada: me = 0,000 548 579 909 067(14)(9)(2) u",
+      "error": "No es una medición independiente de esta constante. Tres contribuciones publicadas: 14, 9 y 2 en las últimas cifras; la última es teórica. Se conserva la descomposición original. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Confinar un ion ¹²C⁵⁺ en una trampa de Penning.",
+        "Comparar la frecuencia ciclotrón del ion con la frecuencia de precesión de su único electrón.",
+        "Combinar ese cociente con el factor g ligado calculado por electrodinámica cuántica."
+      ],
+      "source": "https://www.nature.com/articles/nature13026"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Marca una escala relativista cuántica del electrón; no es una longitud mínima universal.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "2.426 310 235 38 e-12",
+    "unc": "0.000 000 000 76 e-12",
+    "unit": "m"
+  },
+  {
+    "id": "lp",
+    "name": "Longitud de Planck",
+    "symbol": "ℓP",
+    "key": "Planck length",
+    "group": "planck",
+    "year": "1899",
+    "people": [
+      "planck"
+    ],
+    "history": "Max Planck propuso unidades naturales. ℓP es una escala teórica construida con G, ℏ y c; no se ha medido como un tamaño mínimo del espacio.",
+    "formulas": [
+      "ℓP = √(ℏG/c³)",
+      "ℓP = ctP"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de torsión: densidad de la Tierra",
+      "year": "1797–1798",
+      "authors": "Henry Cavendish, a partir del instrumento concebido por John Michell.",
+      "photos": [
+        "cavendish"
+      ],
+      "result": "Dato experimental de entrada: ρTierra / ρagua = 5,48 (publicado). Equivale aproximadamente a G ≈ 6,75 × 10⁻¹¹ m³ kg⁻¹ s⁻².",
+      "error": "No es una medición independiente de esta constante. No se atribuye un ± moderno al resultado original. El valor de G es una reconstrucción aproximada, no la magnitud que publicó Cavendish. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Suspender una varilla con dos esferas pequeñas de plomo de un hilo de torsión.",
+        "Acercar dos grandes masas de plomo y observar el giro desde fuera del recinto.",
+        "Medir el período de oscilación para calibrar la rigidez del hilo.",
+        "Comparar la atracción entre esferas con el peso terrestre y deducir la densidad media de la Tierra."
+      ],
+      "source": "https://doi.org/10.1098/rstl.1798.0022"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Una posible gravedad cuántica podría ser relevante cerca de esta escala; no se conoce una ley experimental que prohíba longitudes menores.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "1.616 255 e-35",
+    "unc": "0.000 018 e-35",
+    "unit": "m"
+  },
+  {
+    "id": "tp",
+    "name": "Tiempo de Planck",
+    "symbol": "tP",
+    "key": "Planck time",
+    "group": "planck",
+    "year": "1899",
+    "people": [
+      "planck"
+    ],
+    "history": "Unidad natural asociada a la longitud de Planck. No hay evidencia de que el tiempo transcurra en saltos de duración tP.",
+    "formulas": [
+      "tP = √(ℏG/c⁵)",
+      "tP = ℓP/c"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de torsión: densidad de la Tierra",
+      "year": "1797–1798",
+      "authors": "Henry Cavendish, a partir del instrumento concebido por John Michell.",
+      "photos": [
+        "cavendish"
+      ],
+      "result": "Dato experimental de entrada: ρTierra / ρagua = 5,48 (publicado). Equivale aproximadamente a G ≈ 6,75 × 10⁻¹¹ m³ kg⁻¹ s⁻².",
+      "error": "No es una medición independiente de esta constante. No se atribuye un ± moderno al resultado original. El valor de G es una reconstrucción aproximada, no la magnitud que publicó Cavendish. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Suspender una varilla con dos esferas pequeñas de plomo de un hilo de torsión.",
+        "Acercar dos grandes masas de plomo y observar el giro desde fuera del recinto.",
+        "Medir el período de oscilación para calibrar la rigidez del hilo.",
+        "Comparar la atracción entre esferas con el peso terrestre y deducir la densidad media de la Tierra."
+      ],
+      "source": "https://doi.org/10.1098/rstl.1798.0022"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Es una referencia para modelos del universo temprano, no un intervalo mínimo demostrado.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "5.391 247 e-44",
+    "unc": "0.000 060 e-44",
+    "unit": "s"
+  },
+  {
+    "id": "mpl",
+    "name": "Masa de Planck",
+    "symbol": "mP",
+    "key": "Planck mass",
+    "group": "planck",
+    "year": "1899",
+    "people": [
+      "planck"
+    ],
+    "history": "Escala en que Gm²/(ℏc) es del orden de uno. Se distingue de la masa de Planck reducida mP/√(8π).",
+    "formulas": [
+      "mP = √(ℏc/G)",
+      "GmP²/(ℏc) = 1"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de torsión: densidad de la Tierra",
+      "year": "1797–1798",
+      "authors": "Henry Cavendish, a partir del instrumento concebido por John Michell.",
+      "photos": [
+        "cavendish"
+      ],
+      "result": "Dato experimental de entrada: ρTierra / ρagua = 5,48 (publicado). Equivale aproximadamente a G ≈ 6,75 × 10⁻¹¹ m³ kg⁻¹ s⁻².",
+      "error": "No es una medición independiente de esta constante. No se atribuye un ± moderno al resultado original. El valor de G es una reconstrucción aproximada, no la magnitud que publicó Cavendish. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Suspender una varilla con dos esferas pequeñas de plomo de un hilo de torsión.",
+        "Acercar dos grandes masas de plomo y observar el giro desde fuera del recinto.",
+        "Medir el período de oscilación para calibrar la rigidez del hilo.",
+        "Comparar la atracción entre esferas con el peso terrestre y deducir la densidad media de la Tierra."
+      ],
+      "source": "https://doi.org/10.1098/rstl.1798.0022"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Un objeto de esta masa no es automáticamente un agujero negro: también debe concentrarse dentro de su radio gravitacional.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "2.176 434 e-8",
+    "unc": "0.000 024 e-8",
+    "unit": "kg"
+  },
+  {
+    "id": "kj",
+    "name": "Constante de Josephson",
+    "symbol": "KJ",
+    "key": "Josephson constant",
+    "group": "metrologia",
+    "year": "1962",
+    "people": [
+      "josephson"
+    ],
+    "history": "Brian Josephson predijo el efecto túnel de pares de Cooper. La constante KJ = 2e/h conecta frecuencia y tensión; es derivada exacta desde 2019.",
+    "formulas": [
+      "KJ = 2e/h",
+      "Vₙ = n f/KJ"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de Kibble NIST-4",
+      "year": "2015–2017 · publicación: 2017",
+      "authors": "D. Haddad, F. Seifert, L. S. Chao, A. Possolo, D. B. Newell, J. R. Pratt, C. J. Williams y S. Schlamminger.",
+      "photos": [
+        "haddad"
+      ],
+      "result": "Dato experimental de entrada: h = 6,626 069 934(89) × 10⁻³⁴ J s",
+      "error": "No es una medición independiente de esta constante. u = 0,000 000 089 × 10⁻³⁴ J s; incertidumbre estándar relativa: 13 × 10⁻⁹. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "En modo fuerza, equilibrar el peso de una masa con la fuerza sobre una bobina.",
+        "En modo velocidad, mover la bobina y medir la tensión inducida.",
+        "Relacionar potencia mecánica mgv con potencia eléctrica usando patrones Josephson y Hall cuántico.",
+        "Antes de 2019, la masa patrón permitía determinar h; hoy el h definido permite realizar el kilogramo."
+      ],
+      "source": "https://arxiv.org/abs/1708.02473"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Al variar las constantes de entrada cambia la relación tensión/frecuencia; no hay un rango cosmológico independiente.",
+    "refs": [
+      [
+        "Historia del patrón Josephson",
+        "https://nvlpubs.nist.gov/nistpubs/sp958-lide/html/315-318.html"
+      ]
+    ],
+    "kind": "Derivada exacta",
+    "value": "483 597.848 4... e9",
+    "unc": "(exact)",
+    "unit": "Hz V^-1"
+  },
+  {
+    "id": "rk",
+    "name": "Constante de von Klitzing",
+    "symbol": "RK",
+    "key": "von Klitzing constant",
+    "group": "metrologia",
+    "year": "1980",
+    "people": [
+      "vonklitzing"
+    ],
+    "history": "Klaus von Klitzing descubrió el efecto Hall cuántico entero; Gerhard Dorda y Michael Pepper fueron coautores del artículo de 1980. RK = h/e² es exacta desde 2019.",
+    "formulas": [
+      "RH = RK/i — meseta Hall de índice i",
+      "RK = h/e²"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de Kibble NIST-4",
+      "year": "2015–2017 · publicación: 2017",
+      "authors": "D. Haddad, F. Seifert, L. S. Chao, A. Possolo, D. B. Newell, J. R. Pratt, C. J. Williams y S. Schlamminger.",
+      "photos": [
+        "haddad"
+      ],
+      "result": "Dato experimental de entrada: h = 6,626 069 934(89) × 10⁻³⁴ J s",
+      "error": "No es una medición independiente de esta constante. u = 0,000 000 089 × 10⁻³⁴ J s; incertidumbre estándar relativa: 13 × 10⁻⁹. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "En modo fuerza, equilibrar el peso de una masa con la fuerza sobre una bobina.",
+        "En modo velocidad, mover la bobina y medir la tensión inducida.",
+        "Relacionar potencia mecánica mgv con potencia eléctrica usando patrones Josephson y Hall cuántico.",
+        "Antes de 2019, la masa patrón permitía determinar h; hoy el h definido permite realizar el kilogramo."
+      ],
+      "source": "https://arxiv.org/abs/1708.02473"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. No es una fuerza adicional; depende de la relación entre el cuanto de acción y la carga.",
+    "refs": [
+      [
+        "Historia del ohm cuántico",
+        "https://nvlpubs.nist.gov/nistpubs/sp958-lide/html/063-065.html"
+      ]
+    ],
+    "kind": "Derivada exacta",
+    "value": "25 812.807 45...",
+    "unc": "(exact)",
+    "unit": "ohm"
+  },
+  {
+    "id": "flux",
+    "name": "Cuanto de flujo magnético",
+    "symbol": "Φ₀",
+    "key": "mag. flux quantum",
+    "group": "metrologia",
+    "year": "1961 · observación",
+    "people": [],
+    "history": "Bascom Deaver y William Fairbank, y de forma independiente Robert Doll y Martin Näbauer, observaron la cuantización del flujo en superconductores. La carga relevante es la de pares de Cooper.",
+    "formulas": [
+      "Φ₀ = h/(2e)",
+      "Φ = nΦ₀ — anillo superconductor ideal"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Balanza de Kibble NIST-4",
+      "year": "2015–2017 · publicación: 2017",
+      "authors": "D. Haddad, F. Seifert, L. S. Chao, A. Possolo, D. B. Newell, J. R. Pratt, C. J. Williams y S. Schlamminger.",
+      "photos": [
+        "haddad"
+      ],
+      "result": "Dato experimental de entrada: h = 6,626 069 934(89) × 10⁻³⁴ J s",
+      "error": "No es una medición independiente de esta constante. u = 0,000 000 089 × 10⁻³⁴ J s; incertidumbre estándar relativa: 13 × 10⁻⁹. Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "En modo fuerza, equilibrar el peso de una masa con la fuerza sobre una bobina.",
+        "En modo velocidad, mover la bobina y medir la tensión inducida.",
+        "Relacionar potencia mecánica mgv con potencia eléctrica usando patrones Josephson y Hall cuántico.",
+        "Antes de 2019, la masa patrón permitía determinar h; hoy el h definido permite realizar el kilogramo."
+      ],
+      "source": "https://arxiv.org/abs/1708.02473"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Cambian los cuantos de flujo si cambian h/e; no hay un umbral autónomo para la estructura del universo.",
+    "refs": [],
+    "kind": "Derivada exacta",
+    "value": "2.067 833 848... e-15",
+    "unc": "(exact)",
+    "unit": "Wb"
+  },
+  {
+    "id": "lambda",
+    "name": "Constante cosmológica",
+    "symbol": "Λ",
+    "key": "",
+    "group": "cosmologia",
+    "year": "1917 · término teórico; 1998 · expansión acelerada",
+    "people": [
+      "einstein"
+    ],
+    "history": "Albert Einstein introdujo Λ en sus ecuaciones cosmológicas. Los equipos de Saul Perlmutter y de Brian Schmidt y Adam Riess hallaron evidencia de aceleración con supernovas en 1998. Aceleración no demuestra por sí sola que la energía oscura sea una constante.",
+    "formulas": [
+      "Gμν + Λgμν = 8πG Tμν/c⁴",
+      "Λ = 3ΩΛH₀²/c²",
+      "ρΛ = Λc²/(8πG) — densidad equivalente de masa"
+    ],
+    "exp": {
+      "name": "Anisotropías del fondo cósmico · misión Planck",
+      "year": "observación: 2009–2013 · resultados: 2018",
+      "authors": "Colaboración Planck; N. Aghanim y colaboradores. No es un experimento de Max Planck. ",
+      "photos": [],
+      "result": "H₀ = 67,4 ± 0,5 km s⁻¹ Mpc⁻¹; Ωm = 0,315 ± 0,007 en ΛCDM plano.",
+      "error": "Intervalos de 68 %. Λ se infiere conjuntamente del modelo; no se obtiene un error correcto combinando parámetros como si fueran independientes.",
+      "steps": [
+        "Medir temperatura y polarización del fondo cósmico en múltiples frecuencias.",
+        "Separar señales galácticas e instrumentales y construir espectros angulares.",
+        "Ajustar el modelo ΛCDM y usar Λ = 3ΩΛH₀²/c²."
+      ],
+      "source": "https://arxiv.org/abs/1807.06209"
+    },
+    "cosmos": "En un modelo FLRW plano con materia ordinaria y Λ constante, Λ &lt; 0 puede llevar a recolapso cuando domina; Λ &gt; 0 favorece expansión acelerada. Una Λ positiva mucho mayor, con perturbaciones iniciales fijas, puede frenar el crecimiento de galaxias. El umbral depende de la densidad de materia y del espectro inicial; no existe un número universal que separe universos habitables e inhabitables.",
+    "refs": [
+      [
+        "Supernovas y aceleración",
+        "https://www.nobelprize.org/prizes/physics/2011/summary/"
+      ]
+    ],
+    "kind": "Modelo ΛCDM",
+    "value": "≈ 1,1 × 10⁻⁵²",
+    "unc": "Valor orientativo inferido; ver intervalos de los parámetros y sus covarianzas en Planck 2018.",
+    "unit": "m⁻²"
+  },
+  {
+    "id": "cesio",
+    "name": "Frecuencia del cesio-133",
+    "symbol": "ΔνCs",
+    "key": "hyperfine transition frequency of Cs-133",
+    "group": "metrologia",
+    "year": "1955 · reloj práctico; 1967 · definición",
+    "people": [
+      "essen"
+    ],
+    "history": "Louis Essen y Jack Parry construyeron un patrón práctico de cesio en el NPL. La transición elegida es entre los dos niveles hiperfinos del estado fundamental del átomo de cesio-133 no perturbado. Es un patrón atómico, no una constante fundamental independiente.",
+    "formulas": [
+      "1 s = 9 192 631 770 períodos de la transición",
+      "ΔE = h ΔνCs"
+    ],
+    "exp": {
+      "name": "Reloj de cesio comparado con el segundo de efemérides",
+      "year": "1955–1958 · publicación: 1958",
+      "authors": "Louis Essen, J. V. L. Parry, William Markowitz y R. G. Hall.",
+      "photos": [
+        "essen"
+      ],
+      "result": "ΔνCs = 9 192 631 770 Hz",
+      "error": "± 20 Hz en la comparación histórica publicada; desde 1967 el valor define el segundo y es exacto.",
+      "steps": [
+        "Preparar un haz de cesio-133 y seleccionar estados mediante campos magnéticos.",
+        "Interrogar la transición hiperfina con microondas y ajustar el oscilador a la resonancia.",
+        "Comparar durante varios años el reloj atómico con el tiempo astronómico de efemérides."
+      ],
+      "source": "https://tf.nist.gov/general/pdf/2039.pdf"
+    },
+    "cosmos": "Redefinir el segundo no cambia el universo. Una variación de la razón entre dos frecuencias atómicas sí sería observable y podría revelar cambios de α, masas o momentos nucleares.",
+    "refs": [
+      [
+        "Historia del tiempo atómico",
+        "https://www.nist.gov/atomic-clocks/brief-history-atomic-time"
+      ]
+    ],
+    "kind": "Exacta",
+    "value": "9 192 631 770",
+    "unc": "(exact)",
+    "unit": "Hz"
+  },
+  {
+    "id": "candela",
+    "name": "Eficacia luminosa definitoria",
+    "symbol": "Kcd",
+    "key": "luminous efficacy",
+    "group": "metrologia",
+    "year": "1979",
+    "people": [],
+    "history": "Convención del Sistema Internacional para relacionar potencia radiante y flujo luminoso a una frecuencia especificada. Depende de una elección fotométrica vinculada a la visión humana, no de una interacción universal.",
+    "formulas": [
+      "Φv = Kcd Φe — radiación a 540 THz",
+      "Iv = dΦv/dΩ"
+    ],
+    "exp": {
+      "name": "Definición fotométrica de la candela",
+      "year": "1979 · definición radiométrica; 2018/2019 · formulación SI",
+      "authors": "Conferencia General de Pesas y Medidas; decisión colectiva.",
+      "photos": [],
+      "result": "Kcd = 683 lm W⁻¹ a la frecuencia 540 × 10¹² Hz.",
+      "error": "Exacto por definición. No hay un experimento que mida este número con un error para fijar una ley fundamental.",
+      "steps": [
+        "Medir potencia radiante con un radiómetro calibrado.",
+        "Aplicar la eficacia espectral y la convención fotométrica de 683 lm/W a la frecuencia indicada.",
+        "La realización instrumental de la candela sí tiene incertidumbre; no la constante definitoria."
+      ],
+      "source": "https://www.bipm.org/en/publications/si-brochure"
+    },
+    "cosmos": "No tiene rango de colapso. Cambiar esta convención sólo altera las unidades fotométricas; no cambia la emisión del Sol ni la física de los fotones.",
+    "refs": [],
+    "kind": "Convención exacta",
+    "value": "683",
+    "unc": "(exact)",
+    "unit": "lm W^-1"
+  },
+  {
+    "id": "alphas",
+    "name": "Acoplamiento fuerte",
+    "symbol": "αs",
+    "key": "",
+    "group": "interacciones",
+    "year": "1973 · libertad asintótica",
+    "people": [
+      "gross",
+      "politzer",
+      "wilczek"
+    ],
+    "history": "David Gross, David Politzer y Frank Wilczek descubrieron la libertad asintótica. αs depende de la escala de energía y del esquema de renormalización: se cita en MS̄ a la masa del bosón Z. La edición PDG utilizada es 2024, no una afirmación sobre la última medida individual.",
+    "formulas": [
+      "αs = gs²/(4π) — unidades naturales",
+      "αs(Q) ≈ 4π/[β₀ ln(Q²/ΛQCD²)] — un bucle",
+      "β₀ = 11 − 2nf/3"
+    ],
+    "exp": {
+      "name": "Producción inclusiva de chorros hadrónicos en CMS",
+      "year": "datos: 2011 · prepublicación: 2014",
+      "authors": "Colaboración CMS del CERN; autoría colectiva identificada en el artículo.",
+      "photos": [],
+      "result": "αs(MZ) = 0,1185 ± 0,0019 (experimental) +0,0060/−0,0037 (teórica)",
+      "error": "Se conservan por separado las contribuciones experimental y teórica; no son el error de la media mundial PDG.",
+      "steps": [
+        "Colisionar protones a una energía de centro de masas de 7 TeV.",
+        "Reconstruir chorros y medir su sección eficaz según momento transversal y rapidez.",
+        "Comparar con cálculos perturbativos NLO, distribuciones de partones y correcciones electrodébiles."
+      ],
+      "source": "https://arxiv.org/abs/1410.6765"
+    },
+    "cosmos": "Cambiar αs a escala fija modifica la escala de confinamiento, las masas de hadrones y la física nuclear. No hay un porcentaje único de cambio que elimine todo el carbono o haga colapsar el universo: también intervienen masas de quarks y parámetros cosmológicos. La evolución de αs con Q dentro de nuestro universo no es una variación temporal de la ley.",
+    "refs": [
+      [
+        "PDG 2024 · cromodinámica cuántica",
+        "https://pdg.lbl.gov/2024/reviews/rpp2024-rev-qcd.pdf"
+      ],
+      [
+        "Origen histórico",
+        "https://www.nobelprize.org/prizes/physics/2004/press-release/"
+      ]
+    ],
+    "kind": "Medida · PDG 2024",
+    "value": "0,1180",
+    "unc": "± 0,0009 · promedio PDG 2024",
+    "unit": "adimensional · MS̄ a MZ"
+  },
+  {
+    "id": "massratio",
+    "name": "Razón protón/electrón",
+    "symbol": "μ",
+    "key": "proton-electron mass ratio",
+    "group": "materia",
+    "year": "siglos XIX–XX · medidas de carga y masa",
+    "people": [
+      "thomson",
+      "rutherford"
+    ],
+    "history": "El cociente de masas es adimensional y combina contribuciones de física leptónica y nuclear. No posee un descubridor individual ni un único año.",
+    "formulas": [
+      "μ = mp/me",
+      "ωvib ∝ √(me/mp) — escala molecular aproximada"
+    ],
+    "exp": {
+      "name": "Determinación indirecta · Comparación ciclotrón de un protón y carbono-12",
+      "year": "2017",
+      "authors": "Fabian Heiße, Florian Köhler-Langes, Sascha Rau, Jamin Hou, Sven Junck, Anke Kracke, Andreas Mooser, Wolfgang Quint, Stefan Ulmer, Günter Werth, Klaus Blaum y Sven Sturm.",
+      "photos": [
+        "sturm"
+      ],
+      "result": "Dato experimental de entrada: mp = 1,007 276 466 583(15)(29) u",
+      "error": "No es una medición independiente de esta constante. Incertidumbres estadística (15) y sistemática (29); combinada relativa ≈ 32 partes por billón (32 × 10⁻¹²). Para el valor actual y su incertidumbre se usa el ajuste correlacionado CODATA, no una propagación que ignore covarianzas.",
+      "steps": [
+        "Atrapar alternadamente un protón y un ion ¹²C⁶⁺ en un campo magnético común.",
+        "Medir sus frecuencias ciclotrón, inversamente proporcionales a las masas.",
+        "Corregir desplazamientos de frecuencia y energías de ionización; calcular la razón de masas."
+      ],
+      "source": "https://arxiv.org/abs/1706.06780"
+    },
+    "cosmos": "No es un parámetro independiente: su variación está ligada a las constantes de las que deriva. No tiene un umbral propio de colapso cósmico. Si μ aumenta por cuatro a masa electrónica fija y en una aproximación molecular simple, las frecuencias vibracionales se reducen a la mitad. No implica automáticamente ausencia de química.",
+    "refs": [],
+    "kind": "Derivada medida",
+    "value": "1836.152 673 426",
+    "unc": "0.000 000 032",
+    "unit": ""
+  }
+]

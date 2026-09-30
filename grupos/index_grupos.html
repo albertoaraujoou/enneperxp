@@ -1,0 +1,2656 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Conversación sobre teoría de grupos, grupos de Lie, SU(2), SO(3), representaciones, caracteres y DFT de Z6.">
+<title>Teoría de grupos, representaciones y DFT de Z6 — Conversación</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    processEscapes: true
+  },
+  svg: {fontCache: 'global'}
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{
+  --bg:#f4f6f9;--surface:#fff;--surface2:#f9fafb;--ink:#172033;--muted:#667085;
+  --line:#d9e0ea;--accent:#2557a7;--user:#eaf3ff;--assistant:#fff;
+  --shadow:0 8px 28px rgba(20,32,55,.07)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.65}
+.wrapper{max-width:1180px;margin:auto;padding:28px 20px 70px}
+.hero{background:linear-gradient(135deg,#172b4d,#275ba8);color:white;border-radius:22px;padding:34px 36px;box-shadow:var(--shadow)}
+.hero h1{margin:0 0 8px;font-size:clamp(2rem,5vw,3.5rem);line-height:1.08}
+.hero p{margin:0;max-width:850px;opacity:.9}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;margin-top:24px}
+aside{position:sticky;top:18px;align-self:start;max-height:calc(100vh - 36px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+aside h2{font-size:1rem;margin:0 0 12px}
+aside ol{padding:0;margin:0;list-style:none}
+aside li{margin:5px 0}
+aside a{display:block;color:var(--ink);text-decoration:none;font-size:.82rem;padding:7px 8px;border-radius:8px}
+aside a:hover{background:var(--user);color:var(--accent)}
+aside span{display:inline-block;min-width:24px;color:var(--muted)}
+.message{border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:18px;background:var(--assistant);box-shadow:0 2px 10px rgba(20,32,55,.035);scroll-margin-top:18px}
+.message.user{background:var(--user);border-color:#c9dcf6}
+.message-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.role{font-weight:750;color:var(--accent);letter-spacing:.01em}
+.anchor{font-size:.8rem;color:var(--muted);text-decoration:none}
+.content{overflow-x:auto}
+.content mjx-container[display="true"]{margin:1.1em 0!important;overflow-x:auto;overflow-y:hidden}
+.toplink{display:inline-block;margin-top:14px;color:var(--accent);text-decoration:none}
+.note{margin:20px 0;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:15px 18px;color:var(--muted)}
+footer{margin-top:32px;color:var(--muted);font-size:.9rem;text-align:center}
+@media(max-width:900px){
+ .layout{grid-template-columns:1fr}
+ aside{position:relative;top:auto;max-height:360px}
+ .hero{padding:26px 22px}
+}
+@media print{
+ body{background:white}
+ .wrapper{max-width:none;padding:0}
+ .hero{box-shadow:none;border:1px solid #bbb;color:black;background:white}
+ aside{display:none}
+ .layout{display:block}
+ .message{box-shadow:none;break-inside:avoid}
+ .anchor{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrapper" id="top">
+<header class="hero">
+<h1>Teoría de grupos, representaciones y DFT de \(\mathbb Z_6\)</h1>
+<p>Documento web de la conversación desde la pregunta sobre subgrupos normales, cocientes, homomorfismos y núcleos en \(\mathbb Z_6\), incluida. Contiene las fórmulas, matrices y símbolos matemáticos del desarrollo posterior.</p>
+</header>
+<div class="note">
+Las fórmulas están escritas en LaTeX y se renderizan con MathJax. Para verlas con tipografía matemática completa, abre este archivo con conexión a Internet.
+</div>
+<div class="layout">
+<aside>
+<h2>Índice de la conversación</h2>
+<ol>
+<li><a href="#m1"><span>1</span> Usuario: Teoría de grupos muestra un ejemplo de cálculo de subgrupo normal, grupos c…</a></li>
+<li><a href="#m2"><span>2</span> Asistente: Tomemos el grupo aditivo \[ \mathbb Z_6=\{0,1,2,3,4,5\} \] con la suma módu…</a></li>
+<li><a href="#m3"><span>3</span> Usuario: Un ejemplo con un grupo no abeliano para ver el significado de normal</a></li>
+<li><a href="#m4"><span>4</span> Asistente: Un ejemplo clásico es el grupo simétrico \[ S_3, \] el grupo de permutacion…</a></li>
+<li><a href="#m5"><span>5</span> Usuario: Grupos de Lie</a></li>
+<li><a href="#m6"><span>6</span> Asistente: Un grupo de Lie es simultáneamente: 1. un grupo; 2. una variedad diferencia…</a></li>
+<li><a href="#m7"><span>7</span> Usuario: Deriva el álgebra de SU(2)</a></li>
+<li><a href="#m8"><span>8</span> Asistente: El grupo \[ SU(2)=\{U\in M_2(\mathbb C):U^\dagger U=I,\det U=1\}. \] Para o…</a></li>
+<li><a href="#m9"><span>9</span> Usuario: Deriva so(3) y compara con su(2)</a></li>
+<li><a href="#m10"><span>10</span> Asistente: Partimos de: \[ SO(3)=\{R\in M_3(\mathbb R):R^TR=I,\det R=1\}. \] Escribimo…</a></li>
+<li><a href="#m11"><span>11</span> Usuario: Los 2 pasos</a></li>
+<li><a href="#m12"><span>12</span> Asistente: Los dos pasos fundamentales son: ## Paso 1. Del álgebra al grupo Para un ge…</a></li>
+<li><a href="#m13"><span>13</span> Usuario: Construye explícitamente la matriz de rotación</a></li>
+<li><a href="#m14"><span>14</span> Asistente: Sea: \[ U= \cos\frac\theta2\,I -i\sin\frac\theta2\,\hat n\cdot\vec\sigma. \…</a></li>
+<li><a href="#m15"><span>15</span> Usuario: Derivación algebraica</a></li>
+<li><a href="#m16"><span>16</span> Asistente: Sea: \[ N=[\hat n]_\times, \] la matriz que representa el producto vectoria…</a></li>
+<li><a href="#m17"><span>17</span> Usuario: Sigue</a></li>
+<li><a href="#m18"><span>18</span> Asistente: Sustituimos: \[ N^2=\hat n\hat n^T-I. \] Entonces: \[ R = I+\sin\theta N +(…</a></li>
+<li><a href="#m19"><span>19</span> Usuario: Derivalo</a></li>
+<li><a href="#m20"><span>20</span> Asistente: Derivación de la exponencial en \(SU(2)\). Tomamos: \[ U(\theta) = \exp\lef…</a></li>
+<li><a href="#m21"><span>21</span> Usuario: Actúa sobre un espinor</a></li>
+<li><a href="#m22"><span>22</span> Asistente: Sea el espinor: \[ \psi= \begin{pmatrix} \alpha\\ \beta \end{pmatrix}, \qqu…</a></li>
+<li><a href="#m23"><span>23</span> Usuario: Construyela</a></li>
+<li><a href="#m24"><span>24</span> Asistente: Construcción de la esfera de Bloch. Un estado puro normalizado es: \[ |\psi…</a></li>
+<li><a href="#m25"><span>25</span> Usuario: ejemplo basico de calculo de un corchete de poisson</a></li>
+<li><a href="#m26"><span>26</span> Asistente: Para dos funciones \(f(q,p)\) y \(g(q,p)\), el corchete de Poisson es: \[ \…</a></li>
+<li><a href="#m27"><span>27</span> Usuario: hazlo</a></li>
+<li><a href="#m28"><span>28</span> Asistente: Aplicamos los corchetes de Poisson al oscilador armónico. El Hamiltoniano e…</a></li>
+<li><a href="#m29"><span>29</span> Usuario: cual es la reprentacion de los enteros mod 4 Z4? y la de sus subgrupos? tie…</a></li>
+<li><a href="#m30"><span>30</span> Asistente: Consideremos: \[ \mathbb Z_4=\{0,1,2,3\}. \] Es un grupo cíclico y abeliano…</a></li>
+<li><a href="#m31"><span>31</span> Usuario: y para enteros mod 6 y sus subgrupos?</a></li>
+<li><a href="#m32"><span>32</span> Asistente: Para: \[ \mathbb Z_6=\{0,1,2,3,4,5\}, \] todas las irreps complejas son uni…</a></li>
+<li><a href="#m33"><span>33</span> Usuario: desarrolla ambos pasos</a></li>
+<li><a href="#m34"><span>34</span> Asistente: ## Paso 1: reconstrucción mediante \(\mathbb Z_2\times\mathbb Z_3\) Por el …</a></li>
+<li><a href="#m35"><span>35</span> Usuario: y las restricciones cuales son?</a></li>
+<li><a href="#m36"><span>36</span> Asistente: Sea: \[ \rho_k(n)=e^{2\pi ikn/6}. \] ## Restricción a \(H_2=\{0,3\}\cong\ma…</a></li>
+<li><a href="#m37"><span>37</span> Usuario: induccion de representaciones</a></li>
+<li><a href="#m38"><span>38</span> Asistente: La inducción realiza el proceso inverso conceptual: parte de una representa…</a></li>
+<li><a href="#m39"><span>39</span> Usuario: y los caracteres?</a></li>
+<li><a href="#m40"><span>40</span> Asistente: El carácter de una representación \(\rho\) es: \[ \chi_\rho(g)=\operatornam…</a></li>
+<li><a href="#m41"><span>41</span> Usuario: y los grupos de Frobenius?</a></li>
+<li><a href="#m42"><span>42</span> Asistente: Un grupo finito \(G\) es un grupo de Frobenius si posee un subgrupo propio …</a></li>
+<li><a href="#m43"><span>43</span> Usuario: construyela</a></li>
+<li><a href="#m44"><span>44</span> Asistente: Construimos la tabla de caracteres de: \[ G=\mathbb Z_5\rtimes\mathbb Z_4 =…</a></li>
+<li><a href="#m45"><span>45</span> Usuario: calcula los irreps de enteros mod 6 Z6</a></li>
+<li><a href="#m46"><span>46</span> Asistente: Como: \[ \mathbb Z_6=\langle1\rangle, \] una representación irreducible com…</a></li>
+<li><a href="#m47"><span>47</span> Usuario: calcula y reconstruye</a></li>
+<li><a href="#m48"><span>48</span> Asistente: Reconstruimos las irreps mediante: \[ \mathbb Z_6\cong\mathbb Z_2\times\mat…</a></li>
+<li><a href="#m49"><span>49</span> Usuario: y la DFT o transformada discreta de Fourier de Z6 o enteros modulo 6 y sus …</a></li>
+<li><a href="#m50"><span>50</span> Asistente: La DFT de \(\mathbb Z_6\) es exactamente la expansión de una función en los…</a></li>
+<li><a href="#m51"><span>51</span> Usuario: hazlo</a></li>
+<li><a href="#m52"><span>52</span> Asistente: Sea: \[ \omega_6=e^{-2\pi i/6}, \qquad \omega_3=e^{-2\pi i/3}. \] Tenemos: …</a></li>
+<li><a href="#m53"><span>53</span> Usuario: hazlo</a></li>
+<li><a href="#m54"><span>54</span> Asistente: Ahora escribimos explícitamente las matrices de permutación. El orden lexic…</a></li>
+<li><a href="#m55"><span>55</span> Usuario: share chat</a></li>
+<li><a href="#m56"><span>56</span> Asistente: Para compartir este chat se puede usar la función Compartir de ChatGPT, cop…</a></li>
+<li><a href="#m57"><span>57</span> Usuario: convierte todo el contenido del chat en un documento .html</a></li>
+<li><a href="#m58"><span>58</span> Asistente: Se generó una primera versión HTML de la conversación.</a></li>
+<li><a href="#m59"><span>59</span> Usuario: convierte toda la conversacion en un sitio web HTML o en un documento web H…</a></li>
+</ol>
+</aside>
+<main>
+
+    <article id="m1" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m1" aria-label="Enlace a este mensaje">#1</a>
+      </div>
+      <div class="content">Teoría de grupos muestra un ejemplo de cálculo de subgrupo normal, grupos cocientes. Homomorfismos y núcleo de los homomorfismos para Z6 el conjunto de los enteros módulo 6</div>
+    </article>
+    
+
+    <article id="m2" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m2" aria-label="Enlace a este mensaje">#2</a>
+      </div>
+      <div class="content">Tomemos el grupo aditivo<br>
+\[<br>
+\mathbb Z_6=\{0,1,2,3,4,5\}<br>
+\]<br>
+con la suma módulo 6.<br>
+<br>
+## 1. Subgrupos de \(\mathbb Z_6\)<br>
+<br>
+Como \(\mathbb Z_6\) es cíclico, sus subgrupos corresponden a los divisores de 6.<br>
+<br>
+Tenemos:<br>
+\[<br>
+H_1=\{0\},<br>
+\]<br>
+\[<br>
+H_2=\{0,3\}\cong\mathbb Z_2,<br>
+\]<br>
+\[<br>
+H_3=\{0,2,4\}\cong\mathbb Z_3,<br>
+\]<br>
+y<br>
+\[<br>
+H_6=\mathbb Z_6.<br>
+\]<br>
+<br>
+Por ejemplo:<br>
+\[<br>
+H=\{0,3\}.<br>
+\]<br>
+<br>
+Para comprobar que es subgrupo basta observar que es cerrado bajo suma módulo 6:<br>
+\[<br>
+3+3=6\equiv0\pmod6.<br>
+\]<br>
+<br>
+## 2. Subgrupo normal<br>
+<br>
+Un subgrupo \(H\subseteq G\) es normal si<br>
+\[<br>
+gH=Hg\qquad\forall g\in G.<br>
+\]<br>
+<br>
+Como \(\mathbb Z_6\) es abeliano:<br>
+\[<br>
+a+b=b+a,<br>
+\]<br>
+todos sus subgrupos son normales.<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{H=\{0,3\}\triangleleft\mathbb Z_6}.<br>
+\]<br>
+<br>
+## 3. Grupo cociente<br>
+<br>
+Construimos<br>
+\[<br>
+\mathbb Z_6/H.<br>
+\]<br>
+<br>
+Las clases laterales son:<br>
+\[<br>
+0+H=\{0,3\},<br>
+\]<br>
+\[<br>
+1+H=\{1,4\},<br>
+\]<br>
+\[<br>
+2+H=\{2,5\}.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\mathbb Z_6/H=<br>
+\big\{\{0,3\},\{1,4\},\{2,5\}\big\}.<br>
+\]<br>
+<br>
+Tiene tres elementos y:<br>
+\[<br>
+\boxed{\mathbb Z_6/H\cong\mathbb Z_3}.<br>
+\]<br>
+<br>
+Si usamos en cambio<br>
+\[<br>
+K=\{0,2,4\}\cong\mathbb Z_3,<br>
+\]<br>
+entonces<br>
+\[<br>
+\boxed{\mathbb Z_6/K\cong\mathbb Z_2}.<br>
+\]<br>
+<br>
+## 4. Homomorfismo<br>
+<br>
+Consideremos<br>
+\[<br>
+\varphi:\mathbb Z_6\to\mathbb Z_3<br>
+\]<br>
+definido por<br>
+\[<br>
+\varphi([n]_6)=[n]_3.<br>
+\]<br>
+<br>
+Es un homomorfismo porque<br>
+\[<br>
+\varphi(a+b)=\varphi(a)+\varphi(b).<br>
+\]<br>
+<br>
+Explícitamente:<br>
+\[<br>
+0\mapsto0,\quad<br>
+1\mapsto1,\quad<br>
+2\mapsto2,\quad<br>
+3\mapsto0,\quad<br>
+4\mapsto1,\quad<br>
+5\mapsto2.<br>
+\]<br>
+<br>
+## 5. Núcleo<br>
+<br>
+El núcleo es<br>
+\[<br>
+\ker\varphi=<br>
+\{x\in\mathbb Z_6:\varphi(x)=0\}.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{\ker\varphi=\{0,3\}}.<br>
+\]<br>
+<br>
+El núcleo de todo homomorfismo es un subgrupo normal.<br>
+<br>
+## 6. Primer teorema de isomorfía<br>
+<br>
+El primer teorema de isomorfía dice:<br>
+\[<br>
+G/\ker\varphi\cong\operatorname{Im}\varphi.<br>
+\]<br>
+<br>
+Aquí:<br>
+\[<br>
+\mathbb Z_6/\{0,3\}\cong\mathbb Z_3.<br>
+\]<br>
+<br>
+Es decir:<br>
+\[<br>
+\boxed{\mathbb Z_6/\ker\varphi\cong\operatorname{Im}\varphi=\mathbb Z_3}.<br>
+\]<br>
+<br>
+Este ejemplo conecta subgrupo normal, grupo cociente, homomorfismo y núcleo en una sola construcción.</div>
+    </article>
+    
+
+    <article id="m3" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m3" aria-label="Enlace a este mensaje">#3</a>
+      </div>
+      <div class="content">Un ejemplo con un grupo no abeliano para ver el significado de normal</div>
+    </article>
+    
+
+    <article id="m4" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m4" aria-label="Enlace a este mensaje">#4</a>
+      </div>
+      <div class="content">Un ejemplo clásico es el grupo simétrico<br>
+\[<br>
+S_3,<br>
+\]<br>
+el grupo de permutaciones de tres objetos. Tiene seis elementos y no es abeliano.<br>
+<br>
+Consideremos<br>
+\[<br>
+A_3=\{e,(123),(132)\}.<br>
+\]<br>
+<br>
+Es un subgrupo de \(S_3\) de orden 3. Además:<br>
+\[<br>
+[S_3:A_3]=2.<br>
+\]<br>
+<br>
+Todo subgrupo de índice 2 es normal, así que:<br>
+\[<br>
+\boxed{A_3\triangleleft S_3}.<br>
+\]<br>
+<br>
+También puede comprobarse mediante conjugación:<br>
+\[<br>
+gA_3g^{-1}=A_3<br>
+\qquad\forall g\in S_3.<br>
+\]<br>
+<br>
+Por ejemplo:<br>
+\[<br>
+(12)(123)(12)^{-1}=(132),<br>
+\]<br>
+que sigue perteneciendo a \(A_3\).<br>
+<br>
+En cambio, tomemos<br>
+\[<br>
+H=\{e,(12)\}.<br>
+\]<br>
+<br>
+Conjugando por \((123)\):<br>
+\[<br>
+(123)(12)(123)^{-1}=(23).<br>
+\]<br>
+<br>
+Pero<br>
+\[<br>
+(23)\notin H.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{H\not\triangleleft S_3}.<br>
+\]<br>
+<br>
+Ésta es la diferencia esencial: en un grupo no abeliano un subgrupo puede cambiar al conjugarlo.</div>
+    </article>
+    
+
+    <article id="m5" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m5" aria-label="Enlace a este mensaje">#5</a>
+      </div>
+      <div class="content">Grupos de Lie</div>
+    </article>
+    
+
+    <article id="m6" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m6" aria-label="Enlace a este mensaje">#6</a>
+      </div>
+      <div class="content">Un grupo de Lie es simultáneamente:<br>
+<br>
+1. un grupo;<br>
+2. una variedad diferenciable;<br>
+3. con multiplicación e inversión suaves.<br>
+<br>
+Ejemplos fundamentales:<br>
+<br>
+\[<br>
+GL(n,\mathbb R),<br>
+\qquad<br>
+SO(n),<br>
+\qquad<br>
+SU(n),<br>
+\qquad<br>
+U(n).<br>
+\]<br>
+<br>
+Por ejemplo:<br>
+\[<br>
+SO(3)=\{R\in M_3(\mathbb R):R^TR=I,\det R=1\}.<br>
+\]<br>
+<br>
+Describe las rotaciones del espacio tridimensional.<br>
+<br>
+A cada grupo de Lie \(G\) se le asocia un álgebra de Lie \(\mathfrak g\), que puede identificarse con el espacio tangente en la identidad:<br>
+\[<br>
+\mathfrak g=T_eG.<br>
+\]<br>
+<br>
+El producto fundamental del álgebra es el corchete:<br>
+\[<br>
+[X,Y]=XY-YX.<br>
+\]<br>
+<br>
+Por ejemplo:<br>
+\[<br>
+\mathfrak{so}(3)=\{X:X^T=-X\},<br>
+\]<br>
+mientras que<br>
+\[<br>
+\mathfrak{su}(2)=\{X:X^\dagger=-X,\operatorname{Tr}X=0\}.<br>
+\]<br>
+<br>
+La aplicación exponencial<br>
+\[<br>
+\exp:\mathfrak g\to G<br>
+\]<br>
+conecta transformaciones infinitesimales con transformaciones finitas.</div>
+    </article>
+    
+
+    <article id="m7" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m7" aria-label="Enlace a este mensaje">#7</a>
+      </div>
+      <div class="content">Deriva el álgebra de SU(2)</div>
+    </article>
+    
+
+    <article id="m8" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m8" aria-label="Enlace a este mensaje">#8</a>
+      </div>
+      <div class="content">El grupo<br>
+\[<br>
+SU(2)=\{U\in M_2(\mathbb C):U^\dagger U=I,\det U=1\}.<br>
+\]<br>
+<br>
+Para obtener su álgebra de Lie escribimos una curva cerca de la identidad:<br>
+\[<br>
+U(t)=I+tX+O(t^2).<br>
+\]<br>
+<br>
+La condición unitaria:<br>
+\[<br>
+U^\dagger U=I<br>
+\]<br>
+produce, a primer orden:<br>
+\[<br>
+X^\dagger+X=0.<br>
+\]<br>
+<br>
+Luego \(X\) es antihermítica.<br>
+<br>
+La condición<br>
+\[<br>
+\det U=1<br>
+\]<br>
+implica:<br>
+\[<br>
+\operatorname{Tr}X=0.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{<br>
+\mathfrak{su}(2)=<br>
+\{X\in M_2(\mathbb C):X^\dagger=-X,\operatorname{Tr}X=0\}.<br>
+}<br>
+\]<br>
+<br>
+Las matrices de Pauli son:<br>
+\[<br>
+\sigma_1=<br>
+\begin{pmatrix}<br>
+0&amp;1\\<br>
+1&amp;0<br>
+\end{pmatrix},<br>
+\quad<br>
+\sigma_2=<br>
+\begin{pmatrix}<br>
+0&amp;-i\\<br>
+i&amp;0<br>
+\end{pmatrix},<br>
+\quad<br>
+\sigma_3=<br>
+\begin{pmatrix}<br>
+1&amp;0\\<br>
+0&amp;-1<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+Una base física habitual es:<br>
+\[<br>
+J_i=\frac{\sigma_i}{2}.<br>
+\]<br>
+<br>
+Las matrices de Pauli satisfacen:<br>
+\[<br>
+[\sigma_i,\sigma_j]<br>
+=<br>
+2i\varepsilon_{ijk}\sigma_k.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+[J_i,J_j]<br>
+=<br>
+i\varepsilon_{ijk}J_k.<br>
+\]<br>
+<br>
+Éstas son las relaciones de conmutación de \(\mathfrak{su}(2)\).</div>
+    </article>
+    
+
+    <article id="m9" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m9" aria-label="Enlace a este mensaje">#9</a>
+      </div>
+      <div class="content">Deriva so(3) y compara con su(2)</div>
+    </article>
+    
+
+    <article id="m10" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m10" aria-label="Enlace a este mensaje">#10</a>
+      </div>
+      <div class="content">Partimos de:<br>
+\[<br>
+SO(3)=\{R\in M_3(\mathbb R):R^TR=I,\det R=1\}.<br>
+\]<br>
+<br>
+Escribimos:<br>
+\[<br>
+R(t)=I+tX+O(t^2).<br>
+\]<br>
+<br>
+La condición:<br>
+\[<br>
+R^TR=I<br>
+\]<br>
+da:<br>
+\[<br>
+(I+tX^T)(I+tX)=I+t(X^T+X)+O(t^2),<br>
+\]<br>
+por lo que:<br>
+\[<br>
+X^T=-X.<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+\boxed{<br>
+\mathfrak{so}(3)=\{X\in M_3(\mathbb R):X^T=-X\}.<br>
+}<br>
+\]<br>
+<br>
+Una base puede elegirse como:<br>
+\[<br>
+L_1=<br>
+\begin{pmatrix}<br>
+0&amp;0&amp;0\\<br>
+0&amp;0&amp;-1\\<br>
+0&amp;1&amp;0<br>
+\end{pmatrix},<br>
+\quad<br>
+L_2=<br>
+\begin{pmatrix}<br>
+0&amp;0&amp;1\\<br>
+0&amp;0&amp;0\\<br>
+-1&amp;0&amp;0<br>
+\end{pmatrix},<br>
+\quad<br>
+L_3=<br>
+\begin{pmatrix}<br>
+0&amp;-1&amp;0\\<br>
+1&amp;0&amp;0\\<br>
+0&amp;0&amp;0<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+Cumplen:<br>
+\[<br>
+[L_i,L_j]=\varepsilon_{ijk}L_k.<br>
+\]<br>
+<br>
+Mientras tanto, con \(J_i=\sigma_i/2\):<br>
+\[<br>
+[J_i,J_j]=i\varepsilon_{ijk}J_k.<br>
+\]<br>
+<br>
+Tras escoger bases antihermíticas apropiadas, ambas álgebras tienen las mismas constantes de estructura:<br>
+\[<br>
+\boxed{\mathfrak{su}(2)\cong\mathfrak{so}(3)}<br>
+\]<br>
+como álgebras de Lie reales.<br>
+<br>
+Pero los grupos no son isomorfos:<br>
+\[<br>
+\boxed{SU(2)\to SO(3)}<br>
+\]<br>
+es un doble recubrimiento con núcleo<br>
+\[<br>
+\{I,-I\}.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+SO(3)\cong SU(2)/\mathbb Z_2.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m11" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m11" aria-label="Enlace a este mensaje">#11</a>
+      </div>
+      <div class="content">Los 2 pasos</div>
+    </article>
+    
+
+    <article id="m12" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m12" aria-label="Enlace a este mensaje">#12</a>
+      </div>
+      <div class="content">Los dos pasos fundamentales son:<br>
+<br>
+## Paso 1. Del álgebra al grupo<br>
+<br>
+Para un generador<br>
+\[<br>
+X\in\mathfrak{so}(3),<br>
+\]<br>
+una rotación finita se obtiene mediante:<br>
+\[<br>
+R(\theta)=e^{\theta X}.<br>
+\]<br>
+<br>
+En \(SU(2)\), usando<br>
+\[<br>
+J_i=\frac{\sigma_i}{2},<br>
+\]<br>
+una rotación se representa mediante:<br>
+\[<br>
+U(\theta)=e^{-i\theta\,\hat n\cdot\sigma/2}.<br>
+\]<br>
+<br>
+## Paso 2. Relacionar \(SU(2)\) con \(SO(3)\)<br>
+<br>
+A cada vector<br>
+\[<br>
+\vec x=(x_1,x_2,x_3)<br>
+\]<br>
+le asociamos la matriz hermítica:<br>
+\[<br>
+X=\vec x\cdot\vec\sigma.<br>
+\]<br>
+<br>
+Entonces \(U\in SU(2)\) actúa como:<br>
+\[<br>
+X\longmapsto UXU^\dagger.<br>
+\]<br>
+<br>
+El resultado sigue siendo de la forma:<br>
+\[<br>
+X&#x27;=\vec x&#x27;\cdot\vec\sigma.<br>
+\]<br>
+<br>
+Esto define una rotación:<br>
+\[<br>
+\vec x&#x27;=R(U)\vec x.<br>
+\]<br>
+<br>
+Así obtenemos el homomorfismo:<br>
+\[<br>
+SU(2)\to SO(3),<br>
+\]<br>
+y:<br>
+\[<br>
+U,\,-U<br>
+\]<br>
+producen exactamente la misma rotación.</div>
+    </article>
+    
+
+    <article id="m13" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m13" aria-label="Enlace a este mensaje">#13</a>
+      </div>
+      <div class="content">Construye explícitamente la matriz de rotación</div>
+    </article>
+    
+
+    <article id="m14" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m14" aria-label="Enlace a este mensaje">#14</a>
+      </div>
+      <div class="content">Sea:<br>
+\[<br>
+U=<br>
+\cos\frac\theta2\,I<br>
+-i\sin\frac\theta2\,\hat n\cdot\vec\sigma.<br>
+\]<br>
+<br>
+La acción:<br>
+\[<br>
+U(\vec x\cdot\vec\sigma)U^\dagger<br>
+=<br>
+(R\vec x)\cdot\vec\sigma<br>
+\]<br>
+produce la matriz:<br>
+\[<br>
+\boxed{<br>
+R_{ij}<br>
+=<br>
+\cos\theta\,\delta_{ij}<br>
++<br>
+(1-\cos\theta)n_in_j<br>
+-<br>
+\sin\theta\,\varepsilon_{ijk}n_k<br>
+}<br>
+\]<br>
+según la convención de signos elegida.<br>
+<br>
+En forma matricial:<br>
+\[<br>
+R=<br>
+\begin{pmatrix}<br>
+c+n_x^2(1-c) &amp;<br>
+n_xn_y(1-c)-n_zs &amp;<br>
+n_xn_z(1-c)+n_ys\\<br>
+n_yn_x(1-c)+n_zs &amp;<br>
+c+n_y^2(1-c) &amp;<br>
+n_yn_z(1-c)-n_xs\\<br>
+n_zn_x(1-c)-n_ys &amp;<br>
+n_zn_y(1-c)+n_xs &amp;<br>
+c+n_z^2(1-c)<br>
+\end{pmatrix},<br>
+\]<br>
+donde:<br>
+\[<br>
+c=\cos\theta,\qquad s=\sin\theta.<br>
+\]<br>
+<br>
+Para el eje \(z\), \(\hat n=(0,0,1)\):<br>
+\[<br>
+R_z(\theta)=<br>
+\begin{pmatrix}<br>
+\cos\theta&amp;-\sin\theta&amp;0\\<br>
+\sin\theta&amp;\cos\theta&amp;0\\<br>
+0&amp;0&amp;1<br>
+\end{pmatrix}.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m15" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m15" aria-label="Enlace a este mensaje">#15</a>
+      </div>
+      <div class="content">Derivación algebraica</div>
+    </article>
+    
+
+    <article id="m16" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m16" aria-label="Enlace a este mensaje">#16</a>
+      </div>
+      <div class="content">Sea:<br>
+\[<br>
+N=[\hat n]_\times,<br>
+\]<br>
+la matriz que representa el producto vectorial:<br>
+\[<br>
+Nx=\hat n\times x.<br>
+\]<br>
+<br>
+Para \(|\hat n|=1\):<br>
+\[<br>
+N^2=\hat n\hat n^T-I.<br>
+\]<br>
+<br>
+Además:<br>
+\[<br>
+N^3=-N,<br>
+\qquad<br>
+N^4=-N^2.<br>
+\]<br>
+<br>
+Consideramos:<br>
+\[<br>
+e^{\theta N}<br>
+=<br>
+I+\theta N+\frac{\theta^2}{2!}N^2+<br>
+\frac{\theta^3}{3!}N^3+\cdots.<br>
+\]<br>
+<br>
+Agrupando las potencias impares:<br>
+\[<br>
+\left(\theta-\frac{\theta^3}{3!}<br>
++\frac{\theta^5}{5!}-\cdots\right)N<br>
+=<br>
+\sin\theta\,N.<br>
+\]<br>
+<br>
+Agrupando las pares:<br>
+\[<br>
+\left(\frac{\theta^2}{2!}<br>
+-\frac{\theta^4}{4!}<br>
++\cdots\right)N^2<br>
+=<br>
+(1-\cos\theta)N^2.<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+\boxed{<br>
+e^{\theta N}<br>
+=<br>
+I+\sin\theta\,N+(1-\cos\theta)N^2.<br>
+}<br>
+\]<br>
+<br>
+Ésta es la forma matricial de la fórmula de Rodrigues.</div>
+    </article>
+    
+
+    <article id="m17" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m17" aria-label="Enlace a este mensaje">#17</a>
+      </div>
+      <div class="content">Sigue</div>
+    </article>
+    
+
+    <article id="m18" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m18" aria-label="Enlace a este mensaje">#18</a>
+      </div>
+      <div class="content">Sustituimos:<br>
+\[<br>
+N^2=\hat n\hat n^T-I.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+R<br>
+=<br>
+I+\sin\theta N<br>
++(1-\cos\theta)(\hat n\hat n^T-I).<br>
+\]<br>
+<br>
+Agrupando:<br>
+\[<br>
+R<br>
+=<br>
+\cos\theta\,I<br>
++<br>
+(1-\cos\theta)\hat n\hat n^T<br>
++<br>
+\sin\theta[\hat n]_\times.<br>
+\]<br>
+<br>
+Aplicando a un vector \(x\):<br>
+\[<br>
+Rx<br>
+=<br>
+x\cos\theta<br>
++<br>
+\hat n(\hat n\cdot x)(1-\cos\theta)<br>
++<br>
+(\hat n\times x)\sin\theta.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{<br>
+Rx=x\cos\theta+<br>
+(\hat n\times x)\sin\theta+<br>
+\hat n(\hat n\cdot x)(1-\cos\theta)<br>
+}.<br>
+\]<br>
+<br>
+Esta fórmula separa \(x\) en una componente paralela al eje, que permanece fija, y una componente perpendicular, que gira en el plano ortogonal a \(\hat n\).</div>
+    </article>
+    
+
+    <article id="m19" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m19" aria-label="Enlace a este mensaje">#19</a>
+      </div>
+      <div class="content">Derivalo</div>
+    </article>
+    
+
+    <article id="m20" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m20" aria-label="Enlace a este mensaje">#20</a>
+      </div>
+      <div class="content">Derivación de la exponencial en \(SU(2)\).<br>
+<br>
+Tomamos:<br>
+\[<br>
+U(\theta)<br>
+=<br>
+\exp\left(<br>
+-i\frac\theta2\hat n\cdot\vec\sigma<br>
+\right).<br>
+\]<br>
+<br>
+Las matrices de Pauli satisfacen:<br>
+\[<br>
+\sigma_i\sigma_j<br>
+=<br>
+\delta_{ij}I<br>
++i\varepsilon_{ijk}\sigma_k.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+(\hat n\cdot\vec\sigma)^2<br>
+=<br>
+n_in_j\sigma_i\sigma_j.<br>
+\]<br>
+<br>
+El término antisimétrico desaparece porque \(n_in_j\) es simétrico:<br>
+\[<br>
+n_in_j\varepsilon_{ijk}=0.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+(\hat n\cdot\vec\sigma)^2<br>
+=<br>
+(n_1^2+n_2^2+n_3^2)I=I.<br>
+\]<br>
+<br>
+Si:<br>
+\[<br>
+A=\hat n\cdot\vec\sigma,<br>
+\]<br>
+entonces:<br>
+\[<br>
+A^{2m}=I,\qquad A^{2m+1}=A.<br>
+\]<br>
+<br>
+Expandimos:<br>
+\[<br>
+e^{-i\theta A/2}<br>
+=<br>
+I-\frac{i\theta}{2}A<br>
+-\frac{\theta^2}{2!2^2}I<br>
++\frac{i\theta^3}{3!2^3}A+\cdots.<br>
+\]<br>
+<br>
+Los términos pares forman:<br>
+\[<br>
+\cos\frac\theta2\,I,<br>
+\]<br>
+y los impares:<br>
+\[<br>
+-i\sin\frac\theta2\,A.<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+\boxed{<br>
+U(\theta)=<br>
+\cos\frac\theta2\,I<br>
+-i\sin\frac\theta2\,\hat n\cdot\vec\sigma<br>
+}.<br>
+\]<br>
+<br>
+El ángulo aparece dividido entre dos porque los generadores fundamentales son:<br>
+\[<br>
+J_i=\frac{\sigma_i}{2}.<br>
+\]<br>
+<br>
+Esto produce:<br>
+\[<br>
+U(2\pi)=-I,<br>
+\qquad<br>
+U(4\pi)=I.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m21" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m21" aria-label="Enlace a este mensaje">#21</a>
+      </div>
+      <div class="content">Actúa sobre un espinor</div>
+    </article>
+    
+
+    <article id="m22" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m22" aria-label="Enlace a este mensaje">#22</a>
+      </div>
+      <div class="content">Sea el espinor:<br>
+\[<br>
+\psi=<br>
+\begin{pmatrix}<br>
+\alpha\\<br>
+\beta<br>
+\end{pmatrix},<br>
+\qquad<br>
+|\alpha|^2+|\beta|^2=1.<br>
+\]<br>
+<br>
+Una rotación actúa como:<br>
+\[<br>
+\psi&#x27;=U\psi.<br>
+\]<br>
+<br>
+Para una rotación alrededor del eje \(z\):<br>
+\[<br>
+U_z(\theta)<br>
+=<br>
+e^{-i\theta\sigma_z/2}<br>
+=<br>
+\begin{pmatrix}<br>
+e^{-i\theta/2}&amp;0\\<br>
+0&amp;e^{i\theta/2}<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+\boxed{<br>
+\psi&#x27;=<br>
+\begin{pmatrix}<br>
+e^{-i\theta/2}\alpha\\<br>
+e^{i\theta/2}\beta<br>
+\end{pmatrix}<br>
+}.<br>
+\]<br>
+<br>
+Para el eje \(x\):<br>
+\[<br>
+U_x(\theta)<br>
+=<br>
+\cos\frac\theta2 I<br>
+-i\sin\frac\theta2\sigma_x<br>
+\]<br>
+y:<br>
+\[<br>
+U_x(\theta)=<br>
+\begin{pmatrix}<br>
+\cos(\theta/2)&amp;-i\sin(\theta/2)\\<br>
+-i\sin(\theta/2)&amp;\cos(\theta/2)<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+Si:<br>
+\[<br>
+|\uparrow\rangle=<br>
+\begin{pmatrix}1\\0\end{pmatrix}<br>
+\]<br>
+y \(\theta=\pi\):<br>
+\[<br>
+U_x(\pi)|\uparrow\rangle<br>
+=<br>
+-i|\downarrow\rangle.<br>
+\]<br>
+<br>
+El vector físico asociado al espinor es:<br>
+\[<br>
+r_i=\psi^\dagger\sigma_i\psi.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m23" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m23" aria-label="Enlace a este mensaje">#23</a>
+      </div>
+      <div class="content">Construyela</div>
+    </article>
+    
+
+    <article id="m24" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m24" aria-label="Enlace a este mensaje">#24</a>
+      </div>
+      <div class="content">Construcción de la esfera de Bloch.<br>
+<br>
+Un estado puro normalizado es:<br>
+\[<br>
+|\psi\rangle=<br>
+\alpha|0\rangle+\beta|1\rangle,<br>
+\]<br>
+con:<br>
+\[<br>
+|\alpha|^2+|\beta|^2=1.<br>
+\]<br>
+<br>
+Eliminando una fase global:<br>
+\[<br>
+\boxed{<br>
+|\psi\rangle=<br>
+\cos\frac\vartheta2|0\rangle<br>
++<br>
+e^{i\varphi}\sin\frac\vartheta2|1\rangle<br>
+}.<br>
+\]<br>
+<br>
+En forma de columna:<br>
+\[<br>
+\psi=<br>
+\begin{pmatrix}<br>
+\cos(\vartheta/2)\\<br>
+e^{i\varphi}\sin(\vartheta/2)<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+Definimos:<br>
+\[<br>
+x=\psi^\dagger\sigma_x\psi,<br>
+\qquad<br>
+y=\psi^\dagger\sigma_y\psi,<br>
+\qquad<br>
+z=\psi^\dagger\sigma_z\psi.<br>
+\]<br>
+<br>
+El cálculo da:<br>
+\[<br>
+x=\sin\vartheta\cos\varphi,<br>
+\]<br>
+\[<br>
+y=\sin\vartheta\sin\varphi,<br>
+\]<br>
+\[<br>
+z=\cos\vartheta.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{<br>
+\vec r=<br>
+(\sin\vartheta\cos\varphi,<br>
+\sin\vartheta\sin\varphi,<br>
+\cos\vartheta)<br>
+}.<br>
+\]<br>
+<br>
+Y:<br>
+\[<br>
+|\vec r|=1.<br>
+\]<br>
+<br>
+La matriz de densidad:<br>
+\[<br>
+\rho=|\psi\rangle\langle\psi|<br>
+\]<br>
+puede escribirse:<br>
+\[<br>
+\boxed{<br>
+\rho=\frac12(I+\vec r\cdot\vec\sigma)<br>
+}.<br>
+\]<br>
+<br>
+Geométricamente:<br>
+\[<br>
+\mathbb{CP}^1\simeq S^2.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m25" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m25" aria-label="Enlace a este mensaje">#25</a>
+      </div>
+      <div class="content">ejemplo basico de calculo de un corchete de poisson</div>
+    </article>
+    
+
+    <article id="m26" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m26" aria-label="Enlace a este mensaje">#26</a>
+      </div>
+      <div class="content">Para dos funciones \(f(q,p)\) y \(g(q,p)\), el corchete de Poisson es:<br>
+\[<br>
+\boxed{<br>
+\{f,g\}<br>
+=<br>
+\frac{\partial f}{\partial q}<br>
+\frac{\partial g}{\partial p}<br>
+-<br>
+\frac{\partial f}{\partial p}<br>
+\frac{\partial g}{\partial q}<br>
+}.<br>
+\]<br>
+<br>
+Ejemplo:<br>
+\[<br>
+f=q,\qquad g=p.<br>
+\]<br>
+<br>
+Tenemos:<br>
+\[<br>
+\frac{\partial q}{\partial q}=1,<br>
+\qquad<br>
+\frac{\partial q}{\partial p}=0,<br>
+\]<br>
+\[<br>
+\frac{\partial p}{\partial p}=1,<br>
+\qquad<br>
+\frac{\partial p}{\partial q}=0.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+\boxed{\{q,p\}=1}.<br>
+\]<br>
+<br>
+Otro ejemplo:<br>
+\[<br>
+f=q^2,\qquad g=p^2.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+\{q^2,p^2\}<br>
+=<br>
+(2q)(2p)-0<br>
+=<br>
+\boxed{4qp}.<br>
+\]<br>
+<br>
+Y si:<br>
+\[<br>
+f=q^2p,\qquad g=qp^2,<br>
+\]<br>
+entonces:<br>
+\[<br>
+\frac{\partial f}{\partial q}=2qp,<br>
+\quad<br>
+\frac{\partial f}{\partial p}=q^2,<br>
+\]<br>
+\[<br>
+\frac{\partial g}{\partial q}=p^2,<br>
+\quad<br>
+\frac{\partial g}{\partial p}=2qp.<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+\{f,g\}<br>
+=<br>
+(2qp)(2qp)-q^2p^2<br>
+=<br>
+\boxed{3q^2p^2}.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m27" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m27" aria-label="Enlace a este mensaje">#27</a>
+      </div>
+      <div class="content">hazlo</div>
+    </article>
+    
+
+    <article id="m28" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m28" aria-label="Enlace a este mensaje">#28</a>
+      </div>
+      <div class="content">Aplicamos los corchetes de Poisson al oscilador armónico.<br>
+<br>
+El Hamiltoniano es:<br>
+\[<br>
+H(q,p)=<br>
+\frac{p^2}{2m}<br>
++<br>
+\frac12m\omega^2q^2.<br>
+\]<br>
+<br>
+La evolución de cualquier observable \(f\) viene dada por:<br>
+\[<br>
+\dot f=\{f,H\}+\frac{\partial f}{\partial t}.<br>
+\]<br>
+<br>
+Para \(q\):<br>
+\[<br>
+\dot q=\{q,H\}.<br>
+\]<br>
+<br>
+Calculando:<br>
+\[<br>
+\{q,H\}<br>
+=<br>
+1\cdot\frac{\partial H}{\partial p}<br>
+=<br>
+\frac{p}{m}.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{\dot q=\frac pm}.<br>
+\]<br>
+<br>
+Para \(p\):<br>
+\[<br>
+\dot p=\{p,H\}.<br>
+\]<br>
+<br>
+Como:<br>
+\[<br>
+\frac{\partial p}{\partial q}=0,<br>
+\qquad<br>
+\frac{\partial p}{\partial p}=1,<br>
+\]<br>
+tenemos:<br>
+\[<br>
+\{p,H\}<br>
+=<br>
+-\frac{\partial H}{\partial q}<br>
+=<br>
+-m\omega^2q.<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+\boxed{\dot p=-m\omega^2q}.<br>
+\]<br>
+<br>
+Como:<br>
+\[<br>
+p=m\dot q,<br>
+\]<br>
+tenemos:<br>
+\[<br>
+\dot p=m\ddot q.<br>
+\]<br>
+<br>
+Luego:<br>
+\[<br>
+m\ddot q=-m\omega^2q<br>
+\]<br>
+y finalmente:<br>
+\[<br>
+\boxed{\ddot q+\omega^2q=0}.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m29" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m29" aria-label="Enlace a este mensaje">#29</a>
+      </div>
+      <div class="content">cual es la reprentacion de los enteros mod 4 Z4? y la de sus subgrupos? tienen mas de una?</div>
+    </article>
+    
+
+    <article id="m30" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m30" aria-label="Enlace a este mensaje">#30</a>
+      </div>
+      <div class="content">Consideremos:<br>
+\[<br>
+\mathbb Z_4=\{0,1,2,3\}.<br>
+\]<br>
+<br>
+Es un grupo cíclico y abeliano.<br>
+<br>
+Sobre \(\mathbb C\), todas sus representaciones irreducibles son unidimensionales:<br>
+\[<br>
+\boxed{<br>
+\rho_k(n)=e^{2\pi ikn/4},<br>
+\qquad k=0,1,2,3.<br>
+}<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+\rho_0(1)=1,<br>
+\]<br>
+\[<br>
+\rho_1(1)=i,<br>
+\]<br>
+\[<br>
+\rho_2(1)=-1,<br>
+\]<br>
+\[<br>
+\rho_3(1)=-i.<br>
+\]<br>
+<br>
+Por tanto hay cuatro irreps complejas.<br>
+<br>
+Los subgrupos son:<br>
+\[<br>
+\{0\},<br>
+\qquad<br>
+H=\{0,2\}\cong\mathbb Z_2,<br>
+\qquad<br>
+\mathbb Z_4.<br>
+\]<br>
+<br>
+El grupo \(\mathbb Z_2\) tiene dos irreps complejas:<br>
+\[<br>
+\chi_0(n)=1,<br>
+\qquad<br>
+\chi_1(n)=(-1)^n.<br>
+\]<br>
+<br>
+También existen representaciones reducibles de dimensiones superiores, obtenidas como sumas directas de irreps.<br>
+<br>
+Por ejemplo, una representación real bidimensional de \(\mathbb Z_4\) viene dada por:<br>
+\[<br>
+\rho(1)=<br>
+\begin{pmatrix}<br>
+0&amp;-1\\<br>
+1&amp;0<br>
+\end{pmatrix},<br>
+\]<br>
+una rotación de \(90^\circ\).</div>
+    </article>
+    
+
+    <article id="m31" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m31" aria-label="Enlace a este mensaje">#31</a>
+      </div>
+      <div class="content">y para enteros mod 6 y sus subgrupos?</div>
+    </article>
+    
+
+    <article id="m32" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m32" aria-label="Enlace a este mensaje">#32</a>
+      </div>
+      <div class="content">Para:<br>
+\[<br>
+\mathbb Z_6=\{0,1,2,3,4,5\},<br>
+\]<br>
+todas las irreps complejas son unidimensionales porque el grupo es abeliano.<br>
+<br>
+Son:<br>
+\[<br>
+\boxed{<br>
+\rho_k(n)=e^{2\pi ikn/6},<br>
+\qquad k=0,1,2,3,4,5.<br>
+}<br>
+\]<br>
+<br>
+Hay exactamente seis.<br>
+<br>
+Los subgrupos son:<br>
+\[<br>
+\{0\},<br>
+\]<br>
+\[<br>
+H_2=\{0,3\}\cong\mathbb Z_2,<br>
+\]<br>
+\[<br>
+H_3=\{0,2,4\}\cong\mathbb Z_3,<br>
+\]<br>
+\[<br>
+\mathbb Z_6.<br>
+\]<br>
+<br>
+Para \(H_2\cong\mathbb Z_2\), hay dos irreps:<br>
+\[<br>
+1,\qquad (-1)^n.<br>
+\]<br>
+<br>
+Para \(H_3\cong\mathbb Z_3\), hay tres:<br>
+\[<br>
+\psi_j(r)=e^{2\pi ijr/3},<br>
+\qquad j=0,1,2.<br>
+\]<br>
+<br>
+Además:<br>
+\[<br>
+\boxed{\mathbb Z_6\cong\mathbb Z_2\times\mathbb Z_3}.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m33" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m33" aria-label="Enlace a este mensaje">#33</a>
+      </div>
+      <div class="content">desarrolla ambos pasos</div>
+    </article>
+    
+
+    <article id="m34" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m34" aria-label="Enlace a este mensaje">#34</a>
+      </div>
+      <div class="content">## Paso 1: reconstrucción mediante \(\mathbb Z_2\times\mathbb Z_3\)<br>
+<br>
+Por el teorema chino del resto:<br>
+\[<br>
+\Phi:\mathbb Z_6\to\mathbb Z_2\times\mathbb Z_3,<br>
+\]<br>
+\[<br>
+[n]_6\mapsto([n]_2,[n]_3).<br>
+\]<br>
+<br>
+Explícitamente:<br>
+\[<br>
+0\mapsto(0,0),<br>
+\]<br>
+\[<br>
+1\mapsto(1,1),<br>
+\]<br>
+\[<br>
+2\mapsto(0,2),<br>
+\]<br>
+\[<br>
+3\mapsto(1,0),<br>
+\]<br>
+\[<br>
+4\mapsto(0,1),<br>
+\]<br>
+\[<br>
+5\mapsto(1,2).<br>
+\]<br>
+<br>
+Las irreps de \(\mathbb Z_2\):<br>
+\[<br>
+\chi_0(a)=1,<br>
+\qquad<br>
+\chi_1(a)=(-1)^a.<br>
+\]<br>
+<br>
+Las de \(\mathbb Z_3\):<br>
+\[<br>
+\psi_j(b)=e^{2\pi ijb/3},<br>
+\qquad j=0,1,2.<br>
+\]<br>
+<br>
+Las irreps del producto son:<br>
+\[<br>
+\rho_{(i,j)}(a,b)<br>
+=<br>
+\chi_i(a)\psi_j(b).<br>
+\]<br>
+<br>
+Al llevarlas a \(\mathbb Z_6\):<br>
+\[<br>
+\widetilde\rho_{(i,j)}(n)<br>
+=<br>
+(-1)^{in}e^{2\pi ijn/3}.<br>
+\]<br>
+<br>
+Como:<br>
+\[<br>
+(-1)^{in}=e^{2\pi i(3i)n/6},<br>
+\]<br>
+obtenemos:<br>
+\[<br>
+\boxed{<br>
+\widetilde\rho_{(i,j)}(n)<br>
+=<br>
+e^{2\pi i(3i+2j)n/6}.<br>
+}<br>
+\]<br>
+<br>
+## Paso 2: interpretación<br>
+<br>
+El índice:<br>
+\[<br>
+k\equiv3i+2j\pmod6<br>
+\]<br>
+reconstruye las seis frecuencias o caracteres de \(\mathbb Z_6\).<br>
+<br>
+Así:<br>
+\[<br>
+(0,0)\to\rho_0,<br>
+\]<br>
+\[<br>
+(1,0)\to\rho_3,<br>
+\]<br>
+\[<br>
+(0,1)\to\rho_2,<br>
+\]<br>
+\[<br>
+(0,2)\to\rho_4,<br>
+\]<br>
+\[<br>
+(1,1)\to\rho_5,<br>
+\]<br>
+\[<br>
+(1,2)\to\rho_1.<br>
+\]<br>
+<br>
+Esto muestra explícitamente cómo las representaciones de \(\mathbb Z_6\) se construyen a partir de las de sus factores \(\mathbb Z_2\) y \(\mathbb Z_3\).</div>
+    </article>
+    
+
+    <article id="m35" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m35" aria-label="Enlace a este mensaje">#35</a>
+      </div>
+      <div class="content">y las restricciones cuales son?</div>
+    </article>
+    
+
+    <article id="m36" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m36" aria-label="Enlace a este mensaje">#36</a>
+      </div>
+      <div class="content">Sea:<br>
+\[<br>
+\rho_k(n)=e^{2\pi ikn/6}.<br>
+\]<br>
+<br>
+## Restricción a \(H_2=\{0,3\}\cong\mathbb Z_2\)<br>
+<br>
+El elemento generador no trivial es \(3\). Entonces:<br>
+\[<br>
+\rho_k(3)<br>
+=<br>
+e^{2\pi i3k/6}<br>
+=<br>
+e^{\pi ik}<br>
+=<br>
+(-1)^k.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{<br>
+\operatorname{Res}_{H_2}^{\mathbb Z_6}\rho_k=<br>
+\begin{cases}<br>
+\mathbf1,&amp;k\ \text{par},\\<br>
+\mathrm{sgn},&amp;k\ \text{impar}.<br>
+\end{cases}<br>
+}<br>
+\]<br>
+<br>
+## Restricción a \(H_3=\{0,2,4\}\cong\mathbb Z_3\)<br>
+<br>
+Identificamos:<br>
+\[<br>
+r\in\mathbb Z_3<br>
+\longmapsto<br>
+2r\in H_3.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+\rho_k(2r)<br>
+=<br>
+e^{2\pi ik(2r)/6}<br>
+=<br>
+e^{2\pi ikr/3}.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+\boxed{<br>
+\operatorname{Res}_{H_3}^{\mathbb Z_6}\rho_k<br>
+=<br>
+\psi_{k\bmod3}.<br>
+}<br>
+\]<br>
+<br>
+Es decir, la restricción a \(H_2\) recuerda \(k\bmod2\), mientras que la restricción a \(H_3\) recuerda \(k\bmod3\).</div>
+    </article>
+    
+
+    <article id="m37" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m37" aria-label="Enlace a este mensaje">#37</a>
+      </div>
+      <div class="content">induccion de representaciones</div>
+    </article>
+    
+
+    <article id="m38" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m38" aria-label="Enlace a este mensaje">#38</a>
+      </div>
+      <div class="content">La inducción realiza el proceso inverso conceptual: parte de una representación de un subgrupo \(H\) y construye una representación de \(G\).<br>
+<br>
+Se denota:<br>
+\[<br>
+\operatorname{Ind}_H^G\rho.<br>
+\]<br>
+<br>
+## Desde \(H_2\cong\mathbb Z_2\)<br>
+<br>
+Como:<br>
+\[<br>
+[\mathbb Z_6:H_2]=3,<br>
+\]<br>
+una representación 1D induce una representación de dimensión 3.<br>
+<br>
+Para la trivial:<br>
+\[<br>
+\boxed{<br>
+\operatorname{Ind}_{H_2}^{\mathbb Z_6}(\mathbf1)<br>
+=<br>
+\rho_0\oplus\rho_2\oplus\rho_4.<br>
+}<br>
+\]<br>
+<br>
+Para el carácter signo:<br>
+\[<br>
+\boxed{<br>
+\operatorname{Ind}_{H_2}^{\mathbb Z_6}(\mathrm{sgn})<br>
+=<br>
+\rho_1\oplus\rho_3\oplus\rho_5.<br>
+}<br>
+\]<br>
+<br>
+## Desde \(H_3\cong\mathbb Z_3\)<br>
+<br>
+Aquí:<br>
+\[<br>
+[\mathbb Z_6:H_3]=2.<br>
+\]<br>
+<br>
+Si:<br>
+\[<br>
+\psi_j(2r)=e^{2\pi ijr/3},<br>
+\]<br>
+entonces:<br>
+\[<br>
+\boxed{<br>
+\operatorname{Ind}_{H_3}^{\mathbb Z_6}(\psi_j)<br>
+=<br>
+\rho_j\oplus\rho_{j+3}.<br>
+}<br>
+\]<br>
+<br>
+La reciprocidad de Frobenius establece:<br>
+\[<br>
+\boxed{<br>
+\left\langle<br>
+\operatorname{Ind}_H^G\rho,\sigma<br>
+\right\rangle_G<br>
+=<br>
+\left\langle<br>
+\rho,\operatorname{Res}_H^G\sigma<br>
+\right\rangle_H.<br>
+}<br>
+\]</div>
+    </article>
+    
+
+    <article id="m39" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m39" aria-label="Enlace a este mensaje">#39</a>
+      </div>
+      <div class="content">y los caracteres?</div>
+    </article>
+    
+
+    <article id="m40" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m40" aria-label="Enlace a este mensaje">#40</a>
+      </div>
+      <div class="content">El carácter de una representación \(\rho\) es:<br>
+\[<br>
+\chi_\rho(g)=\operatorname{Tr}\rho(g).<br>
+\]<br>
+<br>
+Como todas las irreps de \(\mathbb Z_6\) son unidimensionales:<br>
+\[<br>
+\boxed{<br>
+\chi_k(n)=e^{2\pi ikn/6}.<br>
+}<br>
+\]<br>
+<br>
+La ortogonalidad es:<br>
+\[<br>
+\boxed{<br>
+\frac16<br>
+\sum_{n=0}^5<br>
+\chi_k(n)\overline{\chi_m(n)}<br>
+=<br>
+\delta_{km}.<br>
+}<br>
+\]<br>
+<br>
+Para:<br>
+\[<br>
+\operatorname{Ind}_{H_2}^{\mathbb Z_6}(\mathbf1)<br>
+=<br>
+\rho_0\oplus\rho_2\oplus\rho_4,<br>
+\]<br>
+su carácter es:<br>
+\[<br>
+\chi=\chi_0+\chi_2+\chi_4.<br>
+\]<br>
+<br>
+Evaluándolo sobre \(n=0,\ldots,5\):<br>
+\[<br>
+\boxed{(3,0,0,3,0,0)}.<br>
+\]<br>
+<br>
+Para:<br>
+\[<br>
+\operatorname{Ind}_{H_2}^{\mathbb Z_6}(\mathrm{sgn}),<br>
+\]<br>
+obtenemos:<br>
+\[<br>
+\boxed{(3,0,0,-3,0,0)}.<br>
+\]<br>
+<br>
+Para la trivial de \(H_3\):<br>
+\[<br>
+\operatorname{Ind}_{H_3}^{\mathbb Z_6}(\mathbf1)<br>
+=<br>
+\rho_0\oplus\rho_3,<br>
+\]<br>
+cuyo carácter es:<br>
+\[<br>
+\boxed{(2,0,2,0,2,0)}.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m41" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m41" aria-label="Enlace a este mensaje">#41</a>
+      </div>
+      <div class="content">y los grupos de Frobenius?</div>
+    </article>
+    
+
+    <article id="m42" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m42" aria-label="Enlace a este mensaje">#42</a>
+      </div>
+      <div class="content">Un grupo finito \(G\) es un grupo de Frobenius si posee un subgrupo propio no trivial \(H\) tal que:<br>
+\[<br>
+\boxed{<br>
+H\cap gHg^{-1}=\{e\}<br>
+\qquad<br>
+\forall g\notin H.<br>
+}<br>
+\]<br>
+<br>
+El subgrupo \(H\) se llama complemento de Frobenius.<br>
+<br>
+Existe un subgrupo normal \(K\), llamado núcleo de Frobenius, y:<br>
+\[<br>
+\boxed{<br>
+G=K\rtimes H,<br>
+\qquad<br>
+K\cap H=\{e\}.<br>
+}<br>
+\]<br>
+<br>
+Un prototipo es el grupo afín:<br>
+\[<br>
+\mathbb F_p\rtimes\mathbb F_p^\times.<br>
+\]<br>
+<br>
+Para \(p=5\):<br>
+\[<br>
+G=\mathbb Z_5\rtimes\mathbb Z_4.<br>
+\]<br>
+<br>
+Tiene:<br>
+\[<br>
+|G|=5\cdot4=20.<br>
+\]<br>
+<br>
+Puede presentarse mediante:<br>
+\[<br>
+a^5=e,<br>
+\qquad<br>
+b^4=e,<br>
+\qquad<br>
+bab^{-1}=a^2.<br>
+\]<br>
+<br>
+Aquí:<br>
+\[<br>
+K=\langle a\rangle\cong\mathbb Z_5,<br>
+\]<br>
+y:<br>
+\[<br>
+H=\langle b\rangle\cong\mathbb Z_4.<br>
+\]<br>
+<br>
+En contraste, \(\mathbb Z_6\), al ser abeliano, no proporciona un grupo de Frobenius no trivial de este tipo: la conjugación no separa un subgrupo de sus conjugados.</div>
+    </article>
+    
+
+    <article id="m43" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m43" aria-label="Enlace a este mensaje">#43</a>
+      </div>
+      <div class="content">construyela</div>
+    </article>
+    
+
+    <article id="m44" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m44" aria-label="Enlace a este mensaje">#44</a>
+      </div>
+      <div class="content">Construimos la tabla de caracteres de:<br>
+\[<br>
+G=\mathbb Z_5\rtimes\mathbb Z_4<br>
+=<br>
+\langle a,b\mid a^5=b^4=e,\ bab^{-1}=a^2\rangle.<br>
+\]<br>
+<br>
+## Clases de conjugación<br>
+<br>
+Podemos tomar:<br>
+\[<br>
+C_1=\{e\},<br>
+\]<br>
+de tamaño 1;<br>
+<br>
+\[<br>
+C_2=\{a,a^2,a^3,a^4\},<br>
+\]<br>
+de tamaño 4;<br>
+<br>
+y tres clases fuera del núcleo:<br>
+\[<br>
+C_3=\{a^ib:i=0,\ldots,4\},<br>
+\]<br>
+\[<br>
+C_4=\{a^ib^2:i=0,\ldots,4\},<br>
+\]<br>
+\[<br>
+C_5=\{a^ib^3:i=0,\ldots,4\},<br>
+\]<br>
+cada una de tamaño 5.<br>
+<br>
+Hay cinco clases, por lo que hay cinco irreps.<br>
+<br>
+La abelianización es:<br>
+\[<br>
+G_{\mathrm{ab}}\cong\mathbb Z_4,<br>
+\]<br>
+por lo que existen cuatro irreps 1D.<br>
+<br>
+La quinta debe tener dimensión \(d\) tal que:<br>
+\[<br>
+4(1^2)+d^2=20.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+d^2=16,<br>
+\qquad<br>
+d=4.<br>
+\]<br>
+<br>
+La tabla de caracteres es:<br>
+\[<br>
+\boxed{<br>
+\begin{array}{c|ccccc}<br>
+ &amp; C_1 &amp; C_2 &amp; C_3 &amp; C_4 &amp; C_5\\<br>
+\hline<br>
+\chi_1&amp;1&amp;1&amp;1&amp;1&amp;1\\<br>
+\chi_2&amp;1&amp;1&amp;i&amp;-1&amp;-i\\<br>
+\chi_3&amp;1&amp;1&amp;-1&amp;1&amp;-1\\<br>
+\chi_4&amp;1&amp;1&amp;-i&amp;-1&amp;i\\<br>
+\chi_5&amp;4&amp;-1&amp;0&amp;0&amp;0<br>
+\end{array}<br>
+}<br>
+\]<br>
+<br>
+La representación 4-dimensional se obtiene induciendo cualquiera de los caracteres no triviales de:<br>
+\[<br>
+K=\mathbb Z_5.<br>
+\]<br>
+<br>
+Para ella:<br>
+\[<br>
+\chi_5(e)=4,<br>
+\]<br>
+\[<br>
+\chi_5(a^m)=-1<br>
+\qquad(m\ne0),<br>
+\]<br>
+y:<br>
+\[<br>
+\chi_5(g)=0<br>
+\qquad(g\notin K).<br>
+\]</div>
+    </article>
+    
+
+    <article id="m45" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m45" aria-label="Enlace a este mensaje">#45</a>
+      </div>
+      <div class="content">calcula los irreps de enteros mod 6 Z6</div>
+    </article>
+    
+
+    <article id="m46" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m46" aria-label="Enlace a este mensaje">#46</a>
+      </div>
+      <div class="content">Como:<br>
+\[<br>
+\mathbb Z_6=\langle1\rangle,<br>
+\]<br>
+una representación irreducible compleja 1D queda determinada por la imagen del generador \(1\).<br>
+<br>
+Sea:<br>
+\[<br>
+\rho(1)=\lambda.<br>
+\]<br>
+<br>
+Como:<br>
+\[<br>
+6\cdot1=0,<br>
+\]<br>
+debe cumplirse:<br>
+\[<br>
+\lambda^6=1.<br>
+\]<br>
+<br>
+Por tanto \(\lambda\) puede ser cualquiera de las seis raíces sextas de la unidad:<br>
+\[<br>
+\lambda_k=e^{2\pi ik/6},<br>
+\qquad<br>
+k=0,\ldots,5.<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+\boxed{<br>
+\rho_k(n)=e^{2\pi ikn/6},<br>
+\qquad k=0,1,2,3,4,5.<br>
+}<br>
+\]<br>
+<br>
+Son las seis irreps complejas de \(\mathbb Z_6\).<br>
+<br>
+Además:<br>
+\[<br>
+\sum_{k=0}^{5}(\dim\rho_k)^2<br>
+=<br>
+6,<br>
+\]<br>
+porque:<br>
+\[<br>
+1^2+1^2+1^2+1^2+1^2+1^2=6.<br>
+\]</div>
+    </article>
+    
+
+    <article id="m47" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m47" aria-label="Enlace a este mensaje">#47</a>
+      </div>
+      <div class="content">calcula y reconstruye</div>
+    </article>
+    
+
+    <article id="m48" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m48" aria-label="Enlace a este mensaje">#48</a>
+      </div>
+      <div class="content">Reconstruimos las irreps mediante:<br>
+\[<br>
+\mathbb Z_6\cong\mathbb Z_2\times\mathbb Z_3.<br>
+\]<br>
+<br>
+El isomorfismo:<br>
+\[<br>
+\Phi([n]_6)=([n]_2,[n]_3).<br>
+\]<br>
+<br>
+Tabla:<br>
+\[<br>
+\begin{array}{c|c}<br>
+n&amp;(n\bmod2,n\bmod3)\\<br>
+\hline<br>
+0&amp;(0,0)\\<br>
+1&amp;(1,1)\\<br>
+2&amp;(0,2)\\<br>
+3&amp;(1,0)\\<br>
+4&amp;(0,1)\\<br>
+5&amp;(1,2)<br>
+\end{array}<br>
+\]<br>
+<br>
+Irreps de \(\mathbb Z_2\):<br>
+\[<br>
+\chi_0(a)=1,<br>
+\qquad<br>
+\chi_1(a)=(-1)^a.<br>
+\]<br>
+<br>
+Irreps de \(\mathbb Z_3\), con:<br>
+\[<br>
+\omega=e^{2\pi i/3},<br>
+\]<br>
+son:<br>
+\[<br>
+\psi_j(b)=\omega^{jb},<br>
+\qquad<br>
+j=0,1,2.<br>
+\]<br>
+<br>
+Las seis irreps del producto:<br>
+\[<br>
+\rho_{(i,j)}(a,b)<br>
+=<br>
+\chi_i(a)\psi_j(b),<br>
+\qquad<br>
+i=0,1,\quad j=0,1,2.<br>
+\]<br>
+<br>
+Al reconstruir sobre \(\mathbb Z_6\):<br>
+\[<br>
+\widetilde\rho_{(i,j)}(n)<br>
+=<br>
+(-1)^{in}\omega^{jn}.<br>
+\]<br>
+<br>
+Como:<br>
+\[<br>
+(-1)^{in}<br>
+=<br>
+e^{2\pi i(3i)n/6},<br>
+\]<br>
+y:<br>
+\[<br>
+\omega^{jn}<br>
+=<br>
+e^{2\pi i(2j)n/6},<br>
+\]<br>
+resulta:<br>
+\[<br>
+\boxed{<br>
+\widetilde\rho_{(i,j)}(n)<br>
+=<br>
+e^{2\pi i(3i+2j)n/6}.<br>
+}<br>
+\]<br>
+<br>
+Así:<br>
+\[<br>
+k\equiv3i+2j\pmod6.<br>
+\]<br>
+<br>
+Correspondencias:<br>
+\[<br>
+(0,0)\to\rho_0,<br>
+\]<br>
+\[<br>
+(1,0)\to\rho_3,<br>
+\]<br>
+\[<br>
+(0,1)\to\rho_2,<br>
+\]<br>
+\[<br>
+(0,2)\to\rho_4,<br>
+\]<br>
+\[<br>
+(1,1)\to\rho_5,<br>
+\]<br>
+\[<br>
+(1,2)\to\rho_1.<br>
+\]<br>
+<br>
+Se recuperan exactamente:<br>
+\[<br>
+\boxed{<br>
+\rho_k(n)=e^{2\pi ikn/6}.<br>
+}<br>
+\]</div>
+    </article>
+    
+
+    <article id="m49" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m49" aria-label="Enlace a este mensaje">#49</a>
+      </div>
+      <div class="content">y la DFT o transformada discreta de Fourier de Z6 o enteros modulo 6 y sus subgrupos</div>
+    </article>
+    
+
+    <article id="m50" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m50" aria-label="Enlace a este mensaje">#50</a>
+      </div>
+      <div class="content">La DFT de \(\mathbb Z_6\) es exactamente la expansión de una función en los caracteres irreducibles del grupo.<br>
+<br>
+Sea:<br>
+\[<br>
+f:\mathbb Z_6\to\mathbb C.<br>
+\]<br>
+<br>
+Su transformada discreta de Fourier es:<br>
+\[<br>
+\boxed{<br>
+\widehat f(k)<br>
+=<br>
+\sum_{n=0}^{5}<br>
+f(n)e^{-2\pi ikn/6}<br>
+}<br>
+\]<br>
+para:<br>
+\[<br>
+k=0,\ldots,5.<br>
+\]<br>
+<br>
+La inversa:<br>
+\[<br>
+\boxed{<br>
+f(n)<br>
+=<br>
+\frac16<br>
+\sum_{k=0}^{5}<br>
+\widehat f(k)e^{2\pi ikn/6}.<br>
+}<br>
+\]<br>
+<br>
+Sea:<br>
+\[<br>
+\omega_6=e^{-2\pi i/6}.<br>
+\]<br>
+<br>
+La matriz es:<br>
+\[<br>
+F_6=<br>
+\begin{pmatrix}<br>
+1&amp;1&amp;1&amp;1&amp;1&amp;1\\<br>
+1&amp;\omega_6&amp;\omega_6^2&amp;\omega_6^3&amp;\omega_6^4&amp;\omega_6^5\\<br>
+1&amp;\omega_6^2&amp;\omega_6^4&amp;1&amp;\omega_6^2&amp;\omega_6^4\\<br>
+1&amp;\omega_6^3&amp;1&amp;\omega_6^3&amp;1&amp;\omega_6^3\\<br>
+1&amp;\omega_6^4&amp;\omega_6^2&amp;1&amp;\omega_6^4&amp;\omega_6^2\\<br>
+1&amp;\omega_6^5&amp;\omega_6^4&amp;\omega_6^3&amp;\omega_6^2&amp;\omega_6<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+## Subgrupo \(H_2\cong\mathbb Z_2\)<br>
+<br>
+Identificamos:<br>
+\[<br>
+0\leftrightarrow0,<br>
+\qquad<br>
+3\leftrightarrow1.<br>
+\]<br>
+<br>
+Entonces:<br>
+\[<br>
+\boxed{<br>
+F_2=<br>
+\begin{pmatrix}<br>
+1&amp;1\\<br>
+1&amp;-1<br>
+\end{pmatrix}.<br>
+}<br>
+\]<br>
+<br>
+## Subgrupo \(H_3\cong\mathbb Z_3\)<br>
+<br>
+Identificamos:<br>
+\[<br>
+0\leftrightarrow0,<br>
+\qquad<br>
+2\leftrightarrow1,<br>
+\qquad<br>
+4\leftrightarrow2.<br>
+\]<br>
+<br>
+Con:<br>
+\[<br>
+\eta=e^{-2\pi i/3},<br>
+\]<br>
+tenemos:<br>
+\[<br>
+\boxed{<br>
+F_3=<br>
+\begin{pmatrix}<br>
+1&amp;1&amp;1\\<br>
+1&amp;\eta&amp;\eta^2\\<br>
+1&amp;\eta^2&amp;\eta<br>
+\end{pmatrix}.<br>
+}<br>
+\]<br>
+<br>
+La ortogonalidad de caracteres:<br>
+\[<br>
+\frac16<br>
+\sum_{n=0}^5<br>
+\chi_k(n)\overline{\chi_\ell(n)}<br>
+=<br>
+\delta_{k\ell}<br>
+\]<br>
+es precisamente la propiedad que permite la inversión de Fourier.<br>
+<br>
+Como:<br>
+\[<br>
+\mathbb Z_6\cong\mathbb Z_2\times\mathbb Z_3,<br>
+\]<br>
+la DFT de orden 6 puede reconstruirse a partir de las DFT de orden 2 y 3.</div>
+    </article>
+    
+
+    <article id="m51" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m51" aria-label="Enlace a este mensaje">#51</a>
+      </div>
+      <div class="content">hazlo</div>
+    </article>
+    
+
+    <article id="m52" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m52" aria-label="Enlace a este mensaje">#52</a>
+      </div>
+      <div class="content">Sea:<br>
+\[<br>
+\omega_6=e^{-2\pi i/6},<br>
+\qquad<br>
+\omega_3=e^{-2\pi i/3}.<br>
+\]<br>
+<br>
+Tenemos:<br>
+\[<br>
+F_2=<br>
+\begin{pmatrix}<br>
+1&amp;1\\<br>
+1&amp;-1<br>
+\end{pmatrix},<br>
+\]<br>
+y:<br>
+\[<br>
+F_3=<br>
+\begin{pmatrix}<br>
+1&amp;1&amp;1\\<br>
+1&amp;\omega_3&amp;\omega_3^2\\<br>
+1&amp;\omega_3^2&amp;\omega_3<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+El producto tensorial:<br>
+\[<br>
+F_2\otimes F_3<br>
+=<br>
+\begin{pmatrix}<br>
+F_3&amp;F_3\\<br>
+F_3&amp;-F_3<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+Explícitamente:<br>
+\[<br>
+F_2\otimes F_3=<br>
+\begin{pmatrix}<br>
+1&amp;1&amp;1&amp;1&amp;1&amp;1\\<br>
+1&amp;\omega_3&amp;\omega_3^2&amp;1&amp;\omega_3&amp;\omega_3^2\\<br>
+1&amp;\omega_3^2&amp;\omega_3&amp;1&amp;\omega_3^2&amp;\omega_3\\<br>
+1&amp;1&amp;1&amp;-1&amp;-1&amp;-1\\<br>
+1&amp;\omega_3&amp;\omega_3^2&amp;-1&amp;-\omega_3&amp;-\omega_3^2\\<br>
+1&amp;\omega_3^2&amp;\omega_3&amp;-1&amp;-\omega_3^2&amp;-\omega_3<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+El CRT:<br>
+\[<br>
+n\mapsto(n\bmod2,n\bmod3)<br>
+\]<br>
+da:<br>
+\[<br>
+0\mapsto(0,0),\quad<br>
+1\mapsto(1,1),\quad<br>
+2\mapsto(0,2),<br>
+\]<br>
+\[<br>
+3\mapsto(1,0),\quad<br>
+4\mapsto(0,1),\quad<br>
+5\mapsto(1,2).<br>
+\]<br>
+<br>
+Los caracteres del producto:<br>
+\[<br>
+\chi_{(u,v)}(a,b)<br>
+=<br>
+e^{-2\pi iua/2}<br>
+e^{-2\pi ivb/3}<br>
+\]<br>
+corresponden a:<br>
+\[<br>
+\chi_k(n)=e^{-2\pi ikn/6}<br>
+\]<br>
+con:<br>
+\[<br>
+\boxed{<br>
+k\equiv3u+2v\pmod6.<br>
+}<br>
+\]<br>
+<br>
+Por ello:<br>
+\[<br>
+\boxed{<br>
+F_6<br>
+=<br>
+P_{\mathrm{rows}}^T<br>
+(F_2\otimes F_3)<br>
+P_{\mathrm{cols}}^T<br>
+}<br>
+\]<br>
+para matrices de permutación apropiadas.</div>
+    </article>
+    
+
+    <article id="m53" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m53" aria-label="Enlace a este mensaje">#53</a>
+      </div>
+      <div class="content">hazlo</div>
+    </article>
+    
+
+    <article id="m54" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m54" aria-label="Enlace a este mensaje">#54</a>
+      </div>
+      <div class="content">Ahora escribimos explícitamente las matrices de permutación.<br>
+<br>
+El orden lexicográfico de:<br>
+\[<br>
+\mathbb Z_2\times\mathbb Z_3<br>
+\]<br>
+es:<br>
+\[<br>
+(0,0),(0,1),(0,2),(1,0),(1,1),(1,2).<br>
+\]<br>
+<br>
+Para los elementos de \(\mathbb Z_6\), esto corresponde al orden:<br>
+\[<br>
+0,4,2,3,1,5.<br>
+\]<br>
+<br>
+Por tanto:<br>
+\[<br>
+P_{\mathrm{cols}}=<br>
+\begin{pmatrix}<br>
+1&amp;0&amp;0&amp;0&amp;0&amp;0\\<br>
+0&amp;0&amp;0&amp;0&amp;1&amp;0\\<br>
+0&amp;0&amp;1&amp;0&amp;0&amp;0\\<br>
+0&amp;0&amp;0&amp;1&amp;0&amp;0\\<br>
+0&amp;1&amp;0&amp;0&amp;0&amp;0\\<br>
+0&amp;0&amp;0&amp;0&amp;0&amp;1<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+Para las frecuencias:<br>
+\[<br>
+k\equiv3u+2v\pmod6.<br>
+\]<br>
+<br>
+En orden lexicográfico:<br>
+\[<br>
+(0,0)\to0,<br>
+\]<br>
+\[<br>
+(0,1)\to2,<br>
+\]<br>
+\[<br>
+(0,2)\to4,<br>
+\]<br>
+\[<br>
+(1,0)\to3,<br>
+\]<br>
+\[<br>
+(1,1)\to5,<br>
+\]<br>
+\[<br>
+(1,2)\to1.<br>
+\]<br>
+<br>
+Por tanto el orden de frecuencias es:<br>
+\[<br>
+0,2,4,3,5,1.<br>
+\]<br>
+<br>
+La matriz correspondiente es:<br>
+\[<br>
+P_{\mathrm{rows}}=<br>
+\begin{pmatrix}<br>
+1&amp;0&amp;0&amp;0&amp;0&amp;0\\<br>
+0&amp;0&amp;1&amp;0&amp;0&amp;0\\<br>
+0&amp;0&amp;0&amp;0&amp;1&amp;0\\<br>
+0&amp;0&amp;0&amp;1&amp;0&amp;0\\<br>
+0&amp;0&amp;0&amp;0&amp;0&amp;1\\<br>
+0&amp;1&amp;0&amp;0&amp;0&amp;0<br>
+\end{pmatrix}.<br>
+\]<br>
+<br>
+La identidad exacta es:<br>
+\[<br>
+\boxed{<br>
+F_2\otimes F_3<br>
+=<br>
+P_{\mathrm{rows}}<br>
+F_6<br>
+P_{\mathrm{cols}}.<br>
+}<br>
+\]<br>
+<br>
+Equivalentemente:<br>
+\[<br>
+\boxed{<br>
+F_6<br>
+=<br>
+P_{\mathrm{rows}}^T<br>
+(F_2\otimes F_3)<br>
+P_{\mathrm{cols}}^T.<br>
+}<br>
+\]<br>
+<br>
+Como las matrices de permutación son ortogonales:<br>
+\[<br>
+P^{-1}=P^T.<br>
+\]<br>
+<br>
+Así queda demostrada explícitamente la factorización de la DFT de \(\mathbb Z_6\) a partir de las DFT de sus factores:<br>
+\[<br>
+\boxed{<br>
+F_{\mathbb Z_6}<br>
+\cong<br>
+F_{\mathbb Z_2}\otimes F_{\mathbb Z_3}.<br>
+}<br>
+\]</div>
+    </article>
+    
+
+    <article id="m55" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m55" aria-label="Enlace a este mensaje">#55</a>
+      </div>
+      <div class="content">share chat</div>
+    </article>
+    
+
+    <article id="m56" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m56" aria-label="Enlace a este mensaje">#56</a>
+      </div>
+      <div class="content">Para compartir este chat se puede usar la función Compartir de ChatGPT, copiar el contenido o guardarlo mediante impresión como PDF. También puede convertirse a un documento web.</div>
+    </article>
+    
+
+    <article id="m57" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m57" aria-label="Enlace a este mensaje">#57</a>
+      </div>
+      <div class="content">convierte todo el contenido del chat en un documento .html</div>
+    </article>
+    
+
+    <article id="m58" class="message assistant">
+      <div class="message-head">
+        <span class="role">Asistente</span>
+        <a class="anchor" href="#m58" aria-label="Enlace a este mensaje">#58</a>
+      </div>
+      <div class="content">Se generó una primera versión HTML de la conversación.</div>
+    </article>
+    
+
+    <article id="m59" class="message user">
+      <div class="message-head">
+        <span class="role">Usuario</span>
+        <a class="anchor" href="#m59" aria-label="Enlace a este mensaje">#59</a>
+      </div>
+      <div class="content">convierte toda la conversacion en un sitio web HTML o en un documento web HTML, incluyendo todas las formulas y simbolos desde la pregunta &#x27; Teoría de grupos muestra un ejemplo de cálculo de subgrupo normal, grupos cocientes. Homomorfismos y núcleo de los homomorfismos para Z6 el conjunto de los enteros módulo 6&#x27; ésta incluida.</div>
+    </article>
+    
+<a class="toplink" href="#top">↑ Volver arriba</a>
+</main>
+</div>
+<footer>Documento HTML generado a partir de la conversación disponible en este chat.</footer>
+</div>
+</body>
+</html>
